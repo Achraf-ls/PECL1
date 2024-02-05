@@ -9,5 +9,5 @@ package poo.pecl1;
  * @author giise
  */
 public class Clase {
-    
+    private int hola;
 }
