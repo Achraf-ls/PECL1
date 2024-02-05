@@ -10,4 +10,5 @@ package poo.pecl1;
  */
 public class Clase {
     private int hola;
+    //a
 }
