@@ -6,9 +6,16 @@ package poo.pecl1;
 
 /**
  *
- * @author giise
+ * @author achra
  */
-public class Clase {
-    private int hola;
-    //a
+public class Autobus extends Thread {
+    private int id;
+
+    public Autobus(int id) {
+        this.id = id;
+    }
+    
+    public void Run(){
+        String nombreBus = String.format("B-%04d", id);
+    }
 }
