@@ -8,22 +8,25 @@ import java.util.Random;
 
 /**
  *
- * @author achra
+ * @author Achraf El Idrissi y Gisela González
  */
 public class Avion extends Thread {
     
     private static final Random random = new Random();
     private static final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private int id;
+    private Aeropuerto aeropuerto;
+    private int pasajeros;
 
-    public Avion(int id) {
+    public Avion(int id, Aeropuerto aeropuerto) {
         this.id = id;
+        this.aeropuerto = aeropuerto;
     }
     
     
     public void Run(){
          String nombreAvion = generarNombre(id);
-    
+         
     }
     
     public static String generarNombre(int id){
