@@ -22,7 +22,7 @@ public class Autobus extends Thread {
         this.aeropuerto = a;
     }
     
-    public void Run(){
+    public void run(){
         String nombreBus = String.format("B-%04d", id);
         try {
             while(true){

@@ -24,7 +24,7 @@ public class Avion extends Thread {
     }
     
     
-    public void Run(){
+    public void run(){
          String nombreAvion = generarNombre(id);
          
     }
