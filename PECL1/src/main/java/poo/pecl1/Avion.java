@@ -11,7 +11,7 @@ import java.util.Random;
  * @author Achraf El Idrissi y Gisela González
  */
 public class Avion extends Thread {
-    
+
     private static final Random random = new Random();
     private static final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private int id;
@@ -22,20 +22,24 @@ public class Avion extends Thread {
         this.id = id;
         this.aeropuerto = aeropuerto;
     }
-    
-    
-    public void run(){
-         String nombreAvion = generarNombre(id);
-         
+
+    public void run() {
+        String nombreAvion = generarNombre(id);
+        while(true){
+              aeropuerto.aparecerHangar(this);
+              aeropuerto.accederAreaEstacionamiento(this);
+              aeropuerto.accederPuertasEmbarque(this);
+        }
+
     }
-    
-    public static String generarNombre(int id){
-       StringBuilder sb = new StringBuilder();
+
+    public static String generarNombre(int id) {
+        StringBuilder sb = new StringBuilder();
         sb.append(alphabet.charAt(random.nextInt(alphabet.length()))); // Primer carácter aleatorio
         sb.append(alphabet.charAt(random.nextInt(alphabet.length()))); // Segundo carácter aleatorio
         sb.append("-");
-        sb.append(String.format("%04d", id)); 
+        sb.append(String.format("%04d", id));
         return sb.toString();
-    
+
     }
 }
