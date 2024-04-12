@@ -26,11 +26,23 @@ public class Avion extends Thread {
     public void run() {
         String nombreAvion = generarNombre(id);
         while(true){
-              aeropuerto.aparecerHangar(this);
-              aeropuerto.accederAreaEstacionamiento(this);
-              aeropuerto.accederPuertasEmbarque(this);
+            hangar();
+            estacionamiento();
+            embarque();  
         }
 
+    }
+    
+    private void hangar(){
+        aeropuerto.aparecerHangar(this);
+    }
+    
+    private void estacionamiento(){
+        aeropuerto.accederAreaEstacionamiento(this);
+    }
+    
+    private void embarque(){
+        aeropuerto.accederPuertasEmbarque(this); 
     }
 
     public static String generarNombre(int id) {

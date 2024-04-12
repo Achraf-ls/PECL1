@@ -13,7 +13,8 @@ import java.util.Random;
 public class PECL1 {
 
     public static void main(String[] args) throws InterruptedException {
-        
+          
+
         Aeropuerto a = new Aeropuerto();
         
         for(int i = 0; i < 8000; i++){
@@ -24,5 +25,6 @@ public class PECL1 {
             new Autobus(i, a).start();
             Thread.sleep(500 + new Random().nextInt(501)); // intervalo entre 0,5s y 1s
         }
+        
     }
 }

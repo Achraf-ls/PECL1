@@ -18,9 +18,9 @@ public class Autobus extends Thread {
     private int pasajeros;
     private String nombreBus;
     
-    public Autobus(int id, Aeropuerto a) {
+    public Autobus(int id, Aeropuerto aeropuerto) {
         this.id = id;
-        this.aeropuerto = a;
+        this.aeropuerto = aeropuerto;
     }
 
     
@@ -36,23 +36,41 @@ public class Autobus extends Thread {
         nombreBus = String.format("B-%04d", id);
         try {
             while(true){
-            Thread.sleep(2000 + new Random().nextInt(3001)); //llega a la parada y espera
-            pasajeros = new Random().nextInt(51); //se montan entre 0 y 50 pasajeros
-            Thread.sleep(5000 + new Random().nextInt(5001)); // va al aeropuerto
-            aeropuerto.bajarPasajerosBus(this); // entran los pasajeros al aeropuerto
-            Thread.sleep(2000 + new Random().nextInt(3001)); //se montan nuevos pasajeros
-            pasajeros = new Random().nextInt(51);
-            aeropuerto.subirPasajerosBus(this);
-            Thread.sleep(5000 + new Random().nextInt(5001)); //sale con nuevos pasajeros 
+            llegar();
+            subirPasajeros();
+            viajar();
+            bajarPasajeros();
+            subirNuevos();
+            viajar();
             pasajeros = 0; //llega a la parada y los pasajeros dejan de contar
             }
         } catch (InterruptedException ex) {
             Logger.getLogger(Autobus.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-  
-
-  
     
+    private void llegar() throws InterruptedException{
+        Thread.sleep(2000 + new Random().nextInt(3001)); //llega a la parada y espera
+        System.out.println("llega y espera");
+    }
+    
+    private void subirPasajeros(){
+        pasajeros = new Random().nextInt(51); //se montan entre 0 y 50 pasajeros   
+        System.out.println("Se han subido" + pasajeros);
+    }
+    
+    private void viajar() throws InterruptedException{
+        Thread.sleep(5000 + new Random().nextInt(5001)); // va o vuelve del aeropuerto      
+    }
+    
+    private void bajarPasajeros(){
+        aeropuerto.bajarPasajerosBus(this); // entran los pasajeros al aeropuerto        
+    }
+    
+    private void subirNuevos() throws InterruptedException{
+        Thread.sleep(2000 + new Random().nextInt(3001)); //se montan nuevos pasajeros 
+        pasajeros = new Random().nextInt(51);
+        aeropuerto.subirPasajerosBus(this);
+    }
+   
 }
