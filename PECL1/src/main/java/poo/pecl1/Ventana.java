@@ -90,6 +90,7 @@ public class Ventana extends javax.swing.JFrame {
                 pasajerosB.setText(Integer.toString(aeropuertoBarcelona.getPasajeros()));
                 obtenerHangarM();
                 obtenerHangarB();
+                //no funciona el taller
                 obtenerTallerM();
                 obtenerTallerB();
             }
