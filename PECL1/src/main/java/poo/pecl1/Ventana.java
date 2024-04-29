@@ -4,15 +4,22 @@
  */
 package poo.pecl1;
 
+import java.util.Random;
+
 /**
  *
  * @author Achraf El Idrissi y Gisela González 
+ * 
+ * 
  */
+
+
 public class Ventana extends javax.swing.JFrame {
 
     /**
      * Creates new form Ventana
      */
+    
     public Ventana() {
         initComponents();
         inicializar();
@@ -20,7 +27,46 @@ public class Ventana extends javax.swing.JFrame {
     
     public void inicializar(){
         botonRenaudar.setEnabled(false); 
-        this.setLocationRelativeTo(null);       
+        this.setLocationRelativeTo(null);
+        Aeropuerto aeropuertoMadrid = new Aeropuerto();
+        Aeropuerto aeropuertoBarcelona = new Aeropuerto();
+        Aerovia aeroviaMadBar = new Aerovia(aeropuertoBarcelona);
+        Aerovia aeroviaBarMad = new Aerovia(aeropuertoMadrid);
+        aeropuertoMadrid.setAerovia(aeroviaMadBar);
+        aeropuertoBarcelona.setAerovia(aeroviaBarMad);
+
+        Thread avionesThread = new Thread(() -> {
+            for (int i = 0; i < 8000; i++) {
+                if (i % 2 == 0) {
+                    new Avion(i, aeropuertoMadrid).start();
+                } else {
+                   new Avion(i, aeropuertoBarcelona).start();
+                }
+                try {
+                    Thread.sleep(1000 + new Random().nextInt(2001)); //intervalo entre 1s y 3s
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        Thread autobusesThread = new Thread(() -> {
+            for (int i = 0; i < 4000; i++) {
+                if (i % 2 == 0) {
+                    new Autobus(i, aeropuertoMadrid).start();
+                } else {
+                   new Autobus(i, aeropuertoBarcelona).start();
+                }
+                try {
+                    Thread.sleep(500 + new Random().nextInt(501)); // intervalo entre 0,5s y 1s
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        avionesThread.start();
+        autobusesThread.start();
     }
 
     /**
@@ -329,10 +375,22 @@ public class Ventana extends javax.swing.JFrame {
 
         jLabel8.setText("Transfers Ciudad:");
 
+        busesAM.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                busesAMActionPerformed(evt);
+            }
+        });
+
         labelAMadrid.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 14)); // NOI18N
         labelAMadrid.setText("Aeropuerto de Madrid");
 
         jLabel3.setText("Nº de pasajeros:");
+
+        pasajerosM.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pasajerosMActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Hangar:");
 
@@ -653,6 +711,15 @@ public class Ventana extends javax.swing.JFrame {
         botonRenaudar.setEnabled(false);
         botonPausar.setEnabled(true);
     }//GEN-LAST:event_botonRenaudarActionPerformed
+
+    private void busesAMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busesAMActionPerformed
+        
+    }//GEN-LAST:event_busesAMActionPerformed
+
+    private void pasajerosMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pasajerosMActionPerformed
+        
+        
+    }//GEN-LAST:event_pasajerosMActionPerformed
 
     /**
      * @param args the command line arguments
