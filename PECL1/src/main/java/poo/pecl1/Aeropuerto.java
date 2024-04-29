@@ -48,6 +48,14 @@ public class Aeropuerto {
         return aerovia;
     }
 
+    public ConcurrentLinkedQueue<Avion> getHangar() {
+        return hangar;
+    }
+
+    public void setHangar(ConcurrentLinkedQueue<Avion> hangar) {
+        this.hangar = hangar;
+    }
+    
     public int getPasajeros() {
         try {
             semaforoPasajeros.acquire();
@@ -60,6 +68,62 @@ public class Aeropuerto {
         }
     }
 
+    public ConcurrentLinkedQueue<Avion> getAreaDeEstacionamiento() {
+        return areaDeEstacionamiento;
+    }
+
+    public void setAreaDeEstacionamiento(ConcurrentLinkedQueue<Avion> areaDeEstacionamiento) {
+        this.areaDeEstacionamiento = areaDeEstacionamiento;
+    }
+
+    public ConcurrentLinkedQueue<Avion> getAvionesTaller() {
+        return avionesTaller;
+    }
+
+    public void setAvionesTaller(ConcurrentLinkedQueue<Avion> avionesTaller) {
+        this.avionesTaller = avionesTaller;
+    }
+
+    public ConcurrentLinkedQueue<Avion> getAreaDeRodaje() {
+        return areaDeRodaje;
+    }
+
+    public void setAreaDeRodaje(ConcurrentLinkedQueue<Avion> areaDeRodaje) {
+        this.areaDeRodaje = areaDeRodaje;
+    }
+
+    public ConcurrentLinkedQueue<Avion> getAvionesAerovia() {
+        return avionesAerovia;
+    }
+
+    public void setAvionesAerovia(ConcurrentLinkedQueue<Avion> avionesAerovia) {
+        this.avionesAerovia = avionesAerovia;
+    }
+
+    public ConcurrentHashMap<Avion, String> getAvionesPuertaEmbarque() {
+        return avionesPuertaEmbarque;
+    }
+
+    public void setAvionesPuertaEmbarque(ConcurrentHashMap<Avion, String> avionesPuertaEmbarque) {
+        this.avionesPuertaEmbarque = avionesPuertaEmbarque;
+    }
+
+    public ConcurrentHashMap<Avion, String> getAvionesPuertaDesembarque() {
+        return avionesPuertaDesembarque;
+    }
+
+    public void setAvionesPuertaDesembarque(ConcurrentHashMap<Avion, String> avionesPuertaDesembarque) {
+        this.avionesPuertaDesembarque = avionesPuertaDesembarque;
+    }
+
+    public HashMap<Avion, String> getDiccionarioPista() {
+        return diccionarioPista;
+    }
+
+    public void setDiccionarioPista(HashMap<Avion, String> diccionarioPista) {
+        this.diccionarioPista = diccionarioPista;
+    }
+ 
     public void setPasajeros(int pasajeros) {
         this.pasajeros = pasajeros;
     }
@@ -105,9 +169,12 @@ public class Aeropuerto {
 
     }
 
-    public void accederHangar(Avion avion) {
+    public void accederHangar(Avion avion) throws InterruptedException {
         hangar.add(avion);
+        System.out.println("el avion se ha añadido correctamente");
+        Thread.sleep(3000);
         hangar.remove(avion);
+        System.out.println("el avion se ha eliminado");
 
     }
 

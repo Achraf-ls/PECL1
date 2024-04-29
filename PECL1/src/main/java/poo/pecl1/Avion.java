@@ -22,18 +22,20 @@ public class Avion extends Thread {
     private Aerovia aerovia;
     private int capacidadMaxima;
     private int numVuelos = 0;
+    private String nombreAvion;
 
     /**
      * Constructor del avion que recibe un avión y un id del mismo
      *
      * @param id
-     * @param aeropuerto
+     * @param aeropuertoOrigen
      */
-    public Avion(int id, Aeropuerto aeropuerto) {
+    public Avion(int id, Aeropuerto aeropuertoOrigen) {
         this.id = id;
         this.aeropuertoOrigen = aeropuertoOrigen;
         this.capacidadMaxima = aleatorio.nextInt(201) + 100;
         this.aeropuertoDestino = aeropuertoOrigen.getAerovia().getAeropuertoDestino();
+        this.nombreAvion = generarNombre(id);
     }
 
     public int getPasajeros() {
@@ -60,10 +62,12 @@ public class Avion extends Thread {
         this.capacidadMaxima = capacidadMaxima;
     }
 
+    public String getNombreAvion() {
+        return nombreAvion;
+    }
+
     //Tarea ejecutada por el avión
     public void run() {
-        //Generamos un el nombre del avión 
-        String nombreAvion = generarNombre(id);
         //Creamos un contador para contar el número de vuelos realizados
         //Una vez alcanzado 15 vuelos entra al taller
         int contador = 0;
@@ -116,7 +120,6 @@ public class Avion extends Thread {
                 aeropuertoAux = aeropuertoDestino;
                 aeropuertoDestino = aeropuertoOrigen;
                 aeropuertoOrigen = aeropuertoAux;
-                
 
             }
         } catch (InterruptedException e) {

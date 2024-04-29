@@ -682,9 +682,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="busesAM">
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="busesAMActionPerformed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="busesCM">
             </Component>
@@ -702,9 +699,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="pasajerosM">
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pasajerosMActionPerformed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
