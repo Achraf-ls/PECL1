@@ -13,25 +13,42 @@ import java.util.logging.Logger;
  * @author Achraf El Idrissi y Gisela González
  */
 public class Autobus extends Thread {
+    
     private int id;
+    private int pasajeros;    
+    
     private Aeropuerto aeropuerto;
-    private int pasajeros;
     private String nombreBus;
     
+    /**
+     * Constructor del autobus que recibe un id de este y el aeropuerto con el que se comunica
+     * @param id
+     * @param aeropuerto 
+     */
     public Autobus(int id, Aeropuerto aeropuerto) {
         this.id = id;
         this.aeropuerto = aeropuerto;
     }
 
-    
+    /**
+     * Metodo get para el numero de pasajeros del autobus
+     * @return pasajeros, numero de pasajeros del autobus
+     */
     public int getPasajeros() {
         return pasajeros;
     }
 
+    /**
+     * Metodo set para el numero de pasajeros del autobus
+     * @param pasajeros 
+     */
     public void setPasajeros(int pasajeros) {
         this.pasajeros = pasajeros;
     }
     
+    /**
+     * Metodo run que difine la tarea ejecutada por el autobus
+     */
     public void run(){
         nombreBus = String.format("B-%04d", id);
         try {
@@ -49,24 +66,42 @@ public class Autobus extends Thread {
         }
     }
     
+    /**
+     * Metodo para que el autobus llegue a la parada y espere a los pasajeros
+     * @throws InterruptedException 
+     */
     private void llegar() throws InterruptedException{
         Thread.sleep(2000 + new Random().nextInt(3001)); //llega a la parada y espera
         System.out.println("llega y espera");
     }
     
+    /**
+     * Metodo que define el numero de pasajeros que se suben al bus y los añade a este
+     */
     private void subirPasajeros(){
         pasajeros = new Random().nextInt(51); //se montan entre 0 y 50 pasajeros   
         System.out.println("Se han subido" + pasajeros);
     }
     
+    /**
+     * Metodo para que el autobus haga su recorrido
+     * @throws InterruptedException 
+     */
     private void viajar() throws InterruptedException{
         Thread.sleep(5000 + new Random().nextInt(5001)); // va o vuelve del aeropuerto      
     }
     
+    /**
+     * Metodo para bajar los pasajeros del bus y añadirlos al aeropuerto
+     */
     private void bajarPasajeros(){
         aeropuerto.bajarPasajerosBus(this); // entran los pasajeros al aeropuerto        
     }
     
+    /**
+     * Metodo para subir a ciertos pasajeros al bus y eliminarlos del aeropuerto
+     * @throws InterruptedException 
+     */
     private void subirNuevos() throws InterruptedException{
         Thread.sleep(2000 + new Random().nextInt(3001)); //se montan nuevos pasajeros 
         pasajeros = new Random().nextInt(51);

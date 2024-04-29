@@ -13,19 +13,23 @@ import java.util.Random;
 public class Avion extends Thread {
 
     private Random aleatorio = new Random();
-    private String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    private String letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private String nombreAvion;
+
     private int id;
+    private int pasajeros;
+    private int capacidadMaxima;
+    private int numVuelos = 0;
+
     private Aeropuerto aeropuertoOrigen;
     private Aeropuerto aeropuertoDestino;
     private Aeropuerto aeropuertoAux;
-    private int pasajeros;
+
     private Aerovia aerovia;
-    private int capacidadMaxima;
-    private int numVuelos = 0;
-    private String nombreAvion;
 
     /**
-     * Constructor del avion que recibe un avión y un id del mismo
+     * Constructor del avion que recibe un aeropuerto y un id del mismo
      *
      * @param id
      * @param aeropuertoOrigen
@@ -38,39 +42,74 @@ public class Avion extends Thread {
         this.nombreAvion = generarNombre(id);
     }
 
+    /**
+     * Metodo get para el numero de pasajeros del avion
+     *
+     * @return pasajeros, el numero de pasajeros del avion
+     */
     public int getPasajeros() {
         return pasajeros;
     }
 
+    /**
+     * Metodo get para el numero de vuelos que lleva un avion
+     *
+     * @return numVuelos, numero de vuelos que lleva el avion
+     */
     public int getNumVuelos() {
         return numVuelos;
     }
 
-    public void setPasajeros(int pasajeros) {
-        this.pasajeros = pasajeros;
-    }
-
-    public void setNumVuelos(int numVuelos) {
-        this.numVuelos = numVuelos;
-    }
-
+    /**
+     * Metodo get para la capacidad maxima del avion
+     *
+     * @return capacidadMaxima, psasjeros que admite el avion como maximo
+     */
     public int getCapacidadMaxima() {
         return capacidadMaxima;
     }
 
-    public void setCapacidadMaxima(int capacidadMaxima) {
-        this.capacidadMaxima = capacidadMaxima;
-    }
-
+    /**
+     * Metodo get para el nombre del avion
+     *
+     * @return nombreAvion, nombre del avion compuesto por su id y varias letras
+     */
     public String getNombreAvion() {
         return nombreAvion;
     }
 
-    //Tarea ejecutada por el avión
+    /**
+     * Metodo set para los pasajeros de un avion
+     *
+     * @param pasajeros
+     */
+    public void setPasajeros(int pasajeros) {
+        this.pasajeros = pasajeros;
+    }
+
+    /**
+     * Metodo set para el numero de vuelos que lleva el avion
+     *
+     * @param numVuelos
+     */
+    public void setNumVuelos(int numVuelos) {
+        this.numVuelos = numVuelos;
+    }
+
+    /**
+     * Metodo set para la capacidad maxima del avion
+     *
+     * @param capacidadMaxima
+     */
+    public void setCapacidadMaxima(int capacidadMaxima) {
+        this.capacidadMaxima = capacidadMaxima;
+    }
+
+    /**
+     * Metodo run que define la tarea ejecutada por el avion
+     */
+    @Override
     public void run() {
-        //Creamos un contador para contar el número de vuelos realizados
-        //Una vez alcanzado 15 vuelos entra al taller
-        int contador = 0;
         boolean primerVuelo = true;
         try {
             while (true) {
@@ -129,54 +168,67 @@ public class Avion extends Thread {
 
     }
 
-    //Método para acceder al Hangar del aeropuerto
-    public void accederHangar() {
+    /**
+     * Metodo para acceder al hangar del aeropuerto
+     * @throws java.lang.InterruptedException
+     */
+    public void accederHangar() throws InterruptedException {
         aeropuertoDestino.accederHangar(this);
     }
 
-    //Método para acceder al área de estacionamiento
+    /**
+     * Metodo para acceder al area de estacionamiento
+     */
     public void accederAreaEstacionamiento() {
         aeropuertoDestino.accederAreaEstacionamiento(this);
-
     }
 
-    //Método para acceder al área de rodaje
+    /**
+     * Metodo para acceder al area de rodaje
+     */
     public void accederAreaRodaje() {
         aeropuertoDestino.areaRodaje(this);
     }
 
-    //Método para intentar adquirir una pista para despegar
+    /**
+     * Metodo para intentar adquirir una pista para despegar
+     */
     public void adquirirPistaDespegue() {
         aeropuertoDestino.adquirirPistaDespegue(this);
     }
 
-    //Método para que el avión despegue
+    /**
+     * Metodo para que el avión despegue
+     */
     public void despegarAvion() {
         aeropuertoDestino.despegarAvion(this);
     }
 
-    //Método para acceder a las puertas de embarque
+    /**
+     * Metodo para acceder a las puertas de embarque
+     */
     public void accederPuertaEmbarque() {
         aeropuertoDestino.accederPuertaDesembarque(this);
     }
 
-    //Método para acceder al taller
+    /**
+     * Metodo para acceder al taller
+     */
     public void accederTaller() {
         aeropuertoDestino.accederTaller(this);
     }
 
-    //Método para crear el nombre del avión 
     /**
-     * Recibe el id del avión y mediante la generación aleatoria de dos
-     * cáracteres se genera el nombre del avión
+     * Metodo para crear el nombre del avion a partir de un id asigando y 2
+     * letras aleatorias
      *
      * @param id recibe un identificador del avión
      * @return devuelve el nombre del avión
      */
     public String generarNombre(int id) {
         StringBuilder sb = new StringBuilder();
-        sb.append(alphabet.charAt(aleatorio.nextInt(alphabet.length()))); // Primer carácter aleatorio
-        sb.append(alphabet.charAt(aleatorio.nextInt(alphabet.length()))); // Segundo carácter aleatorio
+        sb.append(letras.charAt(aleatorio.nextInt(letras.length()))); // Primer carácter aleatorio
+        sb.append(letras.charAt(aleatorio.nextInt(letras.length()))); // Segundo carácter aleatorio
         sb.append("-");
         sb.append(String.format("%04d", id));
         return sb.toString();

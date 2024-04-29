@@ -9,26 +9,43 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
- * @author achra
+ * @author Achraf El Idrissi y Gisela González
  */
 public class Aerovia {
+    
     private Random aleatorio = new Random();
     private Aeropuerto aeropuertoDestino;
     private ConcurrentLinkedQueue<Avion> avionesAerovia = new ConcurrentLinkedQueue();
 
+    /**
+     * Constructor de la aerovia que recibe el aeropuerto de destino de esta
+     * @param aeropuertoDestino 
+     */
     public Aerovia(Aeropuerto aeropuertoDestino) {
         this.aeropuertoDestino = aeropuertoDestino;
     }
 
+    /**
+     * Metodo get para la lista de aviones que se encuentran en la aerovia
+     * @return avionesAerovia, lista de aviones que se encuentran en esta
+     */
     public ConcurrentLinkedQueue<Avion> getAvionesAerovia() {
         return avionesAerovia;
     }
 
+    /**
+     * Metodo get para el aeropuerto de destino
+     * @return aeropuertoDestino, aeropuerto destino de la aerovia
+     */
     public Aeropuerto getAeropuertoDestino() {
         return aeropuertoDestino;
     }
     
-    
+    /**
+     * Metodo para que un avion acceda y salga de la aerovia
+     * @param avion
+     * @throws InterruptedException 
+     */
     public void accederAerovia(Avion avion) throws InterruptedException{
         //Añadimos el avión a la aerovia
         avionesAerovia.add(avion);

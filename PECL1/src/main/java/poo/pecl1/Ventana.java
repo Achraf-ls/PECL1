@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 /**
@@ -20,6 +19,7 @@ public class Ventana extends javax.swing.JFrame {
 
     Aeropuerto aeropuertoMadrid = new Aeropuerto();
     Aeropuerto aeropuertoBarcelona = new Aeropuerto();
+
     Aerovia aeroviaMadBar = new Aerovia(aeropuertoBarcelona);
     Aerovia aeroviaBarMad = new Aerovia(aeropuertoMadrid);
 
@@ -33,6 +33,9 @@ public class Ventana extends javax.swing.JFrame {
 
     }
 
+    /**
+     * Metodo para iniciar la ventana y los hilos del programa
+     */
     public void inicializar() {
         botonRenaudar.setEnabled(false);
         this.setLocationRelativeTo(null);
@@ -76,6 +79,9 @@ public class Ventana extends javax.swing.JFrame {
         autobusesThread.start();
     }
 
+    /**
+     * Metodo para obtener todos los datos necesarios, mostrarlos en los JTextFields y actualizarlos cada cierto tiempo
+     */
     public void obtener() {
         Timer timer = new Timer(500, new ActionListener() {
             @Override
@@ -84,11 +90,16 @@ public class Ventana extends javax.swing.JFrame {
                 pasajerosB.setText(Integer.toString(aeropuertoBarcelona.getPasajeros()));
                 obtenerHangarM();
                 obtenerHangarB();
+                obtenerTallerM();
+                obtenerTallerB();
             }
         });
         timer.start();
     }
 
+    /**
+     * Metodo para obtener un String con los aviones que se encuentran en el hangar del aeropuerto de Madrid
+     */
     public void obtenerHangarM() {
         ConcurrentLinkedQueue<Avion> hangar = aeropuertoMadrid.getHangar();
         StringBuilder avionesHangar = new StringBuilder();
@@ -101,9 +112,12 @@ public class Ventana extends javax.swing.JFrame {
         if (avionesHangar.length() > 0) {
             avionesHangar.delete(avionesHangar.length() - 2, avionesHangar.length());
         }
-            hangarM.setText(avionesHangar.toString());
+        hangarM.setText(avionesHangar.toString());
     }
-    
+
+    /**
+     * Metodo para obtener un String con los aviones que se encuentran en el hangar del aeropuerto de Barcelona
+     */
     public void obtenerHangarB() {
         ConcurrentLinkedQueue<Avion> hangar = aeropuertoBarcelona.getHangar();
         StringBuilder avionesHangar = new StringBuilder();
@@ -116,7 +130,43 @@ public class Ventana extends javax.swing.JFrame {
         if (avionesHangar.length() > 0) {
             avionesHangar.delete(avionesHangar.length() - 2, avionesHangar.length());
         }
-            hangarB.setText(avionesHangar.toString());
+        hangarB.setText(avionesHangar.toString());
+    }
+    
+    /**
+     * Metodo para obtener un String con los aviones que se encuentran en el taller del aeropuerto de Madrid
+     */
+    public void obtenerTallerM(){
+        ConcurrentLinkedQueue<Avion> taller = aeropuertoMadrid.getAvionesTaller();
+        StringBuilder avionesTaller = new StringBuilder();
+
+        for (Avion avion : taller) {
+            avionesTaller.append(avion.getNombreAvion());
+            avionesTaller.append(", ");
+        }
+
+        if (avionesTaller.length() > 0) {
+            avionesTaller.delete(avionesTaller.length() - 2, avionesTaller.length());
+        }
+        tallerM.setText(avionesTaller.toString());
+    }
+    
+    /**
+     * Metodo para obtener un String con los aviones que se encuentran en el taller del aeropuerto de Barcelona
+     */
+    public void obtenerTallerB(){
+        ConcurrentLinkedQueue<Avion> taller = aeropuertoBarcelona.getAvionesTaller();
+        StringBuilder avionesTaller = new StringBuilder();
+
+        for (Avion avion : taller) {
+            avionesTaller.append(avion.getNombreAvion());
+            avionesTaller.append(", ");
+        }
+
+        if (avionesTaller.length() > 0) {
+            avionesTaller.delete(avionesTaller.length() - 2, avionesTaller.length());
+        }
+        tallerB.setText(avionesTaller.toString());
     }
 
     /**
