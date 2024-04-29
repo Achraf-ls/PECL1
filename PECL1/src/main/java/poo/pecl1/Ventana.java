@@ -6,7 +6,9 @@ package poo.pecl1;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.swing.Timer;
 
@@ -80,7 +82,8 @@ public class Ventana extends javax.swing.JFrame {
     }
 
     /**
-     * Metodo para obtener todos los datos necesarios, mostrarlos en los JTextFields y actualizarlos cada cierto tiempo
+     * Metodo para obtener todos los datos necesarios, mostrarlos en los
+     * JTextFields y actualizarlos cada cierto tiempo
      */
     public void obtener() {
         Timer timer = new Timer(500, new ActionListener() {
@@ -90,16 +93,24 @@ public class Ventana extends javax.swing.JFrame {
                 pasajerosB.setText(Integer.toString(aeropuertoBarcelona.getPasajeros()));
                 obtenerHangarM();
                 obtenerHangarB();
-                //no funciona el taller
                 obtenerTallerM();
                 obtenerTallerB();
+                obtenerAreaEstacionamientoM();
+                obtenerAreaEstacionamientoB();
+                obtenerAreaRodajeM();
+                obtenerAreaRodajeB();
+                obtenerAeroviaMB();
+                obtenerAeroviaBM();
+                obtenerPistasM();
+                obtenerPistasB();
             }
         });
         timer.start();
     }
 
     /**
-     * Metodo para obtener un String con los aviones que se encuentran en el hangar del aeropuerto de Madrid
+     * Metodo para obtener un String con los aviones que se encuentran en el
+     * hangar del aeropuerto de Madrid
      */
     public void obtenerHangarM() {
         ConcurrentLinkedQueue<Avion> hangar = aeropuertoMadrid.getHangar();
@@ -117,7 +128,8 @@ public class Ventana extends javax.swing.JFrame {
     }
 
     /**
-     * Metodo para obtener un String con los aviones que se encuentran en el hangar del aeropuerto de Barcelona
+     * Metodo para obtener un String con los aviones que se encuentran en el
+     * hangar del aeropuerto de Barcelona
      */
     public void obtenerHangarB() {
         ConcurrentLinkedQueue<Avion> hangar = aeropuertoBarcelona.getHangar();
@@ -133,11 +145,12 @@ public class Ventana extends javax.swing.JFrame {
         }
         hangarB.setText(avionesHangar.toString());
     }
-    
+
     /**
-     * Metodo para obtener un String con los aviones que se encuentran en el taller del aeropuerto de Madrid
+     * Metodo para obtener un String con los aviones que se encuentran en el
+     * taller del aeropuerto de Madrid
      */
-    public void obtenerTallerM(){
+    public void obtenerTallerM() {
         ConcurrentLinkedQueue<Avion> taller = aeropuertoMadrid.getAvionesTaller();
         StringBuilder avionesTaller = new StringBuilder();
 
@@ -151,11 +164,12 @@ public class Ventana extends javax.swing.JFrame {
         }
         tallerM.setText(avionesTaller.toString());
     }
-    
+
     /**
-     * Metodo para obtener un String con los aviones que se encuentran en el taller del aeropuerto de Barcelona
+     * Metodo para obtener un String con los aviones que se encuentran en el
+     * taller del aeropuerto de Barcelona
      */
-    public void obtenerTallerB(){
+    public void obtenerTallerB() {
         ConcurrentLinkedQueue<Avion> taller = aeropuertoBarcelona.getAvionesTaller();
         StringBuilder avionesTaller = new StringBuilder();
 
@@ -168,6 +182,144 @@ public class Ventana extends javax.swing.JFrame {
             avionesTaller.delete(avionesTaller.length() - 2, avionesTaller.length());
         }
         tallerB.setText(avionesTaller.toString());
+    }
+
+    public void obtenerAreaEstacionamientoM() {
+        ConcurrentLinkedQueue<Avion> area = aeropuertoMadrid.getAreaDeEstacionamiento();
+        StringBuilder avionesArea = new StringBuilder();
+
+        for (Avion avion : area) {
+            avionesArea.append(avion.getNombreAvion());
+            avionesArea.append(", ");
+        }
+
+        if (avionesArea.length() > 0) {
+            avionesArea.delete(avionesArea.length() - 2, avionesArea.length());
+        }
+        estacionamientoM.setText(avionesArea.toString());
+    }
+
+    public void obtenerAreaEstacionamientoB() {
+        ConcurrentLinkedQueue<Avion> area = aeropuertoBarcelona.getAreaDeEstacionamiento();
+        StringBuilder avionesArea = new StringBuilder();
+
+        for (Avion avion : area) {
+            avionesArea.append(avion.getNombreAvion());
+            avionesArea.append(", ");
+        }
+
+        if (avionesArea.length() > 0) {
+            avionesArea.delete(avionesArea.length() - 2, avionesArea.length());
+        }
+        estacionamientoB.setText(avionesArea.toString());
+    }
+
+    public void obtenerAreaRodajeM() {
+        ConcurrentLinkedQueue<Avion> area = aeropuertoMadrid.getAreaDeRodaje();
+        StringBuilder avionesArea = new StringBuilder();
+
+        for (Avion avion : area) {
+            avionesArea.append(avion.getNombreAvion());
+            avionesArea.append(", ");
+        }
+
+        if (avionesArea.length() > 0) {
+            avionesArea.delete(avionesArea.length() - 2, avionesArea.length());
+        }
+        areaRodajeM.setText(avionesArea.toString());
+    }
+
+    public void obtenerAreaRodajeB() {
+        ConcurrentLinkedQueue<Avion> area = aeropuertoBarcelona.getAreaDeRodaje();
+        StringBuilder avionesArea = new StringBuilder();
+
+        for (Avion avion : area) {
+            avionesArea.append(avion.getNombreAvion());
+            avionesArea.append(", ");
+        }
+
+        if (avionesArea.length() > 0) {
+            avionesArea.delete(avionesArea.length() - 2, avionesArea.length());
+        }
+        areaRodajeB.setText(avionesArea.toString());
+    }
+
+    public void obtenerAeroviaMB() {
+        ConcurrentLinkedQueue<Avion> aerovia = aeropuertoMadrid.getAvionesAerovia();
+        StringBuilder avionesAerovia = new StringBuilder();
+
+        for (Avion avion : aerovia) {
+            avionesAerovia.append(avion.getNombreAvion());
+            avionesAerovia.append(", ");
+        }
+
+        if (avionesAerovia.length() > 0) {
+            avionesAerovia.delete(avionesAerovia.length() - 2, avionesAerovia.length());
+        }
+        aeroviaMB.setText(avionesAerovia.toString());
+    }
+
+    public void obtenerAeroviaBM() {
+        ConcurrentLinkedQueue<Avion> aerovia = aeropuertoBarcelona.getAvionesAerovia();
+        StringBuilder avionesAerovia = new StringBuilder();
+
+        for (Avion avion : aerovia) {
+            avionesAerovia.append(avion.getNombreAvion());
+            avionesAerovia.append(", ");
+        }
+
+        if (avionesAerovia.length() > 0) {
+            avionesAerovia.delete(avionesAerovia.length() - 2, avionesAerovia.length());
+        }
+        aeroviaBM.setText(avionesAerovia.toString());
+    }
+
+    public void obtenerPuertasM() {
+        //
+    }
+
+    public void obtenerPistasM() {
+        ConcurrentHashMap<Avion, String> avionesPista = aeropuertoMadrid.getAvionesPista();
+        ArrayList<Avion> aviones = new ArrayList<>(avionesPista.keySet());
+
+        for (int i = 0; i < aviones.size(); i ++) {
+            Avion avion = aviones.get(i);
+            String valor = avionesPista.get(avion);  
+            String texto = valor + ": " + avion.getNombreAvion();
+            
+            if(pista1M.getText().isEmpty()){
+                pista1M.setText(texto);
+            }else if(pista2M.getText().isEmpty()){
+                pista2M.setText(texto);
+            }else if(pista3M.getText().isEmpty()){
+                pista3M.setText(texto);
+            }else{
+                pista4M.setText(texto);
+            }
+        }
+
+    }
+    
+    public void obtenerPistasB() {
+        ConcurrentHashMap<Avion, String> avionesPista = aeropuertoBarcelona.getAvionesPista();
+        ArrayList<Avion> aviones = new ArrayList<>(avionesPista.keySet());
+
+        for (int i = 0; i < aviones.size(); i ++) {
+            Avion avion = aviones.get(i);
+            String valor = avionesPista.get(avion);  
+            String texto = valor + ": " + avion.getNombreAvion();
+            
+            if(pista1B.getText().isEmpty()){
+                pista1B.setText(texto);
+            }else if(pista2B.getText().isEmpty()){
+                pista2B.setText(texto);
+            }else if(pista3B.getText().isEmpty()){
+                pista3B.setText(texto);
+            }else{
+                pista4B.setText(texto);
+            }
+        }
+
     }
 
     /**
