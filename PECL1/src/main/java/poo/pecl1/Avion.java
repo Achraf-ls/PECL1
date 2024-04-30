@@ -4,6 +4,7 @@
  */
 package poo.pecl1;
 
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -17,7 +18,7 @@ public class Avion extends Thread {
     private String letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private String nombreAvion;
 
-    private int id;
+    private int idAvion;
     private int pasajeros;
     private int capacidadMaxima;
     private int numVuelos = 0;
@@ -31,15 +32,15 @@ public class Avion extends Thread {
     /**
      * Constructor del avion que recibe un aeropuerto y un id del mismo
      *
-     * @param id
+     * @param idAvion
      * @param aeropuertoOrigen
      */
-    public Avion(int id, Aeropuerto aeropuertoOrigen) {
-        this.id = id;
+    public Avion(int idAvion, Aeropuerto aeropuertoOrigen) {
+        this.idAvion = idAvion;
         this.aeropuertoOrigen = aeropuertoOrigen;
         this.capacidadMaxima = aleatorio.nextInt(201) + 100;
         this.aeropuertoDestino = aeropuertoOrigen.getAerovia().getAeropuertoDestino();
-        this.nombreAvion = generarNombre(id);
+        this.nombreAvion = generarNombre(idAvion);
     }
 
     /**
@@ -58,6 +59,10 @@ public class Avion extends Thread {
      */
     public int getNumVuelos() {
         return numVuelos;
+    }
+
+    public int getIdAvion() {
+        return idAvion;
     }
 
     /**
@@ -170,45 +175,46 @@ public class Avion extends Thread {
 
     /**
      * Metodo para acceder al hangar del aeropuerto
+     *
      * @throws java.lang.InterruptedException
      */
     public void accederHangar() throws InterruptedException {
-        aeropuertoDestino.accederHangar(this);
+        aeropuertoOrigen.accederHangar(this);
     }
 
     /**
      * Metodo para acceder al area de estacionamiento
      */
     public void accederAreaEstacionamiento() {
-        aeropuertoDestino.accederAreaEstacionamiento(this);
+        aeropuertoOrigen.accederAreaEstacionamiento(this);
     }
 
     /**
      * Metodo para acceder al area de rodaje
      */
     public void accederAreaRodaje() {
-        aeropuertoDestino.areaRodaje(this);
+        aeropuertoOrigen.areaRodaje(this);
     }
 
     /**
      * Metodo para intentar adquirir una pista para despegar
      */
     public void adquirirPistaDespegue() {
-        aeropuertoDestino.adquirirPistaDespegue(this);
+        aeropuertoOrigen.adquirirPistaDespegue(this);
     }
 
     /**
      * Metodo para que el avión despegue
      */
     public void despegarAvion() {
-        aeropuertoDestino.despegarAvion(this);
+        aeropuertoOrigen.despegarAvion(this);
     }
 
     /**
      * Metodo para acceder a las puertas de embarque
      */
     public void accederPuertaEmbarque() {
-        aeropuertoDestino.accederPuertaDesembarque(this);
+        aeropuertoOrigen.accederPuertaEmbarque(this);
     }
 
     /**
@@ -233,5 +239,19 @@ public class Avion extends Thread {
         sb.append(String.format("%04d", id));
         return sb.toString();
 
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Avion avion = (Avion) obj;
+        // Aquí puedes comparar los campos que determinan la igualdad de los aviones.
+        // Por ejemplo, si los aviones son iguales si tienen el mismo nombre, puedes hacer:
+        return Objects.equals(nombreAvion, avion.nombreAvion);
     }
 }

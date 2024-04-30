@@ -4,10 +4,14 @@
  */
 package poo.pecl1;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  *
@@ -36,7 +40,22 @@ public class Aeropuerto {
 
     private ConcurrentHashMap<Avion, String> avionesPuertaEmbarque = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Avion, String> avionesPuertaDesembarque = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<Avion, String> avionesPista = new ConcurrentHashMap<>();
+
+    // Crear el ArrayList con 4 posiciones null
+    ArrayList<Avion> listaPista = new ArrayList<Avion>(Arrays.asList(new Avion[4]));
+
+    private ReentrantReadWriteLock lockPista = new ReentrantReadWriteLock();
+    Lock lecturaPista = lockPista.readLock();
+    Lock escrituraPista = lockPista.writeLock();
+
+    public ArrayList<Avion> getListaPista() {
+        try {
+            lecturaPista.lock();
+            return listaPista;
+        } finally {
+            lecturaPista.unlock();
+        }
+    }
 
     /**
      * Metodo get para la aerovía asignada al aeropuerto
@@ -132,16 +151,6 @@ public class Aeropuerto {
     }
 
     /**
-     * Metodo get para los aviones en las pistas
-     *
-     * @return avionesPista, HashMap de aviones que se encuentran en las pistas
-     * con el avion y su accion (despegue/aterrizaje)
-     */
-    public ConcurrentHashMap<Avion, String> getAvionesPista() {
-        return avionesPista;
-    }
-
-    /**
      * Metodo set para la lista de aviones que se encuentran en el hangar
      *
      * @param hangar
@@ -208,13 +217,8 @@ public class Aeropuerto {
         this.avionesPuertaDesembarque = avionesPuertaDesembarque;
     }
 
-    /**
-     * Metodo set para el HashMap de aviones que se encuentran en las pistas
-     *
-     * @param avionesPista
-     */
-    public void setAvionesPista(ConcurrentHashMap<Avion, String> avionesPista) {
-        this.avionesPista = avionesPista;
+    public void setListaPista(ArrayList<Avion> listaPista) {
+        this.listaPista = listaPista;
     }
 
     /**
@@ -315,7 +319,7 @@ public class Aeropuerto {
 
             System.out.println("avion en taller");
             avionesTaller.add(avion);
-            
+
             if (avion.getNumVuelos() == 15) {
                 //Como el valor de contador de vuelos es igual a 15 se realiza una inspección en profundidad
                 //El avión tarda entre 5 y 10 segundos en realizar una inspección en profundidad
@@ -418,39 +422,56 @@ public class Aeropuerto {
      */
     public void despegarAvion(Avion avion) {
         try {
-            //El avión tarda entre 1 y 5 segundos en despegar
+            // El avión tarda entre 1 y 5 segundos en despegar
             int tiempoDespegue = aleatorio.nextInt(5) + 1;
             Thread.sleep(1000 * tiempoDespegue);
-            //El avión despega y la pista queda libre
+
+            // Adquirir el bloqueo de escritura antes de modificar listaPista
+            escrituraPista.lock();
+            try {
+                // El avión despega y la pista queda libre
+                for (int i = 0; i < listaPista.size(); i++) {
+                    Avion avionEnPista = listaPista.get(i);
+                    if (avionEnPista != null && avionEnPista.getIdAvion() == avion.getIdAvion()) {
+                        listaPista.set(i, null); // Elimina el avión de la pista
+                        break; // Sal del bucle una vez que hayas eliminado el avión
+                    }
+                }
+            } finally {
+                escrituraPista.unlock(); // Asegúrate de liberar el bloqueo incluso si ocurre una excepción
+            }
+
+            // Libera la pista para que otros aviones puedan usarla
             pista.release();
-            //Se elimina el avión de la lista
-            avionesPista.remove(avion);
         } catch (InterruptedException e) {
             System.out.println(e);
         }
-
     }
 
-    /**
-     * Metodo para acceder a una pista de despegue
-     *
-     * @param avion
-     */
     public void adquirirPistaDespegue(Avion avion) {
         try {
-            //Intentamos adquirir la pista
+            // Intenta adquirir la pista
             pista.acquire();
-            //Eliminamos el avión de el área de rodaje
-            areaDeRodaje.remove(avion);
-            while (avionesPista.size() == 4) {
-            }
-            //Se añade el avión en la lista
-            avionesPista.put(avion, "Despegue");
 
+            // Elimina el avión del área de rodaje
+            areaDeRodaje.remove(avion);
+
+            // Adquiere el bloqueo de escritura antes de modificar listaPista
+            escrituraPista.lock();
+            try {
+                // Añade el avión a la primera pista disponible
+                for (int i = 0; i < listaPista.size(); i++) {
+                    if (listaPista.get(i) == null) {
+                        listaPista.set(i, avion); // Añade el avión en la primera posición null que encuentre
+                        break; // Sal del bucle una vez que hayas añadido el avión
+                    }
+                }
+            } finally {
+                escrituraPista.unlock(); // Asegúrate de liberar el bloqueo incluso si ocurre una excepción
+            }
         } catch (InterruptedException e) {
             System.out.println(e);
         }
-
     }
 
     /**
@@ -471,7 +492,7 @@ public class Aeropuerto {
 
             }
             //Si hay una pista disponible este accede a ella
-            avionesPista.put(avion, "Aterrizaje");
+
             //El avión aterriza durante un tiempo de entre 1 y 5 segundos
             int tiempoAterrizaje = aleatorio.nextInt(5) + 1;
             Thread.sleep(1000 * tiempoAterrizaje);
@@ -488,7 +509,12 @@ public class Aeropuerto {
      * @param avion
      */
     public void accederAreaEstacionamiento(Avion avion) {
-        areaDeEstacionamiento.add(avion);
+        try {
+            areaDeEstacionamiento.add(avion);
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            System.out.println(e);
+        }
     }
 
     /**

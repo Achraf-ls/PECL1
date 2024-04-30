@@ -9,6 +9,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.target>19</maven.compiler.target>
-        <exec.mainClass>poo.pecl1.PECL1</exec.mainClass>
+        <exec.mainClass>poo.pecl1.Ventana</exec.mainClass>
     </properties>
 </project>

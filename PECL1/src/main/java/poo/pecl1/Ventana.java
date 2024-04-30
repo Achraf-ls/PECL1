@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 /**
@@ -86,26 +87,38 @@ public class Ventana extends javax.swing.JFrame {
      * JTextFields y actualizarlos cada cierto tiempo
      */
     public void obtener() {
-        Timer timer = new Timer(500, new ActionListener() {
+        Thread thread = new Thread(new Runnable() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                pasajerosM.setText(Integer.toString(aeropuertoMadrid.getPasajeros()));
-                pasajerosB.setText(Integer.toString(aeropuertoBarcelona.getPasajeros()));
-                obtenerHangarM();
-                obtenerHangarB();
-                obtenerTallerM();
-                obtenerTallerB();
-                obtenerAreaEstacionamientoM();
-                obtenerAreaEstacionamientoB();
-                obtenerAreaRodajeM();
-                obtenerAreaRodajeB();
-                obtenerAeroviaMB();
-                obtenerAeroviaBM();
-                obtenerPistasM();
-                obtenerPistasB();
+            public void run() {
+                while (true) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            pasajerosM.setText(Integer.toString(aeropuertoMadrid.getPasajeros()));
+                            pasajerosB.setText(Integer.toString(aeropuertoBarcelona.getPasajeros()));
+                            obtenerHangarM();
+                            obtenerHangarB();
+                            obtenerTallerM();
+                            obtenerTallerB();
+                            obtenerAreaEstacionamientoM();
+                            obtenerAreaEstacionamientoB();
+                            obtenerAreaRodajeM();
+                            obtenerAreaRodajeB();
+                            obtenerAeroviaMB();
+                            obtenerAeroviaBM();
+                            obtenerPistasM();
+                            obtenerPistasB();
+                        }
+                    });
+                    try {
+                        Thread.sleep(25);  // Espera medio segundo antes de la próxima actualización
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
-        timer.start();
+        thread.start();
     }
 
     /**
@@ -277,49 +290,67 @@ public class Ventana extends javax.swing.JFrame {
     public void obtenerPuertasM() {
         //
     }
-
-    public void obtenerPistasM() {
-        ConcurrentHashMap<Avion, String> avionesPista = aeropuertoMadrid.getAvionesPista();
-        ArrayList<Avion> aviones = new ArrayList<>(avionesPista.keySet());
-
-        for (int i = 0; i < aviones.size(); i ++) {
-            Avion avion = aviones.get(i);
-            String valor = avionesPista.get(avion);  
-            String texto = valor + ": " + avion.getNombreAvion();
-            
-            if(pista1M.getText().isEmpty()){
-                pista1M.setText(texto);
-            }else if(pista2M.getText().isEmpty()){
-                pista2M.setText(texto);
-            }else if(pista3M.getText().isEmpty()){
-                pista3M.setText(texto);
-            }else{
-                pista4M.setText(texto);
-            }
-        }
-
-    }
     
-    public void obtenerPistasB() {
-        ConcurrentHashMap<Avion, String> avionesPista = aeropuertoBarcelona.getAvionesPista();
-        ArrayList<Avion> aviones = new ArrayList<>(avionesPista.keySet());
+    public void obtenerPistasM() {
+        pista1M.setText("");
+        pista2M.setText("");
+        pista3M.setText("");
+        pista4M.setText("");
+        ArrayList<Avion> avionesPista = aeropuertoMadrid.getListaPista();
+        String valor;
 
-        for (int i = 0; i < aviones.size(); i ++) {
-            Avion avion = aviones.get(i);
-            String valor = avionesPista.get(avion);  
-            String texto = valor + ": " + avion.getNombreAvion();
-            
-            if(pista1B.getText().isEmpty()){
-                pista1B.setText(texto);
-            }else if(pista2B.getText().isEmpty()){
-                pista2B.setText(texto);
-            }else if(pista3B.getText().isEmpty()){
-                pista3B.setText(texto);
-            }else{
-                pista4B.setText(texto);
+        for (int i = 0; i < avionesPista.size(); i++) {
+            if (avionesPista.get(i) != null) {
+                Avion avion = avionesPista.get(i);
+                if (avion.getIdAvion() % 2 == 0) {
+                    valor = "Despegue: ";
+                }else{
+                    valor = "Aterrizaje: ";
+                }
+                String texto = valor + avion.getNombreAvion();
+
+                if ("".equals(pista1M.getText()) && i==0) {
+                    pista1M.setText(texto);
+                } else if ("".equals(pista2M.getText()) && i==1) {
+                    pista2M.setText(texto);
+                } else if ("".equals(pista3M.getText()) && i==2) {
+                    pista3M.setText(texto);
+                } else if ("".equals(pista4M.getText()) && i==3) {
+                    pista4M.setText(texto);
+                }
             }
         }
+    }
 
+    public void obtenerPistasB() {
+        pista1B.setText("");
+        pista2B.setText("");
+        pista3B.setText("");
+        pista4B.setText("");
+        ArrayList<Avion> avionesPista = aeropuertoBarcelona.getListaPista();
+        String valor;
+
+        for (int i = 0; i < avionesPista.size(); i++) {
+            if (avionesPista.get(i) != null) {
+                Avion avion = avionesPista.get(i);
+                if (avion.getIdAvion() % 2 == 0) {
+                    valor = "Aterrizaje: ";
+                }else{
+                    valor = "Despegue: ";
+                }
+                String texto = valor + avion.getNombreAvion();
+
+                if ("".equals(pista1B.getText()) && i==0) {
+                    pista1B.setText(texto);
+                } else if ("".equals(pista2B.getText()) && i==1) {
+                    pista2B.setText(texto);
+                } else if ("".equals(pista3B.getText()) && i==2) {
+                    pista3B.setText(texto);
+                } else if ("".equals(pista4B.getText()) && i==3) {
+                    pista4B.setText(texto);
+                }
+            }
+        }
     }
 
     /**
@@ -967,16 +998,24 @@ public class Ventana extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Ventana.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Ventana.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Ventana.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Ventana.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Ventana.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Ventana.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Ventana.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Ventana.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
