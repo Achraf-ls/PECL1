@@ -314,9 +314,9 @@ public class Parte1 extends javax.swing.JFrame {
                     gate3M.setText(texto);
                 } else if ("".equals(gate4M.getText()) && i == 3) {
                     gate4M.setText(texto);
-                } else if ("".equals(gate5M.getText()) && i == 2) {
+                } else if ("".equals(gate5M.getText()) && i == 4) {
                     gate5M.setText(texto);
-                } else if ("".equals(gate6M.getText()) && i == 3) {
+                } else if ("".equals(gate6M.getText()) && i == 5) {
                     gate6M.setText(texto);
                 }
             }
@@ -352,9 +352,9 @@ public class Parte1 extends javax.swing.JFrame {
                     gate3B.setText(texto);
                 } else if ("".equals(gate4B.getText()) && i == 3) {
                     gate4B.setText(texto);
-                } else if ("".equals(gate5B.getText()) && i == 2) {
+                } else if ("".equals(gate5B.getText()) && i == 4) {
                     gate5B.setText(texto);
-                } else if ("".equals(gate6B.getText()) && i == 3) {
+                } else if ("".equals(gate6B.getText()) && i == 5) {
                     gate6B.setText(texto);
                 }
             }
