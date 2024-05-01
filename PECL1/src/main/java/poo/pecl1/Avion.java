@@ -22,6 +22,7 @@ public class Avion extends Thread {
     private int pasajeros;
     private int capacidadMaxima;
     private int numVuelos = 0;
+    
     private LoggerA loggerA;
 
     private Aeropuerto aeropuertoOrigen;
@@ -66,6 +67,14 @@ public class Avion extends Thread {
 
     public int getIdAvion() {
         return idAvion;
+    }
+
+    public Aerovia getAerovia() {
+        return aerovia;
+    }
+
+    public Aeropuerto getAeropuertoOrigen() {
+        return aeropuertoOrigen;
     }
 
     /**

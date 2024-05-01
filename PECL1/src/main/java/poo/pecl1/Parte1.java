@@ -15,17 +15,18 @@ import javax.swing.SwingUtilities;
  *
  */
 public class Parte1 extends javax.swing.JFrame {
+
     private LoggerA loggerA = new LoggerA("evolucionAeropuerto.txt");
 
-    Aeropuerto aeropuertoMadrid = new Aeropuerto(loggerA,"Madrid");
+    Aeropuerto aeropuertoMadrid = new Aeropuerto(loggerA, "Madrid");
     Aeropuerto aeropuertoBarcelona = new Aeropuerto(loggerA, "Barcelona");
     private Thread avionesThread;
     private Thread autobusesThread;
     private boolean pausado = false;
     private Object lock = new Object();
 
-    Aerovia aeroviaMadBar = new Aerovia(aeropuertoBarcelona);
-    Aerovia aeroviaBarMad = new Aerovia(aeropuertoMadrid);
+    Aerovia aeroviaMadBar = new Aerovia("Madrid-Barcelona", aeropuertoBarcelona, loggerA);
+    Aerovia aeroviaBarMad = new Aerovia("Barcelona-Madrid", aeropuertoMadrid, loggerA);
 
     /**
      * Creates new form Ventana
@@ -61,9 +62,13 @@ public class Parte1 extends javax.swing.JFrame {
                     }
                 }
                 if (i % 2 == 0) {
-                    new Avion(i, aeropuertoMadrid,loggerA).start();
+                    Avion avion = new Avion(i, aeropuertoMadrid, loggerA);
+                    avion.start();
+                    loggerA.logEvent("Avión " + avion.getNombreAvion() + " es creado");
                 } else {
-                    new Avion(i, aeropuertoBarcelona,loggerA).start();
+                    Avion avion = new Avion(i, aeropuertoBarcelona, loggerA);
+                    avion.start();
+                    loggerA.logEvent("Avión " + avion.getNombreAvion() + " es creado");
                 }
                 try {
                     Thread.sleep(1000 + new Random().nextInt(2001)); // intervalo entre 1s y 3s
@@ -85,9 +90,9 @@ public class Parte1 extends javax.swing.JFrame {
                     }
                 }
                 if (i % 2 == 0) {
-                    new Autobus(i,aeropuertoMadrid,loggerA).start();
+                    new Autobus(i, aeropuertoMadrid, loggerA).start();
                 } else {
-                    new Autobus(i, aeropuertoBarcelona,loggerA).start();
+                    new Autobus(i, aeropuertoBarcelona, loggerA).start();
                 }
                 try {
                     Thread.sleep(500 + new Random().nextInt(501)); // intervalo entre 0,5s y 1s

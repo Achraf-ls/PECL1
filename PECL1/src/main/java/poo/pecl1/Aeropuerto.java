@@ -7,7 +7,6 @@ package poo.pecl1;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
@@ -39,7 +38,6 @@ public class Aeropuerto {
     private ConcurrentLinkedQueue<Avion> areaDeRodaje = new ConcurrentLinkedQueue();
     private ConcurrentLinkedQueue<Autobus> busesDirAeropuerto = new ConcurrentLinkedQueue();
     private ConcurrentLinkedQueue<Autobus> busesDirCiudad = new ConcurrentLinkedQueue();
-    
 
     private ArrayList<Avion> avionesPuertas = new ArrayList<Avion>(Arrays.asList(new Avion[6]));
     private ArrayList<Avion> listaPista = new ArrayList<Avion>(Arrays.asList(new Avion[4]));
@@ -55,8 +53,6 @@ public class Aeropuerto {
         this.loggerA = loggerA;
         this.nombreAeropuerto = nombreAeropuerto;
     }
-    
-    
 
     public ConcurrentLinkedQueue<Autobus> getBusesDirAeropuerto() {
         return busesDirAeropuerto;
@@ -65,8 +61,7 @@ public class Aeropuerto {
     public ConcurrentLinkedQueue<Autobus> getBusesDirCiudad() {
         return busesDirCiudad;
     }
-    
-    
+
     public ArrayList<Avion> getListaPista() {
         try {
             lecturaPista.lock();
@@ -163,8 +158,6 @@ public class Aeropuerto {
         this.busesDirCiudad = busesDirCiudad;
     }
 
-    
-
     /**
      * Metodo set para la lista de aviones que se encuentran en el hangar
      *
@@ -245,8 +238,7 @@ public class Aeropuerto {
 
             semaforoPasajeros.acquire();
             busesDirAeropuerto.remove(autobus);
-            
-            
+            loggerA.logEvent("Bus " + autobus.getNombreBus() + " deja " + autobus.getPasajeros() + " pasajeros en el aeropuerto de " + autobus.getAeropuerto().nombreAeropuerto);
             pasajeros += autobus.getPasajeros();
 
         } catch (InterruptedException e) {
@@ -271,6 +263,7 @@ public class Aeropuerto {
         try {
 
             semaforoPasajeros.acquire();
+            loggerA.logEvent("Bus " + autobus.getNombreBus() + " recoge " + autobus.getPasajeros() + " del aeropuerto de " + autobus.getAeropuerto().nombreAeropuerto);
             pasajeros -= autobus.getPasajeros();
             busesDirCiudad.add(autobus);
 
@@ -294,12 +287,9 @@ public class Aeropuerto {
      */
     public void accederHangar(Avion avion) throws InterruptedException {
         hangar.add(avion);
-        System.out.println("el avion se ha añadido correctamente");
-        loggerA.logEvent("Avión", avion.getNombreAvion() + " ha accedido al hangar");
+        loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede al hangar");
         Thread.sleep(3000);
         hangar.remove(avion);
-        System.out.println("el avion se ha eliminado");
-
     }
 
     /**
@@ -318,6 +308,7 @@ public class Aeropuerto {
             //La puerta queda libre
             puertaTaller.release();
 
+            loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede al taller en su vuelo numero " + avion.getNumVuelos());
             System.out.println("avion en taller");
             avionesTaller.add(avion);
 
@@ -353,6 +344,7 @@ public class Aeropuerto {
      */
     public void accederPuertaEmbarque(Avion avion) {
         try {
+            int puerta = 1;
             posiblePuertasEmbarque.acquire();
             puertasEmbarqueDesembarque.acquire();
             areaDeEstacionamiento.remove(avion);
@@ -362,6 +354,7 @@ public class Aeropuerto {
             for (int i = 0; i < avionesPuertas.size(); i++) {
                 if (avionesPuertas.get(i) == null) {
                     avionesPuertas.set(i, avion);
+                    puerta += i;
                     break;
                 }
             }
@@ -385,6 +378,8 @@ public class Aeropuerto {
 
                 contador++;
             }
+
+            loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede a puerta de embarque " + puerta + " para embarcar " + avion.getPasajeros() + " pasajeros");
 
             escrituraPuertas.lock();
             for (int i = 0; i < avionesPuertas.size(); i++) {
@@ -415,6 +410,7 @@ public class Aeropuerto {
      */
     public void accederPuertaDesembarque(Avion avion) {
         try {
+            int puerta = 1;
             posiblePuertasDesembarque.acquire();
             puertasEmbarqueDesembarque.acquire();
             //Eliminamos el avión del área de rodaje
@@ -425,6 +421,7 @@ public class Aeropuerto {
             for (int i = 0; i < avionesPuertas.size(); i++) {
                 if (avionesPuertas.get(i) == null) {
                     avionesPuertas.set(i, avion);
+                    puerta += i;
                     break;
                 }
             }
@@ -436,6 +433,7 @@ public class Aeropuerto {
             //La transferencia de pasajeros dura entre 1 y 5 segundos
             Thread.sleep(1000 * aleatorio.nextInt(5) + 1);
             pasajeros += avion.getPasajeros();
+            loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede a puerta de embarque " + puerta + " para desembarcar " + avion.getPasajeros() + " pasajeros");
             avion.setPasajeros(0);
             semaforoPasajeros.release();
 
@@ -485,7 +483,6 @@ public class Aeropuerto {
             } finally {
                 escrituraPista.unlock(); // Asegúrate de liberar el bloqueo incluso si ocurre una excepción
             }
-
             // Libera la pista para que otros aviones puedan usarla
             pista.release();
         } catch (InterruptedException e) {
@@ -500,6 +497,7 @@ public class Aeropuerto {
      */
     public void adquirirPistaDespegue(Avion avion) {
         try {
+            int p = 1;
             // Intenta adquirir la pista
             pista.acquire();
 
@@ -513,9 +511,12 @@ public class Aeropuerto {
                 for (int i = 0; i < listaPista.size(); i++) {
                     if (listaPista.get(i) == null) {
                         listaPista.set(i, avion);
+                        p += i;
                         break;
                     }
                 }
+                
+                loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede a la pista " + p + " para despegue");
             } finally {
                 escrituraPista.unlock();
             }
@@ -531,6 +532,7 @@ public class Aeropuerto {
      */
     public void adquirirPistaAterrizaje(Avion avion) {
         try {
+            int p = 1;
             boolean pistaAdquirida = false;
             while (!pistaAdquirida) {
                 pistaAdquirida = pista.tryAcquire();
@@ -546,11 +548,13 @@ public class Aeropuerto {
             for (int i = 0; i < listaPista.size(); i++) {
                 if (listaPista.get(i) == null) {
                     listaPista.set(i, avion);
+                    p += 1;
                     break;
                 }
             }
             escrituraPista.unlock();
-
+            
+            loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede a la pista " + p + " para aterrizaje");
             //El avión aterriza durante un tiempo de entre 1 y 5 segundos
             int tiempoAterrizaje = aleatorio.nextInt(5) + 1;
             Thread.sleep(1000 * tiempoAterrizaje);
@@ -578,6 +582,7 @@ public class Aeropuerto {
     public void accederAreaEstacionamiento(Avion avion) {
         try {
             areaDeEstacionamiento.add(avion);
+            loggerA.logEvent("Avion " + avion.getNombreAvion() + " accede al area de estacionamiento");
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             System.out.println(e);
@@ -591,6 +596,7 @@ public class Aeropuerto {
      */
     public void areaRodaje(Avion avion) {
         areaDeRodaje.add(avion);
+        loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede al area de rodaje");
     }
 
 }

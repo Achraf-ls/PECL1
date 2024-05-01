@@ -1,21 +1,312 @@
-[2024-05-01 17:41:52] Avión: NK-0000 ha accedido al hangar
-[2024-05-01 17:41:54] Avión: DG-0001 ha accedido al hangar
-[2024-05-01 17:41:56] Avión: YH-0002 ha accedido al hangar
-[2024-05-01 17:41:59] Avión: CF-0003 ha accedido al hangar
-[2024-05-01 17:42:02] Avión: AW-0004 ha accedido al hangar
-[2024-05-01 17:42:03] Avión: VD-0005 ha accedido al hangar
-[2024-05-01 17:42:05] Avión: CC-0006 ha accedido al hangar
-[2024-05-01 17:42:07] Avión: OB-0007 ha accedido al hangar
-[2024-05-01 17:42:08] Avión: MN-0008 ha accedido al hangar
-[2024-05-01 17:42:10] Avión: SS-0009 ha accedido al hangar
-[2024-05-01 17:42:12] Avión: IO-0010 ha accedido al hangar
-[2024-05-01 17:42:13] Avión: OP-0011 ha accedido al hangar
-[2024-05-01 17:42:15] Avión: BE-0012 ha accedido al hangar
-[2024-05-01 17:42:18] Avión: LE-0013 ha accedido al hangar
-[2024-05-01 17:42:20] Avión: FA-0014 ha accedido al hangar
-[2024-05-01 17:42:22] Avión: DL-0015 ha accedido al hangar
-[2024-05-01 17:42:23] Avión: PV-0016 ha accedido al hangar
-[2024-05-01 17:42:26] Avión: UI-0017 ha accedido al hangar
-[2024-05-01 17:42:27] Avión: BC-0018 ha accedido al hangar
-[2024-05-01 17:42:28] Avión: GZ-0019 ha accedido al hangar
-[2024-05-01 17:42:29] Avión: SC-0020 ha accedido al hangar
+[2024-05-01 19:08:41] Avión TS-0000 es creado
+[2024-05-01 19:08:41] Avión TS-0000 accede al hangar
+[2024-05-01 19:08:42] Avión JL-0001 accede al hangar
+[2024-05-01 19:08:42] Avión JL-0001 es creado
+[2024-05-01 19:08:44] Avion TS-0000 accede al area de estacionamiento
+[2024-05-01 19:08:45] Avión EB-0002 es creado
+[2024-05-01 19:08:45] Avión EB-0002 accede al hangar
+[2024-05-01 19:08:45] Avion JL-0001 accede al area de estacionamiento
+[2024-05-01 19:08:46] Avión MD-0003 es creado
+[2024-05-01 19:08:46] Avión MD-0003 accede al hangar
+[2024-05-01 19:08:48] Avion EB-0002 accede al area de estacionamiento
+[2024-05-01 19:08:48] Avión QK-0004 es creado
+[2024-05-01 19:08:48] Avión QK-0004 accede al hangar
+[2024-05-01 19:08:48] Avión TS-0000 accede a puerta de embarque 1 para embarcar 245 pasajeros
+[2024-05-01 19:08:48] Avion TS-0000 (245 pasajeros) accede al area de rodaje
+[2024-05-01 19:08:49] Avion MD-0003 accede al area de estacionamiento
+[2024-05-01 19:08:50] Avión MD-0005 es creado
+[2024-05-01 19:08:50] Avión MD-0005 accede al hangar
+[2024-05-01 19:08:51] Bus B-0001 deja 19 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:08:51] Avion QK-0004 accede al area de estacionamiento
+[2024-05-01 19:08:51] Avión JL-0001 accede a puerta de embarque 1 para embarcar 114 pasajeros
+[2024-05-01 19:08:51] Avion JL-0001 (114 pasajeros) accede al area de rodaje
+[2024-05-01 19:08:52] Bus B-0000 deja 26 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:08:52] Avión YI-0006 es creado
+[2024-05-01 19:08:52] Avión YI-0006 accede al hangar
+[2024-05-01 19:08:52] Avión EB-0002 accede a puerta de embarque 1 para embarcar 236 pasajeros
+[2024-05-01 19:08:52] Avion EB-0002 (236 pasajeros) accede al area de rodaje
+[2024-05-01 19:08:53] Avion EB-0002 (236 pasajeros) accede a la pista 1 para despegue
+[2024-05-01 19:08:53] Avion MD-0005 accede al area de estacionamiento
+[2024-05-01 19:08:53] Avion TS-0000 (245 pasajeros) accede a la pista 2 para despegue
+[2024-05-01 19:08:53] Bus B-0003 deja 48 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:08:54] Avión HJ-0007 es creado
+[2024-05-01 19:08:54] Avión HJ-0007 accede al hangar
+[2024-05-01 19:08:54] Avión MD-0003 accede a puerta de embarque 1 para embarcar 145 pasajeros
+[2024-05-01 19:08:54] Avion MD-0003 (145 pasajeros) accede al area de rodaje
+[2024-05-01 19:08:54] Bus B-0001 recoge 47 del aeropuerto de Barcelona
+[2024-05-01 19:08:54] Bus B-0006 deja 8 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:08:55] Avion YI-0006 accede al area de estacionamiento
+[2024-05-01 19:08:55] Avion JL-0001 (114 pasajeros) accede a la pista 1 para despegue
+[2024-05-01 19:08:55] Bus B-0005 deja 17 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:08:55] Bus B-0000 recoge 26 del aeropuerto de Madrid
+[2024-05-01 19:08:56] Bus B-0004 deja 0 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:08:56] Avión QK-0004 accede a puerta de embarque 1 para embarcar 146 pasajeros
+[2024-05-01 19:08:56] Avion QK-0004 (146 pasajeros) accede al area de rodaje
+[2024-05-01 19:08:56] Bus B-0002 deja 30 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:08:57] Avión YL-0008 es creado
+[2024-05-01 19:08:57] Avión YL-0008 accede al hangar
+[2024-05-01 19:08:57] Avion HJ-0007 accede al area de estacionamiento
+[2024-05-01 19:08:57] Bus B-0006 recoge 24 del aeropuerto de Madrid
+[2024-05-01 19:08:57] Bus B-0003 recoge 13 del aeropuerto de Barcelona
+[2024-05-01 19:08:57] Avión MD-0005 accede a puerta de embarque 1 para embarcar 289 pasajeros
+[2024-05-01 19:08:57] Avion MD-0005 (289 pasajeros) accede al area de rodaje
+[2024-05-01 19:08:57] Avion MD-0003 (145 pasajeros) accede a la pista 2 para despegue
+[2024-05-01 19:08:58] Bus B-0009 deja 24 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:08:58] Bus B-0008 deja 6 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:08:58] Avion JL-0001(114 pasajeros) accede a la aerovía Barcelona-Madrid
+[2024-05-01 19:08:58] Avión FJ-0009 es creado
+[2024-05-01 19:08:58] Avión FJ-0009 accede al hangar
+[2024-05-01 19:08:59] Bus B-0011 deja 21 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:08:59] Avión YI-0006 accede a puerta de embarque 1 para embarcar 255 pasajeros
+[2024-05-01 19:08:59] Avion YI-0006 (255 pasajeros) accede al area de rodaje
+[2024-05-01 19:08:59] Avion EB-0002(236 pasajeros) accede a la aerovía Madrid-Barcelona
+[2024-05-01 19:08:59] Avion QK-0004 (146 pasajeros) accede a la pista 1 para despegue
+[2024-05-01 19:08:59] Bus B-0002 recoge 18 del aeropuerto de Madrid
+[2024-05-01 19:09:00] Avion YL-0008 accede al area de estacionamiento
+[2024-05-01 19:09:00] Avión WS-0010 es creado
+[2024-05-01 19:09:00] Avión WS-0010 accede al hangar
+[2024-05-01 19:09:00] Bus B-0007 deja 36 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:00] Bus B-0010 deja 11 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:00] Bus B-0005 recoge 41 del aeropuerto de Barcelona
+[2024-05-01 19:09:00] Bus B-0004 recoge 30 del aeropuerto de Madrid
+[2024-05-01 19:09:01] Bus B-0008 recoge 38 del aeropuerto de Madrid
+[2024-05-01 19:09:01] Avion YI-0006 (255 pasajeros) accede a la pista 3 para despegue
+[2024-05-01 19:09:01] Bus B-0011 recoge 44 del aeropuerto de Barcelona
+[2024-05-01 19:09:01] Avion TS-0000(245 pasajeros) accede a la aerovía Madrid-Barcelona
+[2024-05-01 19:09:01] Avion FJ-0009 accede al area de estacionamiento
+[2024-05-01 19:09:02] Avion MD-0005 (289 pasajeros) accede a la pista 1 para despegue
+[2024-05-01 19:09:02] Avion QK-0004(146 pasajeros) accede a la aerovía Madrid-Barcelona
+[2024-05-01 19:09:02] Bus B-0012 deja 48 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:02] Bus B-0009 recoge 8 del aeropuerto de Barcelona
+[2024-05-01 19:09:02] Avión YW-0011 es creado
+[2024-05-01 19:09:02] Avión YW-0011 accede al hangar
+[2024-05-01 19:09:03] Bus B-0013 deja 48 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:03] Avión HJ-0007 accede a puerta de embarque 1 para embarcar 182 pasajeros
+[2024-05-01 19:09:03] Avion HJ-0007 (182 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:03] Bus B-0017 deja 6 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:03] Avion WS-0010 accede al area de estacionamiento
+[2024-05-01 19:09:03] Bus B-0016 deja 32 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:03] Avion MD-0003(145 pasajeros) accede a la aerovía Barcelona-Madrid
+[2024-05-01 19:09:03] Bus B-0010 recoge 24 del aeropuerto de Madrid
+[2024-05-01 19:09:03] Bus B-0014 deja 23 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:04] Bus B-0019 deja 40 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:04] Bus B-0018 deja 43 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:04] Bus B-0007 recoge 4 del aeropuerto de Barcelona
+[2024-05-01 19:09:04] Avión QM-0012 es creado
+[2024-05-01 19:09:04] Avión QM-0012 accede al hangar
+[2024-05-01 19:09:05] Avión YL-0008 accede a puerta de embarque 1 para embarcar 255 pasajeros
+[2024-05-01 19:09:05] Avion YL-0008 (255 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:05] Avion HJ-0007 (182 pasajeros) accede a la pista 2 para despegue
+[2024-05-01 19:09:05] Bus B-0012 recoge 49 del aeropuerto de Madrid
+[2024-05-01 19:09:05] Bus B-0013 recoge 2 del aeropuerto de Barcelona
+[2024-05-01 19:09:05] Avion YW-0011 accede al area de estacionamiento
+[2024-05-01 19:09:06] Avión VJ-0013 es creado
+[2024-05-01 19:09:06] Avión VJ-0013 accede al hangar
+[2024-05-01 19:09:06] Bus B-0015 deja 11 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:07] Avion YI-0006(255 pasajeros) accede a la aerovía Madrid-Barcelona
+[2024-05-01 19:09:07] Avion YL-0008 (255 pasajeros) accede a la pista 1 para despegue
+[2024-05-01 19:09:07] Avión WS-0010 accede a puerta de embarque 1 para embarcar 130 pasajeros
+[2024-05-01 19:09:07] Avion WS-0010 (130 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:07] Bus B-0018 recoge 42 del aeropuerto de Madrid
+[2024-05-01 19:09:07] Bus B-0017 recoge 20 del aeropuerto de Barcelona
+[2024-05-01 19:09:07] Avion QM-0012 accede al area de estacionamiento
+[2024-05-01 19:09:07] Avión EY-0014 es creado
+[2024-05-01 19:09:07] Avión EY-0014 accede al hangar
+[2024-05-01 19:09:07] Avión FJ-0009 accede a puerta de embarque 1 para embarcar 214 pasajeros
+[2024-05-01 19:09:07] Avion FJ-0009 (214 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:07] Bus B-0016 recoge 20 del aeropuerto de Madrid
+[2024-05-01 19:09:08] Bus B-0024 deja 3 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:08] Bus B-0014 recoge 23 del aeropuerto de Madrid
+[2024-05-01 19:09:08] Avion FJ-0009 (214 pasajeros) accede a la pista 3 para despegue
+[2024-05-01 19:09:09] Bus B-0019 recoge 42 del aeropuerto de Barcelona
+[2024-05-01 19:09:09] Avion WS-0010 (130 pasajeros) accede a la pista 2 para despegue
+[2024-05-01 19:09:09] Bus B-0020 deja 24 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:09] Avion VJ-0013 accede al area de estacionamiento
+[2024-05-01 19:09:09] Avión JI-0015 es creado
+[2024-05-01 19:09:09] Avión JI-0015 accede al hangar
+[2024-05-01 19:09:09] Bus B-0015 recoge 21 del aeropuerto de Barcelona
+[2024-05-01 19:09:09] Bus B-0027 deja 17 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:09] Avión YW-0011 accede a puerta de embarque 1 para embarcar 171 pasajeros
+[2024-05-01 19:09:09] Avion YW-0011 (171 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:10] Bus B-0023 deja 47 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:10] Avion MD-0005(289 pasajeros) accede a la aerovía Barcelona-Madrid
+[2024-05-01 19:09:10] Bus B-0021 deja 26 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:10] Bus B-0026 deja 22 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:10] Avion EY-0014 accede al area de estacionamiento
+[2024-05-01 19:09:10] Bus B-0022 deja 19 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:11] Avión BH-0016 es creado
+[2024-05-01 19:09:11] Avión BH-0016 accede al hangar
+[2024-05-01 19:09:11] Bus B-0024 recoge 49 del aeropuerto de Madrid
+[2024-05-01 19:09:11] Avión QM-0012 accede a puerta de embarque 1 para embarcar 114 pasajeros
+[2024-05-01 19:09:11] Avion QM-0012 (114 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:11] Avion YW-0011 (171 pasajeros) accede a la pista 1 para despegue
+[2024-05-01 19:09:12] Avion HJ-0007(182 pasajeros) accede a la aerovía Barcelona-Madrid
+[2024-05-01 19:09:12] Bus B-0027 recoge 4 del aeropuerto de Barcelona
+[2024-05-01 19:09:12] Bus B-0025 deja 24 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:12] Bus B-0031 deja 6 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:12] Avion JI-0015 accede al area de estacionamiento
+[2024-05-01 19:09:12] Bus B-0020 recoge 17 del aeropuerto de Madrid
+[2024-05-01 19:09:12] Bus B-0028 deja 24 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:13] Avion YL-0008(255 pasajeros) accede a la aerovía Madrid-Barcelona
+[2024-05-01 19:09:13] Avion WS-0010(130 pasajeros) accede a la aerovía Madrid-Barcelona
+[2024-05-01 19:09:13] Avión TV-0017 es creado
+[2024-05-01 19:09:13] Avión TV-0017 accede al hangar
+[2024-05-01 19:09:13] Bus B-0001 deja 32 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:13] Bus B-0021 recoge 42 del aeropuerto de Barcelona
+[2024-05-01 19:09:13] Bus B-0029 deja 31 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:14] Bus B-0004 deja 25 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:14] Bus B-0003 deja 36 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:14] Bus B-0006 deja 2 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:14] Avion BH-0016 accede al area de estacionamiento
+[2024-05-01 19:09:14] Bus B-0026 recoge 21 del aeropuerto de Madrid
+[2024-05-01 19:09:14] Bus B-0022 recoge 4 del aeropuerto de Madrid
+[2024-05-01 19:09:14] Avion QM-0012 (114 pasajeros) accede a la pista 1 para despegue
+[2024-05-01 19:09:14] Bus B-0023 recoge 10 del aeropuerto de Barcelona
+[2024-05-01 19:09:14] Bus B-0030 deja 48 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:15] Avión FZ-0018 es creado
+[2024-05-01 19:09:15] Avión FZ-0018 accede al hangar
+[2024-05-01 19:09:15] Bus B-0028 recoge 12 del aeropuerto de Madrid
+[2024-05-01 19:09:15] Bus B-0000 deja 49 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:15] Bus B-0025 recoge 49 del aeropuerto de Barcelona
+[2024-05-01 19:09:15] Avión VJ-0013 accede a puerta de embarque 1 para embarcar 122 pasajeros
+[2024-05-01 19:09:15] Avion VJ-0013 (122 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:15] Avion JL-0001 (114 pasajeros) accede a la pista 2 para aterrizaje
+[2024-05-01 19:09:15] Avion FJ-0009(214 pasajeros) accede a la aerovía Barcelona-Madrid
+[2024-05-01 19:09:16] Bus B-0001 recoge 1 del aeropuerto de Barcelona
+[2024-05-01 19:09:16] Avion TV-0017 accede al area de estacionamiento
+[2024-05-01 19:09:16] Avion YW-0011(171 pasajeros) accede a la aerovía Barcelona-Madrid
+[2024-05-01 19:09:16] Avión EY-0014 accede a puerta de embarque 1 para embarcar 253 pasajeros
+[2024-05-01 19:09:16] Avion EY-0014 (253 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:16] Bus B-0011 deja 15 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:16] Bus B-0031 recoge 27 del aeropuerto de Barcelona
+[2024-05-01 19:09:17] Bus B-0029 recoge 15 del aeropuerto de Barcelona
+[2024-05-01 19:09:17] Avión SW-0019 es creado
+[2024-05-01 19:09:17] Avión SW-0019 accede al hangar
+[2024-05-01 19:09:17] Bus B-0003 recoge 7 del aeropuerto de Barcelona
+[2024-05-01 19:09:17] Bus B-0030 recoge 2 del aeropuerto de Madrid
+[2024-05-01 19:09:17] Bus B-0032 deja 41 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:18] Avion FZ-0018 accede al area de estacionamiento
+[2024-05-01 19:09:18] Avion EB-0002 (236 pasajeros) accede a la pista 2 para aterrizaje
+[2024-05-01 19:09:18] Bus B-0005 deja 29 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:18] Avion QK-0004 (146 pasajeros) accede a la pista 2 para aterrizaje
+[2024-05-01 19:09:18] Avion VJ-0013 (122 pasajeros) accede a la pista 3 para despegue
+[2024-05-01 19:09:18] Bus B-0002 deja 7 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:18] Avión JI-0015 accede a puerta de embarque 1 para embarcar 100 pasajeros
+[2024-05-01 19:09:18] Avion JI-0015 (100 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:18] Bus B-0037 deja 3 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:18] Bus B-0004 recoge 35 del aeropuerto de Madrid
+[2024-05-01 19:09:19] Bus B-0006 recoge 47 del aeropuerto de Madrid
+[2024-05-01 19:09:19] Bus B-0000 recoge 42 del aeropuerto de Madrid
+[2024-05-01 19:09:19] Avión LP-0020 es creado
+[2024-05-01 19:09:19] Avión LP-0020 accede al hangar
+[2024-05-01 19:09:19] Avión BH-0016 accede a puerta de embarque 1 para embarcar 102 pasajeros
+[2024-05-01 19:09:19] Avion BH-0016 (102 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:19] Bus B-0008 deja 21 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:19] Avion QM-0012(114 pasajeros) accede a la aerovía Madrid-Barcelona
+[2024-05-01 19:09:19] Bus B-0034 deja 19 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:19] Bus B-0032 recoge 40 del aeropuerto de Madrid
+[2024-05-01 19:09:19] Bus B-0033 deja 11 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:20] Bus B-0036 deja 4 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:20] Avion SW-0019 accede al area de estacionamiento
+[2024-05-01 19:09:20] Bus B-0035 deja 47 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:20] Bus B-0012 deja 13 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:20] Bus B-0010 deja 29 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:20] Bus B-0011 recoge 21 del aeropuerto de Barcelona
+[2024-05-01 19:09:20] Avión WS-0021 es creado
+[2024-05-01 19:09:20] Avión WS-0021 accede al hangar
+[2024-05-01 19:09:20] Avion JL-0001 (114 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:21] Bus B-0005 recoge 19 del aeropuerto de Barcelona
+[2024-05-01 19:09:21] Avión TV-0017 accede a puerta de embarque 1 para embarcar 172 pasajeros
+[2024-05-01 19:09:21] Avion TV-0017 (172 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:21] Avion JI-0015 (100 pasajeros) accede a la pista 4 para despegue
+[2024-05-01 19:09:21] Bus B-0008 recoge 46 del aeropuerto de Madrid
+[2024-05-01 19:09:21] Avion EY-0014 (253 pasajeros) accede a la pista 1 para despegue
+[2024-05-01 19:09:22] Avion EB-0002 (236 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:22] Bus B-0009 deja 24 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:22] Avion LP-0020 accede al area de estacionamiento
+[2024-05-01 19:09:22] Avion BH-0016 (102 pasajeros) accede a la pista 2 para despegue
+[2024-05-01 19:09:22] Bus B-0035 recoge 13 del aeropuerto de Barcelona
+[2024-05-01 19:09:22] Bus B-0010 recoge 18 del aeropuerto de Madrid
+[2024-05-01 19:09:22] Avion TS-0000 (245 pasajeros) accede a la pista 2 para aterrizaje
+[2024-05-01 19:09:22] Bus B-0041 deja 36 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:22] Avión BL-0022 es creado
+[2024-05-01 19:09:22] Avión BL-0022 accede al hangar
+[2024-05-01 19:09:23] Avión EB-0002 accede a puerta de embarque 1 para desembarcar 236 pasajeros
+[2024-05-01 19:09:23] Bus B-0037 recoge 28 del aeropuerto de Barcelona
+[2024-05-01 19:09:23] Avion QK-0004 (146 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:23] Avion TV-0017 (172 pasajeros) accede a la pista 2 para despegue
+[2024-05-01 19:09:23] Avion WS-0021 accede al area de estacionamiento
+[2024-05-01 19:09:23] Avión JL-0001 accede a puerta de embarque 2 para desembarcar 114 pasajeros
+[2024-05-01 19:09:23] Bus B-0038 deja 11 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:23] Bus B-0002 recoge 41 del aeropuerto de Madrid
+[2024-05-01 19:09:24] Avión FZ-0018 accede a puerta de embarque 1 para embarcar 214 pasajeros
+[2024-05-01 19:09:24] Avion FZ-0018 (214 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:24] Avión EB-0002 accede al taller con 1 número de vuelos
+[2024-05-01 19:09:24] Avión SW-0019 accede a puerta de embarque 1 para embarcar 281 pasajeros
+[2024-05-01 19:09:24] Avion SW-0019 (281 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:24] Bus B-0036 recoge 32 del aeropuerto de Madrid
+[2024-05-01 19:09:24] Avión FX-0023 es creado
+[2024-05-01 19:09:24] Avión FX-0023 accede al hangar
+[2024-05-01 19:09:24] Avion BH-0016(102 pasajeros) accede a la aerovía Madrid-Barcelona
+[2024-05-01 19:09:24] Bus B-0012 recoge 19 del aeropuerto de Madrid
+[2024-05-01 19:09:24] Bus B-0034 recoge 14 del aeropuerto de Madrid
+[2024-05-01 19:09:24] Bus B-0016 deja 36 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:24] Avión JL-0001 accede al taller con 1 número de vuelos
+[2024-05-01 19:09:24] Bus B-0040 deja 37 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:25] Bus B-0042 deja 45 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:25] Bus B-0014 deja 46 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:25] Avion MD-0003 (145 pasajeros) accede a la pista 2 para aterrizaje
+[2024-05-01 19:09:25] Avion VJ-0013(122 pasajeros) accede a la aerovía Barcelona-Madrid
+[2024-05-01 19:09:25] Avion TS-0000 (245 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:25] Avión IP-0024 es creado
+[2024-05-01 19:09:25] Avión IP-0024 accede al hangar
+[2024-05-01 19:09:25] Bus B-0044 deja 18 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:25] Avion BL-0022 accede al area de estacionamiento
+[2024-05-01 19:09:26] Avión EB-0002 accede al hangar
+[2024-05-01 19:09:26] Bus B-0048 deja 41 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:26] Avión JL-0001 accede al hangar
+[2024-05-01 19:09:27] Avion FX-0023 accede al area de estacionamiento
+[2024-05-01 19:09:27] Avion TV-0017(172 pasajeros) accede a la aerovía Barcelona-Madrid
+[2024-05-01 19:09:27] Avión QK-0004 accede a puerta de embarque 2 para desembarcar 146 pasajeros
+[2024-05-01 19:09:27] Bus B-0007 deja 27 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:27] Bus B-0017 deja 30 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:27] Bus B-0045 deja 39 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:27] Bus B-0043 deja 37 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:27] Bus B-0015 deja 7 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:27] Bus B-0013 deja 41 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:27] Bus B-0039 deja 33 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:27] Bus B-0042 recoge 6 del aeropuerto de Madrid
+[2024-05-01 19:09:27] Avion JI-0015(100 pasajeros) accede a la aerovía Barcelona-Madrid
+[2024-05-01 19:09:27] Bus B-0018 deja 35 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:28] Avion SW-0019 (281 pasajeros) accede a la pista 1 para despegue
+[2024-05-01 19:09:28] Avión DP-0025 es creado
+[2024-05-01 19:09:28] Avión DP-0025 accede al hangar
+[2024-05-01 19:09:28] Bus B-0038 recoge 19 del aeropuerto de Madrid
+[2024-05-01 19:09:28] Avión LP-0020 accede a puerta de embarque 1 para embarcar 242 pasajeros
+[2024-05-01 19:09:28] Avion LP-0020 (242 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:28] Avión QK-0004 accede al taller con 1 número de vuelos
+[2024-05-01 19:09:28] Avion IP-0024 accede al area de estacionamiento
+[2024-05-01 19:09:28] Bus B-0014 recoge 7 del aeropuerto de Madrid
+[2024-05-01 19:09:28] Bus B-0016 recoge 5 del aeropuerto de Madrid
+[2024-05-01 19:09:28] Bus B-0050 deja 35 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:28] Avion EY-0014(253 pasajeros) accede a la aerovía Madrid-Barcelona
+[2024-05-01 19:09:28] Bus B-0048 recoge 6 del aeropuerto de Madrid
+[2024-05-01 19:09:29] Avion FZ-0018 (214 pasajeros) accede a la pista 1 para despegue
+[2024-05-01 19:09:29] Bus B-0040 recoge 39 del aeropuerto de Madrid
+[2024-05-01 19:09:29] Avion MD-0005 (289 pasajeros) accede a la pista 2 para aterrizaje
+[2024-05-01 19:09:29] Bus B-0046 deja 8 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:30] Bus B-0044 recoge 30 del aeropuerto de Madrid
+[2024-05-01 19:09:30] Avion MD-0003 (145 pasajeros) accede al area de rodaje
+[2024-05-01 19:09:30] Avión TS-0000 accede a puerta de embarque 1 para desembarcar 245 pasajeros
+[2024-05-01 19:09:30] Bus B-0019 deja 18 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:30] Bus B-0033 recoge 12 del aeropuerto de Barcelona
+[2024-05-01 19:09:30] Bus B-0041 recoge 12 del aeropuerto de Barcelona
+[2024-05-01 19:09:30] Bus B-0009 recoge 47 del aeropuerto de Barcelona
+[2024-05-01 19:09:30] Bus B-0027 deja 48 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:30] Bus B-0049 deja 47 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:30] Bus B-0047 deja 0 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:30] Bus B-0021 deja 15 pasajeros en el aeropuerto de Barcelona
+[2024-05-01 19:09:30] Bus B-0043 recoge 36 del aeropuerto de Barcelona
+[2024-05-01 19:09:30] Bus B-0013 recoge 4 del aeropuerto de Barcelona
+[2024-05-01 19:09:30] Bus B-0020 deja 43 pasajeros en el aeropuerto de Madrid
+[2024-05-01 19:09:30] Bus B-0017 recoge 38 del aeropuerto de Barcelona

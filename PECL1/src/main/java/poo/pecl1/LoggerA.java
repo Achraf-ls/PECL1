@@ -22,10 +22,10 @@ public class LoggerA {
         this.LOG_FILE = logFile;
     }
 
-    public synchronized void logEvent(String source, String event) {
+    public synchronized void logEvent(String event) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG_FILE, true))) {
             String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-            String logEntry = String.format("[%s] %s: %s\n", timestamp, source, event);
+            String logEntry = String.format("[%s] %s\n", timestamp, event);
             writer.write(logEntry);
         } catch (IOException e) {
             e.printStackTrace();

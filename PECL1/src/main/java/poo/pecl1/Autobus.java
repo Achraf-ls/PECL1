@@ -37,7 +37,10 @@ public class Autobus extends Thread {
     public String getNombreBus() {
         return nombreBus;
     }
-    
+
+    public Aeropuerto getAeropuerto() {
+        return aeropuerto;
+    }
     
     /**
      * Metodo get para el numero de pasajeros del autobus

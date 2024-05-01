@@ -12,48 +12,54 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author Achraf El Idrissi y Gisela González
  */
 public class Aerovia {
-    
+
     private Random aleatorio = new Random();
-    private Aeropuerto aeropuertoDestino;
+    private String aeropuertoOrigenDestino;
     private ConcurrentLinkedQueue<Avion> avionesAerovia = new ConcurrentLinkedQueue();
+    private LoggerA loggerA;
+    private Aeropuerto aeropuertoDestino;
 
     /**
      * Constructor de la aerovia que recibe el aeropuerto de destino de esta
-     * @param aeropuertoDestino 
+     *
+     * @param aeropuertoOrigenDestino
+     * @param aeropuertoDestino
+     * @param loggerA
      */
-    public Aerovia(Aeropuerto aeropuertoDestino) {
+    public Aerovia(String aeropuertoOrigenDestino, Aeropuerto aeropuertoDestino, LoggerA loggerA) {
+        this.aeropuertoOrigenDestino = aeropuertoOrigenDestino;
+        this.loggerA = loggerA;
         this.aeropuertoDestino = aeropuertoDestino;
     }
 
     /**
      * Metodo get para la lista de aviones que se encuentran en la aerovia
+     *
      * @return avionesAerovia, lista de aviones que se encuentran en esta
      */
     public ConcurrentLinkedQueue<Avion> getAvionesAerovia() {
         return avionesAerovia;
     }
 
-    /**
-     * Metodo get para el aeropuerto de destino
-     * @return aeropuertoDestino, aeropuerto destino de la aerovia
-     */
     public Aeropuerto getAeropuertoDestino() {
         return aeropuertoDestino;
     }
-    
+
     /**
      * Metodo para que un avion acceda y salga de la aerovia
+     *
      * @param avion
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
-    public void accederAerovia(Avion avion) throws InterruptedException{
+    public void accederAerovia(Avion avion) throws InterruptedException {
         //Añadimos el avión a la aerovia
         avionesAerovia.add(avion);
+        loggerA.logEvent("Avion " + avion.getNombreAvion() + "(" + avion.getPasajeros() + " pasajeros) accede a la aerovía " + avion.getAeropuertoOrigen().getAerovia().aeropuertoOrigenDestino);
         //El avión vuela un tiempo entre 15 y 30 segunodos
-        int tiempoVuelo = aleatorio.nextInt(16)+ 15;
-        Thread.sleep(1000*tiempoVuelo);
+        int tiempoVuelo = aleatorio.nextInt(16) + 15;
+        Thread.sleep(1000 * tiempoVuelo);
         //Una vez se realiza el vuelo dejamos la aerovia e intentamos adquirir una pista del aeropuerto de origen 
         avionesAerovia.remove(avion);
     }
-    
+
 }
