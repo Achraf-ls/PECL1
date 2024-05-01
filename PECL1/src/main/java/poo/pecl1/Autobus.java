@@ -16,7 +16,7 @@ public class Autobus extends Thread {
     
     private int id;
     private int pasajeros;   
-    private Logger logger;
+    private LoggerA loggerA;
     
     private Aeropuerto aeropuerto;
     private String nombreBus;
@@ -25,13 +25,13 @@ public class Autobus extends Thread {
      * Constructor del autobus que recibe un id de este y el aeropuerto con el que se comunica
      * @param id
      * @param aeropuerto 
-     * @param logger 
+     * @param loggerA 
      */
-    public Autobus(int id, Aeropuerto aeropuerto, Logger logger) {
+    public Autobus(int id, Aeropuerto aeropuerto, LoggerA loggerA) {
         this.id = id;
         this.aeropuerto = aeropuerto;
         this.nombreBus = String.format("B-%04d", id);
-        this.logger = logger;
+        this.loggerA = loggerA;
     }
 
     public String getNombreBus() {

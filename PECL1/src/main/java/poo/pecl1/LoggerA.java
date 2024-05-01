@@ -14,11 +14,11 @@ import java.util.Date;
  *
  * @author achra
  */
-public class Logger {
+public class LoggerA {
 
     private final String LOG_FILE;
 
-    public Logger(String logFile) {
+    public LoggerA(String logFile) {
         this.LOG_FILE = logFile;
     }
 

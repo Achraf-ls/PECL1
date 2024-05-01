@@ -22,7 +22,7 @@ public class Avion extends Thread {
     private int pasajeros;
     private int capacidadMaxima;
     private int numVuelos = 0;
-    private Logger logger;
+    private LoggerA loggerA;
 
     private Aeropuerto aeropuertoOrigen;
     private Aeropuerto aeropuertoDestino;
@@ -35,14 +35,15 @@ public class Avion extends Thread {
      *
      * @param idAvion
      * @param aeropuertoOrigen
+     * @param loggerA
      */
-    public Avion(int idAvion, Aeropuerto aeropuertoOrigen, Logger logger) {
+    public Avion(int idAvion, Aeropuerto aeropuertoOrigen, LoggerA loggerA) {
         this.idAvion = idAvion;
         this.aeropuertoOrigen = aeropuertoOrigen;
         this.capacidadMaxima = aleatorio.nextInt(201) + 100;
         this.aeropuertoDestino = aeropuertoOrigen.getAerovia().getAeropuertoDestino();
         this.nombreAvion = generarNombre(idAvion);
-        this.logger = logger;
+        this.loggerA = loggerA;
     }
 
     /**

@@ -1,5 +1,21 @@
-[2024-05-01 17:18:20] Hola: Mañana
-[2024-05-01 17:18:22] Hola: Mañana
-[2024-05-01 17:18:24] Hola: Mañana
-[2024-05-01 17:18:26] Hola: Mañana
-[2024-05-01 17:18:29] Hola: Mañana
+[2024-05-01 17:41:52] Avión: NK-0000 ha accedido al hangar
+[2024-05-01 17:41:54] Avión: DG-0001 ha accedido al hangar
+[2024-05-01 17:41:56] Avión: YH-0002 ha accedido al hangar
+[2024-05-01 17:41:59] Avión: CF-0003 ha accedido al hangar
+[2024-05-01 17:42:02] Avión: AW-0004 ha accedido al hangar
+[2024-05-01 17:42:03] Avión: VD-0005 ha accedido al hangar
+[2024-05-01 17:42:05] Avión: CC-0006 ha accedido al hangar
+[2024-05-01 17:42:07] Avión: OB-0007 ha accedido al hangar
+[2024-05-01 17:42:08] Avión: MN-0008 ha accedido al hangar
+[2024-05-01 17:42:10] Avión: SS-0009 ha accedido al hangar
+[2024-05-01 17:42:12] Avión: IO-0010 ha accedido al hangar
+[2024-05-01 17:42:13] Avión: OP-0011 ha accedido al hangar
+[2024-05-01 17:42:15] Avión: BE-0012 ha accedido al hangar
+[2024-05-01 17:42:18] Avión: LE-0013 ha accedido al hangar
+[2024-05-01 17:42:20] Avión: FA-0014 ha accedido al hangar
+[2024-05-01 17:42:22] Avión: DL-0015 ha accedido al hangar
+[2024-05-01 17:42:23] Avión: PV-0016 ha accedido al hangar
+[2024-05-01 17:42:26] Avión: UI-0017 ha accedido al hangar
+[2024-05-01 17:42:27] Avión: BC-0018 ha accedido al hangar
+[2024-05-01 17:42:28] Avión: GZ-0019 ha accedido al hangar
+[2024-05-01 17:42:29] Avión: SC-0020 ha accedido al hangar

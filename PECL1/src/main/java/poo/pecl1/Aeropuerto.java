@@ -21,8 +21,9 @@ public class Aeropuerto {
 
     private int pasajeros;
     private Aerovia aerovia;
-    private Logger logger;
+    private LoggerA loggerA;
     private Random aleatorio = new Random();
+    private String nombreAeropuerto;
 
     private Semaphore semaforoPasajeros = new Semaphore(1, true);
     private Semaphore puertaTaller = new Semaphore(1, true);
@@ -50,8 +51,9 @@ public class Aeropuerto {
     Lock lecturaPuertas = lockPuertas.readLock();
     Lock escrituraPuertas = lockPuertas.writeLock();
 
-    public Aeropuerto(Logger logger) {
-        this.logger = logger;
+    public Aeropuerto(LoggerA loggerA, String nombreAeropuerto) {
+        this.loggerA = loggerA;
+        this.nombreAeropuerto = nombreAeropuerto;
     }
     
     
@@ -293,7 +295,7 @@ public class Aeropuerto {
     public void accederHangar(Avion avion) throws InterruptedException {
         hangar.add(avion);
         System.out.println("el avion se ha añadido correctamente");
-        logger.logEvent("Avión", avion.getNombreAvion() + "ha accedido al hangar");
+        loggerA.logEvent("Avión", avion.getNombreAvion() + " ha accedido al hangar");
         Thread.sleep(3000);
         hangar.remove(avion);
         System.out.println("el avion se ha eliminado");

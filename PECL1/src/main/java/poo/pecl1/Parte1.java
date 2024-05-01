@@ -15,10 +15,10 @@ import javax.swing.SwingUtilities;
  *
  */
 public class Parte1 extends javax.swing.JFrame {
-    Logger logger = new Logger("evolucionAeropuerto.txt");
+    private LoggerA loggerA = new LoggerA("evolucionAeropuerto.txt");
 
-    Aeropuerto aeropuertoMadrid = new Aeropuerto(logger);
-    Aeropuerto aeropuertoBarcelona = new Aeropuerto(logger);
+    Aeropuerto aeropuertoMadrid = new Aeropuerto(loggerA,"Madrid");
+    Aeropuerto aeropuertoBarcelona = new Aeropuerto(loggerA, "Barcelona");
     private Thread avionesThread;
     private Thread autobusesThread;
     private boolean pausado = false;
@@ -61,9 +61,9 @@ public class Parte1 extends javax.swing.JFrame {
                     }
                 }
                 if (i % 2 == 0) {
-                    new Avion(i, aeropuertoMadrid,logger).start();
+                    new Avion(i, aeropuertoMadrid,loggerA).start();
                 } else {
-                    new Avion(i, aeropuertoBarcelona,logger).start();
+                    new Avion(i, aeropuertoBarcelona,loggerA).start();
                 }
                 try {
                     Thread.sleep(1000 + new Random().nextInt(2001)); // intervalo entre 1s y 3s
@@ -85,9 +85,9 @@ public class Parte1 extends javax.swing.JFrame {
                     }
                 }
                 if (i % 2 == 0) {
-                    new Autobus(i,aeropuertoMadrid,logger).start();
+                    new Autobus(i,aeropuertoMadrid,loggerA).start();
                 } else {
-                    new Autobus(i, aeropuertoBarcelona,logger).start();
+                    new Autobus(i, aeropuertoBarcelona,loggerA).start();
                 }
                 try {
                     Thread.sleep(500 + new Random().nextInt(501)); // intervalo entre 0,5s y 1s
