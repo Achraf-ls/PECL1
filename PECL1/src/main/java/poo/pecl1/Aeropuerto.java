@@ -21,7 +21,7 @@ public class Aeropuerto {
 
     private int pasajeros;
     private Aerovia aerovia;
-    private Autobus autobus;
+    private Logger logger;
     private Random aleatorio = new Random();
 
     private Semaphore semaforoPasajeros = new Semaphore(1, true);
@@ -36,6 +36,9 @@ public class Aeropuerto {
     private ConcurrentLinkedQueue<Avion> areaDeEstacionamiento = new ConcurrentLinkedQueue();
     private ConcurrentLinkedQueue<Avion> avionesTaller = new ConcurrentLinkedQueue();
     private ConcurrentLinkedQueue<Avion> areaDeRodaje = new ConcurrentLinkedQueue();
+    private ConcurrentLinkedQueue<Autobus> busesDirAeropuerto = new ConcurrentLinkedQueue();
+    private ConcurrentLinkedQueue<Autobus> busesDirCiudad = new ConcurrentLinkedQueue();
+    
 
     private ArrayList<Avion> avionesPuertas = new ArrayList<Avion>(Arrays.asList(new Avion[6]));
     private ArrayList<Avion> listaPista = new ArrayList<Avion>(Arrays.asList(new Avion[4]));
@@ -47,6 +50,21 @@ public class Aeropuerto {
     Lock lecturaPuertas = lockPuertas.readLock();
     Lock escrituraPuertas = lockPuertas.writeLock();
 
+    public Aeropuerto(Logger logger) {
+        this.logger = logger;
+    }
+    
+    
+
+    public ConcurrentLinkedQueue<Autobus> getBusesDirAeropuerto() {
+        return busesDirAeropuerto;
+    }
+
+    public ConcurrentLinkedQueue<Autobus> getBusesDirCiudad() {
+        return busesDirCiudad;
+    }
+    
+    
     public ArrayList<Avion> getListaPista() {
         try {
             lecturaPista.lock();
@@ -135,6 +153,16 @@ public class Aeropuerto {
         }
     }
 
+    public void setBusesDirAeropuerto(ConcurrentLinkedQueue<Autobus> busesDirAeropuerto) {
+        this.busesDirAeropuerto = busesDirAeropuerto;
+    }
+
+    public void setBusesDirCiudad(ConcurrentLinkedQueue<Autobus> busesDirCiudad) {
+        this.busesDirCiudad = busesDirCiudad;
+    }
+
+    
+
     /**
      * Metodo set para la lista de aviones que se encuentran en el hangar
      *
@@ -214,6 +242,9 @@ public class Aeropuerto {
         try {
 
             semaforoPasajeros.acquire();
+            busesDirAeropuerto.remove(autobus);
+            
+            
             pasajeros += autobus.getPasajeros();
 
         } catch (InterruptedException e) {
@@ -239,6 +270,7 @@ public class Aeropuerto {
 
             semaforoPasajeros.acquire();
             pasajeros -= autobus.getPasajeros();
+            busesDirCiudad.add(autobus);
 
         } catch (InterruptedException e) {
 
@@ -261,6 +293,7 @@ public class Aeropuerto {
     public void accederHangar(Avion avion) throws InterruptedException {
         hangar.add(avion);
         System.out.println("el avion se ha añadido correctamente");
+        logger.logEvent("Avión", avion.getNombreAvion() + "ha accedido al hangar");
         Thread.sleep(3000);
         hangar.remove(avion);
         System.out.println("el avion se ha eliminado");

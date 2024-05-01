@@ -15,9 +15,14 @@ import javax.swing.SwingUtilities;
  *
  */
 public class Parte1 extends javax.swing.JFrame {
+    Logger logger = new Logger("evolucionAeropuerto.txt");
 
-    Aeropuerto aeropuertoMadrid = new Aeropuerto();
-    Aeropuerto aeropuertoBarcelona = new Aeropuerto();
+    Aeropuerto aeropuertoMadrid = new Aeropuerto(logger);
+    Aeropuerto aeropuertoBarcelona = new Aeropuerto(logger);
+    private Thread avionesThread;
+    private Thread autobusesThread;
+    private boolean pausado = false;
+    private Object lock = new Object();
 
     Aerovia aeroviaMadBar = new Aerovia(aeropuertoBarcelona);
     Aerovia aeroviaBarMad = new Aerovia(aeropuertoMadrid);
@@ -39,32 +44,50 @@ public class Parte1 extends javax.swing.JFrame {
         botonRenaudar.setEnabled(false);
         this.setLocationRelativeTo(null);
 
-        aeropuertoMadrid.setPasajeros(1000);
-        aeropuertoBarcelona.setPasajeros(1000);
+        aeropuertoMadrid.setPasajeros(10000);
+        aeropuertoBarcelona.setPasajeros(10000);
         aeropuertoMadrid.setAerovia(aeroviaMadBar);
         aeropuertoBarcelona.setAerovia(aeroviaBarMad);
 
-        Thread avionesThread = new Thread(() -> {
+        avionesThread = new Thread(() -> {
             for (int i = 0; i < 8000; i++) {
+                synchronized (lock) {
+                    while (pausado) { // Esperar si los hilos están pausados
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 if (i % 2 == 0) {
-                    new Avion(i, aeropuertoMadrid).start();
+                    new Avion(i, aeropuertoMadrid,logger).start();
                 } else {
-                    new Avion(i, aeropuertoBarcelona).start();
+                    new Avion(i, aeropuertoBarcelona,logger).start();
                 }
                 try {
-                    Thread.sleep(1000 + new Random().nextInt(2001)); //intervalo entre 1s y 3s
+                    Thread.sleep(1000 + new Random().nextInt(2001)); // intervalo entre 1s y 3s
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
 
-        Thread autobusesThread = new Thread(() -> {
+        autobusesThread = new Thread(() -> {
             for (int i = 0; i < 4000; i++) {
+                synchronized (lock) {
+                    while (pausado) { // Esperar si los hilos están pausados
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 if (i % 2 == 0) {
-                    new Autobus(i, aeropuertoMadrid).start();
+                    new Autobus(i,aeropuertoMadrid,logger).start();
                 } else {
-                    new Autobus(i, aeropuertoBarcelona).start();
+                    new Autobus(i, aeropuertoBarcelona,logger).start();
                 }
                 try {
                     Thread.sleep(500 + new Random().nextInt(501)); // intervalo entre 0,5s y 1s
@@ -106,6 +129,10 @@ public class Parte1 extends javax.swing.JFrame {
                             obtenerPistasB();
                             obtenerPuertasM();
                             obtenerPuertasB();
+                            obtenerBusCM();
+                            obtenerBusAM();
+                            obtenerBusCB();
+                            obtenerBusAB();
                         }
                     });
                     try {
@@ -420,6 +447,79 @@ public class Parte1 extends javax.swing.JFrame {
                     pista4B.setText(texto);
                 }
             }
+        }
+    }
+
+    public void obtenerBusAM() {
+        ConcurrentLinkedQueue<Autobus> buses = aeropuertoMadrid.getBusesDirAeropuerto();
+        StringBuilder busesMadridAero = new StringBuilder();
+        int count = 0; // Variable para rastrear la cantidad de autobuses mostrados
+
+        for (Autobus autobus : buses) {
+            if (count < 2) { // Mostrar solo los primeros dos autobuses
+                busesMadridAero.append(autobus.getNombreBus());
+                busesMadridAero.append(", ");
+                count++;
+            }
+        }
+
+        busesAM.setText(busesMadridAero.toString());
+
+    }
+
+    public void obtenerBusCM() {
+        ConcurrentLinkedQueue<Autobus> buses = aeropuertoMadrid.getBusesDirCiudad();
+        StringBuilder busesM = new StringBuilder();
+        int count = 0; // Variable para rastrear la cantidad de autobuses mostrados
+
+        for (Autobus autobus : buses) {
+            if (count < 2) { // Mostrar solo los primeros dos autobuses
+                busesM.append(autobus.getNombreBus());
+                busesM.append(", ");
+                count++;
+            }
+        }
+
+        busesCM.setText(busesM.toString());
+
+    }
+
+    public void obtenerBusAB() {
+        ConcurrentLinkedQueue<Autobus> buses = aeropuertoBarcelona.getBusesDirAeropuerto();
+        StringBuilder busesB = new StringBuilder();
+        int count = 0; // Variable para rastrear la cantidad de autobuses mostrados
+
+        for (Autobus autobus : buses) {
+            if (count < 2) { // Mostrar solo los primeros dos autobuses
+                busesB.append(autobus.getNombreBus());
+                busesB.append(", ");
+                count++;
+            }
+        }
+
+        busesAB.setText(busesB.toString());
+
+    }
+
+    public void obtenerBusCB() {
+        ConcurrentLinkedQueue<Autobus> buses = aeropuertoBarcelona.getBusesDirCiudad();
+        StringBuilder busesB = new StringBuilder();
+        int count = 0; // Variable para rastrear la cantidad de autobuses mostrados
+
+        for (Autobus autobus : buses) {
+            if (count < 2) { // Mostrar solo los primeros dos autobuses
+                busesB.append(autobus.getNombreBus());
+                busesB.append(", ");
+                count++;
+            }
+        }
+
+        busesCB.setText(busesB.toString());
+    }
+
+    private void pausarHilos() {
+        synchronized (lock) {
+            lock.notifyAll(); // Reanuda todos los hilos que están esperando en el objeto de bloqueo
         }
     }
 
@@ -1031,11 +1131,17 @@ public class Parte1 extends javax.swing.JFrame {
     private void botonPausarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPausarActionPerformed
         botonPausar.setEnabled(false);
         botonRenaudar.setEnabled(true);
+        pausado = true;
     }//GEN-LAST:event_botonPausarActionPerformed
 
     private void botonRenaudarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRenaudarActionPerformed
         botonRenaudar.setEnabled(false);
         botonPausar.setEnabled(true);
+        pausado = false; // Establecer la bandera en false para reanudar los hilos
+        synchronized (lock) {
+            lock.notifyAll(); // Reanudar todos los hilos que están esperando en el objeto de bloqueo
+        }
+
     }//GEN-LAST:event_botonRenaudarActionPerformed
 
     /**
