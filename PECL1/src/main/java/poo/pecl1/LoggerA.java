@@ -7,6 +7,7 @@ package poo.pecl1;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,7 +15,7 @@ import java.util.Date;
  *
  * @author achra
  */
-public class LoggerA {
+public class LoggerA implements Serializable{
 
     private final String LOG_FILE;
 

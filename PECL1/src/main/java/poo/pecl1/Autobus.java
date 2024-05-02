@@ -4,6 +4,7 @@
  */
 package poo.pecl1;
 
+import java.io.Serializable;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
  *
  * @author Achraf El Idrissi y Gisela González
  */
-public class Autobus extends Thread {
+public class Autobus extends Thread implements Serializable{
     
     private int id;
     private int pasajeros;   
@@ -21,17 +22,21 @@ public class Autobus extends Thread {
     private Aeropuerto aeropuerto;
     private String nombreBus;
     
+    private ControladorHilos controladorHilos;
+    
     /**
      * Constructor del autobus que recibe un id de este y el aeropuerto con el que se comunica
      * @param id
      * @param aeropuerto 
      * @param loggerA 
+     * @param controladorHilos
      */
-    public Autobus(int id, Aeropuerto aeropuerto, LoggerA loggerA) {
+    public Autobus(int id, Aeropuerto aeropuerto, LoggerA loggerA,ControladorHilos controladorHilos) {
         this.id = id;
         this.aeropuerto = aeropuerto;
         this.nombreBus = String.format("B-%04d", id);
         this.loggerA = loggerA;
+        this.controladorHilos = controladorHilos;
     }
 
     public String getNombreBus() {
@@ -65,16 +70,22 @@ public class Autobus extends Thread {
         try {
             while(true){
             llegar();
+            controladorHilos.comprobaciónEspera();
             subirPasajeros();
+            controladorHilos.comprobaciónEspera();
             viajar();
+            controladorHilos.comprobaciónEspera();
             bajarPasajeros();
+            controladorHilos.comprobaciónEspera();
             subirNuevos();
+            controladorHilos.comprobaciónEspera();
             viajar();
+            controladorHilos.comprobaciónEspera();
             //El bus se elimina de la lista de buses dirección ciudad ya que este llega correctamente
             aeropuerto.getBusesDirCiudad().remove(this);
             pasajeros = 0; //llega a la parada y los pasajeros dejan de contar
             }
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Autobus.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

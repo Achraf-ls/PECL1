@@ -4,9 +4,17 @@
  */
 package poo.pecl1;
 
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
@@ -14,17 +22,12 @@ import javax.swing.SwingUtilities;
  * @author Achraf El Idrissi y Gisela González
  *
  */
-public class Parte1 extends javax.swing.JFrame {
+public class Parte1 extends javax.swing.JFrame implements Serializable {
 
     private LoggerA loggerA = new LoggerA("evolucionAeropuerto.txt");
-
-    Aeropuerto aeropuertoMadrid = new Aeropuerto(loggerA, "Madrid");
-    Aeropuerto aeropuertoBarcelona = new Aeropuerto(loggerA, "Barcelona");
-    private Thread avionesThread;
-    private Thread autobusesThread;
-    private boolean pausado = false;
-    private Object lock = new Object();
-
+    private ControladorHilos controladorHilos = new ControladorHilos();
+    private Aeropuerto aeropuertoMadrid = new Aeropuerto(loggerA, "Madrid", 4);
+    private Aeropuerto aeropuertoBarcelona = new Aeropuerto(loggerA, "Barcelona", 4);
     Aerovia aeroviaMadBar = new Aerovia("Madrid-Barcelona", aeropuertoBarcelona, loggerA);
     Aerovia aeroviaBarMad = new Aerovia("Barcelona-Madrid", aeropuertoMadrid, loggerA);
 
@@ -35,6 +38,11 @@ public class Parte1 extends javax.swing.JFrame {
         initComponents();
         inicializar();
         obtener();
+        try {
+            inicializarConexor();
+        } catch (RemoteException e) {
+            System.out.println(e);
+        }
 
     }
 
@@ -49,50 +57,29 @@ public class Parte1 extends javax.swing.JFrame {
         aeropuertoBarcelona.setPasajeros(10000);
         aeropuertoMadrid.setAerovia(aeroviaMadBar);
         aeropuertoBarcelona.setAerovia(aeroviaBarMad);
+        controladorHilos = new ControladorHilos();
 
-        avionesThread = new Thread(() -> {
+        Thread avionesThread = new Thread(() -> {
             for (int i = 0; i < 8000; i++) {
-                synchronized (lock) {
-                    while (pausado) { // Esperar si los hilos están pausados
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
                 if (i % 2 == 0) {
-                    Avion avion = new Avion(i, aeropuertoMadrid, loggerA);
-                    avion.start();
-                    loggerA.logEvent("Avión " + avion.getNombreAvion() + " es creado");
+                    new Avion(i, aeropuertoMadrid, loggerA, controladorHilos).start();
                 } else {
-                    Avion avion = new Avion(i, aeropuertoBarcelona, loggerA);
-                    avion.start();
-                    loggerA.logEvent("Avión " + avion.getNombreAvion() + " es creado");
+                    new Avion(i, aeropuertoBarcelona, loggerA, controladorHilos).start();
                 }
                 try {
-                    Thread.sleep(1000 + new Random().nextInt(2001)); // intervalo entre 1s y 3s
+                    Thread.sleep(1000 + new Random().nextInt(2001)); //intervalo entre 1s y 3s
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         });
 
-        autobusesThread = new Thread(() -> {
+        Thread autobusesThread = new Thread(() -> {
             for (int i = 0; i < 4000; i++) {
-                synchronized (lock) {
-                    while (pausado) { // Esperar si los hilos están pausados
-                        try {
-                            lock.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
                 if (i % 2 == 0) {
-                    new Autobus(i, aeropuertoMadrid, loggerA).start();
+                    new Autobus(i, aeropuertoMadrid, loggerA, controladorHilos).start();
                 } else {
-                    new Autobus(i, aeropuertoBarcelona, loggerA).start();
+                    new Autobus(i, aeropuertoBarcelona, loggerA, controladorHilos).start();
                 }
                 try {
                     Thread.sleep(500 + new Random().nextInt(501)); // intervalo entre 0,5s y 1s
@@ -104,6 +91,7 @@ public class Parte1 extends javax.swing.JFrame {
 
         avionesThread.start();
         autobusesThread.start();
+
     }
 
     /**
@@ -116,8 +104,24 @@ public class Parte1 extends javax.swing.JFrame {
             public void run() {
                 while (true) {
                     SwingUtilities.invokeLater(new Runnable() {
-                        @Override
+
                         public void run() {
+                            try {
+                                InterfazConexion2 conexor = (InterfazConexion2) Naming.lookup("//127.0.0.1/ObjetoConecta2");
+                                aeropuertoMadrid.setPista1(conexor.getPistasMadrid()[0]);
+                                aeropuertoMadrid.setPista2(conexor.getPistasMadrid()[1]);
+                                aeropuertoMadrid.setPista3(conexor.getPistasMadrid()[2]);
+                                aeropuertoMadrid.setPista4(conexor.getPistasMadrid()[3]);
+                                aeropuertoBarcelona.setPista1(conexor.getPistasBarcelona()[0]);
+                                aeropuertoBarcelona.setPista2(conexor.getPistasBarcelona()[1]);
+                                aeropuertoBarcelona.setPista3(conexor.getPistasBarcelona()[2]);
+                                aeropuertoBarcelona.setPista4(conexor.getPistasBarcelona()[3]);
+                                aeropuertoMadrid.setPistasDisponibles(conexor.getSemaforoMadrid());
+                                aeropuertoBarcelona.setPistasDisponibles(conexor.getSemaforoBarcelona());
+                            } catch (Exception e) {
+                                System.out.println(e);
+                            }
+
                             pasajerosM.setText(Integer.toString(aeropuertoMadrid.getPasajeros()));
                             pasajerosB.setText(Integer.toString(aeropuertoBarcelona.getPasajeros()));
                             obtenerHangarM();
@@ -138,17 +142,34 @@ public class Parte1 extends javax.swing.JFrame {
                             obtenerBusAM();
                             obtenerBusCB();
                             obtenerBusAB();
+
                         }
                     });
+
                     try {
                         Thread.sleep(25);  // Espera medio segundo antes de la próxima actualización
-                    } catch (InterruptedException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
         thread.start();
+    }
+
+    public void inicializarConexor() throws RemoteException {
+        try {
+            Conexor conexor = new Conexor();
+
+            // Establecer los aeropuertos en el conector
+            conexor.enviarAeropuertos(aeropuertoMadrid, aeropuertoBarcelona);
+
+            // Registrar el conector en el registro RMI
+            Registry registro = LocateRegistry.createRegistry(1099);
+            Naming.rebind("//127.0.0.1/ObjetoConecta", conexor);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -520,12 +541,6 @@ public class Parte1 extends javax.swing.JFrame {
         }
 
         busesCB.setText(busesB.toString());
-    }
-
-    private void pausarHilos() {
-        synchronized (lock) {
-            lock.notifyAll(); // Reanuda todos los hilos que están esperando en el objeto de bloqueo
-        }
     }
 
     /**
@@ -1136,23 +1151,20 @@ public class Parte1 extends javax.swing.JFrame {
     private void botonPausarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPausarActionPerformed
         botonPausar.setEnabled(false);
         botonRenaudar.setEnabled(true);
-        pausado = true;
+        controladorHilos.detener();
     }//GEN-LAST:event_botonPausarActionPerformed
 
     private void botonRenaudarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRenaudarActionPerformed
         botonRenaudar.setEnabled(false);
         botonPausar.setEnabled(true);
-        pausado = false; // Establecer la bandera en false para reanudar los hilos
-        synchronized (lock) {
-            lock.notifyAll(); // Reanudar todos los hilos que están esperando en el objeto de bloqueo
-        }
+        controladorHilos.reanudar();
 
     }//GEN-LAST:event_botonRenaudarActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) throws InterruptedException {
+    public static void main(String args[]) throws MalformedURLException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

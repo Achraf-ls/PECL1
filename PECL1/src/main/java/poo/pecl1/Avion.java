@@ -4,6 +4,7 @@
  */
 package poo.pecl1;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Random;
 
@@ -11,7 +12,7 @@ import java.util.Random;
  *
  * @author Achraf El Idrissi y Gisela González
  */
-public class Avion extends Thread {
+public class Avion extends Thread implements Serializable{
 
     private Random aleatorio = new Random();
 
@@ -22,7 +23,7 @@ public class Avion extends Thread {
     private int pasajeros;
     private int capacidadMaxima;
     private int numVuelos = 0;
-    
+
     private LoggerA loggerA;
 
     private Aeropuerto aeropuertoOrigen;
@@ -31,21 +32,26 @@ public class Avion extends Thread {
 
     private Aerovia aerovia;
 
-    /**
+    private ControladorHilos controladorHilos;
+
+     /**
      * Constructor del avion que recibe un aeropuerto y un id del mismo
      *
      * @param idAvion
      * @param aeropuertoOrigen
      * @param loggerA
+     * @param controladorHilos
      */
-    public Avion(int idAvion, Aeropuerto aeropuertoOrigen, LoggerA loggerA) {
+    public Avion(int idAvion, Aeropuerto aeropuertoOrigen, LoggerA loggerA, ControladorHilos controladorHilos) {
         this.idAvion = idAvion;
         this.aeropuertoOrigen = aeropuertoOrigen;
         this.capacidadMaxima = aleatorio.nextInt(201) + 100;
         this.aeropuertoDestino = aeropuertoOrigen.getAerovia().getAeropuertoDestino();
         this.nombreAvion = generarNombre(idAvion);
         this.loggerA = loggerA;
+        this.controladorHilos = controladorHilos; // Asignación del controlador de hilos
     }
+
 
     /**
      * Metodo get para el numero de pasajeros del avion
@@ -130,6 +136,7 @@ public class Avion extends Thread {
         boolean primerVuelo = true;
         try {
             while (true) {
+                controladorHilos.comprobaciónEspera();
                 if (primerVuelo) {
                     //Se accede al Hangar
                     accederHangar();
@@ -142,43 +149,58 @@ public class Avion extends Thread {
                     }
 
                 }
+                controladorHilos.comprobaciónEspera();
+                
                 //Se accede al área de estacionamiento
                 accederAreaEstacionamiento();
+                controladorHilos.comprobaciónEspera();
                 //Accede a una puerta de Embarque
                 accederPuertaEmbarque();
+                controladorHilos.comprobaciónEspera();
                 //Se accede al área de rodaje
                 accederAreaRodaje();
+                controladorHilos.comprobaciónEspera();
                 //Se realizan comprobaciones de entre 1 y 5 segundos antes de solicitar una pista
                 int tiempoDeComprobaciones = aleatorio.nextInt(5) + 1;
                 Thread.sleep(1000 * tiempoDeComprobaciones);
+                controladorHilos.comprobaciónEspera();
                 //Se intenta acceder a la pista para realizar un despegue
                 adquirirPistaDespegue();
+                controladorHilos.comprobaciónEspera();
                 //Realiza unas últimas verificaciones antes de despegar entre 1 y 3 segundos
                 int tiempoComprobacionesDespegar = aleatorio.nextInt(3) + 1;
                 Thread.sleep(1000 * tiempoComprobacionesDespegar);
+                controladorHilos.comprobaciónEspera();
                 //El avión realiza el despegue
                 despegarAvion();
+                controladorHilos.comprobaciónEspera();
                 //Accedemos al aerovia
                 aeropuertoOrigen.getAerovia().accederAerovia(this);
+                controladorHilos.comprobaciónEspera();
                 //Solicitamos aterrizaje en el aeropuerto de destino
                 aeropuertoDestino.adquirirPistaAterrizaje(this);
+                controladorHilos.comprobaciónEspera();
                 //Una vez aterrizado el avión accedemos a la areá de rodaje
                 aeropuertoDestino.areaRodaje(this);
+                controladorHilos.comprobaciónEspera();
                 //Tarda entre 3 y 5 segundos en llegar al lugar donde se desembarcaran los pasajeros
                 Thread.sleep(1000 * aleatorio.nextInt(3) + 3);
+                controladorHilos.comprobaciónEspera();
                 //Desembarca los pasajerosç
                 aeropuertoDestino.accederPuertaDesembarque(this);
+                controladorHilos.comprobaciónEspera();
                 //Sumamos uno al valor de número de vuelos
                 numVuelos++;
                 //Se accede al taller
                 accederTaller();
+                controladorHilos.comprobaciónEspera();
                 //Cambiamos el aeropuerto destino y el origen
                 aeropuertoAux = aeropuertoDestino;
                 aeropuertoDestino = aeropuertoOrigen;
                 aeropuertoOrigen = aeropuertoAux;
 
             }
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             //Se imprime la excepcion por pantalla
             System.out.println(e);
         }

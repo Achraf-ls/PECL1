@@ -4,35 +4,105 @@
  */
 package poo.pecl1;
 
+import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author giise
  */
-public class Parte2 extends javax.swing.JFrame {
+public class Parte2 extends javax.swing.JFrame implements Serializable {
 
     /**
      * Creates new form Parte2
+     *
      */
+    private boolean pista1M = true;
+    private boolean pista2M = true;
+    private boolean pista3M = true;
+    private boolean pista4M = true;
+    private boolean pista1B = true;
+    private boolean pista2B = true;
+    private boolean pista3B = true;
+    private boolean pista4B = true;
+    private int contadorM = 4;
+    private int contadorB = 4;
+
+    private Aeropuerto aeropuertoMadrid;
+    private Aeropuerto aeropuertoBarcelona;
+
     public Parte2() {
         initComponents();
         inicializar();
+        try {
+            inicializarConexor2();
+        } catch (RemoteException e) {
+            System.out.println(e);
+        }
     }
 
-    public void inicializar(){
-        
-        this.setLocationRelativeTo(null);
-        
+    public void inicializar() {
+
         botonAbrir1M.setEnabled(false);
         botonAbrir2M.setEnabled(false);
         botonAbrir3M.setEnabled(false);
         botonAbrir4M.setEnabled(false);
-        
+
         botonAbrir1B.setEnabled(false);
         botonAbrir2B.setEnabled(false);
         botonAbrir3B.setEnabled(false);
         botonAbrir4B.setEnabled(false);
+        this.setLocationRelativeTo(null);
+
+        Thread updateThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        InterfazConexion conexor = (InterfazConexion) Naming.lookup("//127.0.0.1/ObjetoConecta");
+
+                        // Solicitar los objetos actualizados de los aeropuertos
+                        Aeropuerto aeropuertoMadrid = conexor.getAeropuertoMadrid();
+                        Aeropuerto aeropuertoBarcelona = conexor.getAeropuertoBarcelona();
+                        pasajerosM.setText(Integer.toString(aeropuertoMadrid.getPasajeros()));
+
+                        // Esperar medio segundo antes de la próxima actualización
+                        Thread.sleep(500);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        });
+        updateThread.start();
+
     }
-    
+
+    public void inicializarConexor2() throws RemoteException {
+        try {
+            Conexor2 conexor = new Conexor2();
+
+            boolean[] pistasMadrid = new boolean[]{pista1M, pista2M, pista3M, pista4M};
+            boolean[] pistasBarcelona = new boolean[]{pista1B, pista2B, pista3B, pista4B};
+
+            conexor.enviarDatos(pistasMadrid, pistasBarcelona, contadorM, contadorB);
+
+            // Registrar el conector en el registro RMI
+            Registry registro = LocateRegistry.createRegistry(1050);
+            Naming.rebind("//127.0.0.1/ObjetoConecta2", conexor);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -545,83 +615,115 @@ public class Parte2 extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonCerrar1MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar1MActionPerformed
-       botonAbrir1M.setEnabled(true);
-       botonCerrar1M.setEnabled(false);
+        botonAbrir1M.setEnabled(true);
+        botonCerrar1M.setEnabled(false);
+        pista1M = false;
+        contadorM--;
     }//GEN-LAST:event_botonCerrar1MActionPerformed
 
     private void botonAbrir1MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir1MActionPerformed
         botonAbrir1M.setEnabled(false);
-       botonCerrar1M.setEnabled(true);
+        botonCerrar1M.setEnabled(true);
+        pista1M = true;
+        contadorM++;
     }//GEN-LAST:event_botonAbrir1MActionPerformed
 
     private void botonCerrar2MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar2MActionPerformed
-       botonAbrir2M.setEnabled(true);
-       botonCerrar2M.setEnabled(false);
+        botonAbrir2M.setEnabled(true);
+        botonCerrar2M.setEnabled(false);
+        pista2M = false;
+        contadorM--;
     }//GEN-LAST:event_botonCerrar2MActionPerformed
 
     private void botonAbrir2MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir2MActionPerformed
-       botonAbrir2M.setEnabled(false);
-       botonCerrar2M.setEnabled(true);
+        botonAbrir2M.setEnabled(false);
+        botonCerrar2M.setEnabled(true);
+        pista2M = true;
+        contadorM++;
     }//GEN-LAST:event_botonAbrir2MActionPerformed
 
     private void botonCerrar3MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar3MActionPerformed
-       botonAbrir3M.setEnabled(true);
-       botonCerrar3M.setEnabled(false);
+        botonAbrir3M.setEnabled(true);
+        botonCerrar3M.setEnabled(false);
+        pista3M = false;
+        contadorM--;
     }//GEN-LAST:event_botonCerrar3MActionPerformed
 
     private void botonAbrir3MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir3MActionPerformed
-       botonAbrir3M.setEnabled(false);
-       botonCerrar3M.setEnabled(true);
+        botonAbrir3M.setEnabled(false);
+        botonCerrar3M.setEnabled(true);
+        pista3M = true;
+        contadorM++;
     }//GEN-LAST:event_botonAbrir3MActionPerformed
 
     private void botonCerrar4MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar4MActionPerformed
-       botonAbrir4M.setEnabled(true);
-       botonCerrar4M.setEnabled(false);
+        botonAbrir4M.setEnabled(true);
+        botonCerrar4M.setEnabled(false);
+        pista4M = false;
+        contadorM--;
     }//GEN-LAST:event_botonCerrar4MActionPerformed
 
     private void botonAbrir4MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir4MActionPerformed
-       botonAbrir4M.setEnabled(false);
-       botonCerrar4M.setEnabled(true);
+        botonAbrir4M.setEnabled(false);
+        botonCerrar4M.setEnabled(true);
+        pista4M = true;
+        contadorM++;
     }//GEN-LAST:event_botonAbrir4MActionPerformed
 
     private void botonCerrar1BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar1BActionPerformed
-       botonAbrir1B.setEnabled(true);
-       botonCerrar1B.setEnabled(false);
+        botonAbrir1B.setEnabled(true);
+        botonCerrar1B.setEnabled(false);
+        pista1B = false;
+        contadorB--;
     }//GEN-LAST:event_botonCerrar1BActionPerformed
 
     private void botonAbrir1BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir1BActionPerformed
-       botonAbrir1B.setEnabled(false);
-       botonCerrar1B.setEnabled(true);
+        botonAbrir1B.setEnabled(false);
+        botonCerrar1B.setEnabled(true);
+        pista1B = true;
+        contadorB++;
     }//GEN-LAST:event_botonAbrir1BActionPerformed
 
     private void botonCerrar2BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar2BActionPerformed
-       botonAbrir2B.setEnabled(true);
-       botonCerrar2B.setEnabled(false);
+        botonAbrir2B.setEnabled(true);
+        botonCerrar2B.setEnabled(false);
+        pista2B = false;
+        contadorB--;
     }//GEN-LAST:event_botonCerrar2BActionPerformed
 
     private void botonAbrir2BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir2BActionPerformed
-       botonAbrir2B.setEnabled(false);
-       botonCerrar2B.setEnabled(true);
+        botonAbrir2B.setEnabled(false);
+        botonCerrar2B.setEnabled(true);
+        pista2B = true;
+        contadorB++;
     }//GEN-LAST:event_botonAbrir2BActionPerformed
 
     private void botonCerrar3BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar3BActionPerformed
-       botonAbrir3B.setEnabled(true);
-       botonCerrar3B.setEnabled(false);
+        botonAbrir3B.setEnabled(true);
+        botonCerrar3B.setEnabled(false);
+        pista3B = false;
+        contadorB--;
     }//GEN-LAST:event_botonCerrar3BActionPerformed
 
     private void botonAbrir3BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir3BActionPerformed
-       botonAbrir3B.setEnabled(false);
-       botonCerrar3B.setEnabled(true);
+        botonAbrir3B.setEnabled(false);
+        botonCerrar3B.setEnabled(true);
+        pista3B = true;
+        contadorB++;
     }//GEN-LAST:event_botonAbrir3BActionPerformed
 
     private void botonCerrar4BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar4BActionPerformed
-       botonAbrir4B.setEnabled(true);
-       botonCerrar4B.setEnabled(false);
+        botonAbrir4B.setEnabled(true);
+        botonCerrar4B.setEnabled(false);
+        pista4B = false;
+        contadorB--;
     }//GEN-LAST:event_botonCerrar4BActionPerformed
 
     private void botonAbrir4BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir4BActionPerformed
-       botonAbrir4B.setEnabled(false);
-       botonCerrar4B.setEnabled(true);
+        botonAbrir4B.setEnabled(false);
+        botonCerrar4B.setEnabled(true);
+        pista4B = true;
+        contadorB++;
     }//GEN-LAST:event_botonAbrir4BActionPerformed
 
     /**

@@ -4,6 +4,7 @@
  */
 package poo.pecl1;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -16,9 +17,15 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author Achraf El Idrissi y Gisela González
  */
-public class Aeropuerto {
+public class Aeropuerto implements Serializable {
 
     private int pasajeros;
+    private int pistasDisponibles;
+    private boolean pista1 = true;
+    private boolean pista2 = true;
+    private boolean pista3 = true;
+    private boolean pista4 = true;
+
     private Aerovia aerovia;
     private LoggerA loggerA;
     private Random aleatorio = new Random();
@@ -27,7 +34,7 @@ public class Aeropuerto {
     private Semaphore semaforoPasajeros = new Semaphore(1, true);
     private Semaphore puertaTaller = new Semaphore(1, true);
     private Semaphore taller = new Semaphore(20, true);
-    private Semaphore pista = new Semaphore(4, true);
+    private Semaphore pista;
     private Semaphore puertasEmbarqueDesembarque = new Semaphore(6, true);
     private Semaphore posiblePuertasEmbarque = new Semaphore(5, true);
     private Semaphore posiblePuertasDesembarque = new Semaphore(5, true);
@@ -49,9 +56,11 @@ public class Aeropuerto {
     Lock lecturaPuertas = lockPuertas.readLock();
     Lock escrituraPuertas = lockPuertas.writeLock();
 
-    public Aeropuerto(LoggerA loggerA, String nombreAeropuerto) {
+    public Aeropuerto(LoggerA loggerA, String nombreAeropuerto, int pistasDisponibles) {
         this.loggerA = loggerA;
         this.nombreAeropuerto = nombreAeropuerto;
+        this.pistasDisponibles = pistasDisponibles;
+        this.pista = new Semaphore(pistasDisponibles, true);
     }
 
     public ConcurrentLinkedQueue<Autobus> getBusesDirAeropuerto() {
@@ -158,6 +167,26 @@ public class Aeropuerto {
         this.busesDirCiudad = busesDirCiudad;
     }
 
+    public void setPistasDisponibles(int pistasDisponibles) {
+        this.pistasDisponibles = pistasDisponibles;
+    }
+
+    public synchronized void setPista1(boolean pista1) {
+        this.pista1 = pista1;
+    }
+
+    public synchronized void setPista2(boolean pista2) {
+        this.pista2 = pista2;
+    }
+
+    public synchronized void setPista3(boolean pista3) {
+        this.pista3 = pista3;
+    }
+
+    public synchronized void setPista4(boolean pista4) {
+        this.pista4 = pista4;
+    }
+
     /**
      * Metodo set para la lista de aviones que se encuentran en el hangar
      *
@@ -241,7 +270,7 @@ public class Aeropuerto {
             loggerA.logEvent("Bus " + autobus.getNombreBus() + " deja " + autobus.getPasajeros() + " pasajeros en el aeropuerto de " + autobus.getAeropuerto().nombreAeropuerto);
             pasajeros += autobus.getPasajeros();
 
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
 
             System.out.println(e);
 
@@ -267,7 +296,7 @@ public class Aeropuerto {
             pasajeros -= autobus.getPasajeros();
             busesDirCiudad.add(autobus);
 
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
 
             System.out.println(e);
 
@@ -331,7 +360,7 @@ public class Aeropuerto {
             avionesTaller.remove(avion);
             taller.release();
 
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
@@ -392,7 +421,7 @@ public class Aeropuerto {
 
             escrituraPuertas.unlock();
 
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             System.out.println(e);
         } finally {
             puertasEmbarqueDesembarque.release();
@@ -448,7 +477,7 @@ public class Aeropuerto {
 
             escrituraPuertas.unlock();
 
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             System.out.println(e);
         } finally {
             puertasEmbarqueDesembarque.release();
@@ -485,7 +514,7 @@ public class Aeropuerto {
             }
             // Libera la pista para que otros aviones puedan usarla
             pista.release();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
@@ -510,17 +539,31 @@ public class Aeropuerto {
                 // Añade el avión a la primera pista disponible
                 for (int i = 0; i < listaPista.size(); i++) {
                     if (listaPista.get(i) == null) {
-                        listaPista.set(i, avion);
-                        p += i;
-                        break;
+                        if (pista1 && i == 0) {
+                            listaPista.set(i, avion);
+                            p += i;
+                            break;
+                        } else if (pista2 && i == 1) {
+                            listaPista.set(i, avion);
+                            p += i;
+                            break;
+                        } else if (pista3 && i == 2) {
+                            listaPista.set(i, avion);
+                            p += i;
+                            break;
+                        } else if (pista4 && i == 3) {
+                            listaPista.set(i, avion);
+                            p += i;
+                            break;
+                        }
                     }
                 }
-                
+
                 loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede a la pista " + p + " para despegue");
             } finally {
                 escrituraPista.unlock();
             }
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
@@ -547,13 +590,27 @@ public class Aeropuerto {
             escrituraPista.lock();
             for (int i = 0; i < listaPista.size(); i++) {
                 if (listaPista.get(i) == null) {
-                    listaPista.set(i, avion);
-                    p += 1;
-                    break;
+                    if (pista1 && i == 0) {
+                        listaPista.set(i, avion);
+                        p += i;
+                        break;
+                    } else if (pista2 && i == 1) {
+                        listaPista.set(i, avion);
+                        p += i;
+                        break;
+                    } else if (pista3 && i == 2) {
+                        listaPista.set(i, avion);
+                        p += i;
+                        break;
+                    } else if (pista4 && i == 3) {
+                        listaPista.set(i, avion);
+                        p += i;
+                        break;
+                    }
                 }
             }
             escrituraPista.unlock();
-            
+
             loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede a la pista " + p + " para aterrizaje");
             //El avión aterriza durante un tiempo de entre 1 y 5 segundos
             int tiempoAterrizaje = aleatorio.nextInt(5) + 1;
@@ -569,7 +626,7 @@ public class Aeropuerto {
             }
             escrituraPista.unlock();
             pista.release();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
@@ -584,7 +641,7 @@ public class Aeropuerto {
             areaDeEstacionamiento.add(avion);
             loggerA.logEvent("Avion " + avion.getNombreAvion() + " accede al area de estacionamiento");
             Thread.sleep(3000);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             System.out.println(e);
         }
     }

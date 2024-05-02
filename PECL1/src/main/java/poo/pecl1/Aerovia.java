@@ -4,6 +4,7 @@
  */
 package poo.pecl1;
 
+import java.io.Serializable;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -11,7 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  *
  * @author Achraf El Idrissi y Gisela González
  */
-public class Aerovia {
+public class Aerovia implements Serializable{
 
     private Random aleatorio = new Random();
     private String aeropuertoOrigenDestino;
