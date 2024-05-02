@@ -34,23 +34,14 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
     private boolean pista4B = true;
     private int contadorM = 4;
     private int contadorB = 4;
+    private Conexor2 conexor2;
 
     private Aeropuerto aeropuertoMadrid;
     private Aeropuerto aeropuertoBarcelona;
 
     public Parte2() {
         initComponents();
-        inicializar();
-        try {
-            inicializarConexor2();
-        } catch (RemoteException e) {
-            System.out.println(e);
-        }
-    }
-
-    public void inicializar() {
-
-        botonAbrir1M.setEnabled(false);
+         botonAbrir1M.setEnabled(false);
         botonAbrir2M.setEnabled(false);
         botonAbrir3M.setEnabled(false);
         botonAbrir4M.setEnabled(false);
@@ -60,12 +51,26 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
         botonAbrir3B.setEnabled(false);
         botonAbrir4B.setEnabled(false);
         this.setLocationRelativeTo(null);
+        try{
+            inicializarConexor2();
+        }catch(Exception e){System.out.println(e);}
+    
+        inicializar();
+      
+    }
+
+    public void inicializar() {
+
+        
 
         Thread updateThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
+                    
                     try {
+                        actualizarInformación();
+                        
                         InterfazConexion conexor = (InterfazConexion) Naming.lookup("//127.0.0.1/ObjetoConecta");
 
                         // Solicitar los objetos actualizados de los aeropuertos
@@ -85,19 +90,34 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
         updateThread.start();
 
     }
-
-    public void inicializarConexor2() throws RemoteException {
+    public void actualizarInformación(){
         try {
-            Conexor2 conexor = new Conexor2();
+           
 
             boolean[] pistasMadrid = new boolean[]{pista1M, pista2M, pista3M, pista4M};
             boolean[] pistasBarcelona = new boolean[]{pista1B, pista2B, pista3B, pista4B};
 
-            conexor.enviarDatos(pistasMadrid, pistasBarcelona, contadorM, contadorB);
+            conexor2.enviarDatos(pistasMadrid, pistasBarcelona, contadorM, contadorB);
+
+            
+        } catch (Exception ex) {
+            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    
+    }
+    public void inicializarConexor2() throws RemoteException {
+        try {
+            conexor2 = new Conexor2();
+
+            boolean[] pistasMadrid = new boolean[]{pista1M, pista2M, pista3M, pista4M};
+            boolean[] pistasBarcelona = new boolean[]{pista1B, pista2B, pista3B, pista4B};
+
+            conexor2.enviarDatos(pistasMadrid, pistasBarcelona, contadorM, contadorB);
 
             // Registrar el conector en el registro RMI
             Registry registro = LocateRegistry.createRegistry(1050);
-            Naming.rebind("//127.0.0.1/ObjetoConecta2", conexor);
+            Naming.rebind("//127.0.0.1/ObjetoConecta2", conexor2);
         } catch (MalformedURLException ex) {
             Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
         }

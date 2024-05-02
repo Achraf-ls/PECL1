@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -168,23 +170,33 @@ public class Aeropuerto implements Serializable {
     }
 
     public void setPistasDisponibles(int pistasDisponibles) {
+        escrituraPista.lock();
         this.pistasDisponibles = pistasDisponibles;
+        escrituraPista.unlock();
     }
 
-    public synchronized void setPista1(boolean pista1) {
+    public void setPista1(boolean pista1) {
+        escrituraPista.lock();
         this.pista1 = pista1;
+        escrituraPista.unlock();
     }
 
-    public synchronized void setPista2(boolean pista2) {
+    public void setPista2(boolean pista2) {
+        escrituraPista.lock();
         this.pista2 = pista2;
+        escrituraPista.unlock();
     }
 
-    public synchronized void setPista3(boolean pista3) {
+    public void setPista3(boolean pista3) {
+        escrituraPista.lock();
         this.pista3 = pista3;
+        escrituraPista.unlock();
     }
 
-    public synchronized void setPista4(boolean pista4) {
+    public void setPista4(boolean pista4) {
+        escrituraPista.lock();
         this.pista4 = pista4;
+        escrituraPista.unlock();
     }
 
     /**
@@ -525,7 +537,7 @@ public class Aeropuerto implements Serializable {
      * @param avion
      */
     public void adquirirPistaDespegue(Avion avion) {
-        try {
+         try {
             int p = 1;
             // Intenta adquirir la pista
             pista.acquire();
@@ -655,5 +667,7 @@ public class Aeropuerto implements Serializable {
         areaDeRodaje.add(avion);
         loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede al area de rodaje");
     }
+
+    
 
 }

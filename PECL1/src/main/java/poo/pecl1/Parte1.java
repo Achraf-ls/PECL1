@@ -30,19 +30,22 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
     private Aeropuerto aeropuertoBarcelona = new Aeropuerto(loggerA, "Barcelona", 4);
     Aerovia aeroviaMadBar = new Aerovia("Madrid-Barcelona", aeropuertoBarcelona, loggerA);
     Aerovia aeroviaBarMad = new Aerovia("Barcelona-Madrid", aeropuertoMadrid, loggerA);
+    private Conexor conexor;
 
     /**
      * Creates new form Ventana
      */
     public Parte1() {
         initComponents();
+      
         inicializar();
-        obtener();
-        try {
+             try {
             inicializarConexor();
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             System.out.println(e);
         }
+        obtener();
+       
 
     }
 
@@ -107,6 +110,7 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
 
                         public void run() {
                             try {
+                                actualizarInformación();
                                 InterfazConexion2 conexor = (InterfazConexion2) Naming.lookup("//127.0.0.1/ObjetoConecta2");
                                 aeropuertoMadrid.setPista1(conexor.getPistasMadrid()[0]);
                                 aeropuertoMadrid.setPista2(conexor.getPistasMadrid()[1]);
@@ -157,9 +161,21 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         thread.start();
     }
 
+    public void actualizarInformación() {
+        try {
+
+            // Establecer los aeropuertos en el conector
+            conexor.enviarAeropuertos(aeropuertoMadrid, aeropuertoBarcelona);
+
+        } catch (Exception ex) {
+            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
     public void inicializarConexor() throws RemoteException {
         try {
-            Conexor conexor = new Conexor();
+            conexor = new Conexor();
 
             // Establecer los aeropuertos en el conector
             conexor.enviarAeropuertos(aeropuertoMadrid, aeropuertoBarcelona);
