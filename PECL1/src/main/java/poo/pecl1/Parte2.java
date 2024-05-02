@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author giise
+ * @author Gisela González y Achraf El Idrissi
  */
 public class Parte2 extends javax.swing.JFrame implements Serializable {
 
