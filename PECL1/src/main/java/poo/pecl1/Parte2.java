@@ -11,6 +11,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,7 +42,7 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
 
     public Parte2() {
         initComponents();
-         botonAbrir1M.setEnabled(false);
+        botonAbrir1M.setEnabled(false);
         botonAbrir2M.setEnabled(false);
         botonAbrir3M.setEnabled(false);
         botonAbrir4M.setEnabled(false);
@@ -51,32 +52,43 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
         botonAbrir3B.setEnabled(false);
         botonAbrir4B.setEnabled(false);
         this.setLocationRelativeTo(null);
-        try{
+        try {
             inicializarConexor2();
-        }catch(Exception e){System.out.println(e);}
-    
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
         inicializar();
-      
+
     }
 
     public void inicializar() {
-
-        
 
         Thread updateThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
-                    
+
                     try {
                         actualizarInformación();
-                        
+
                         InterfazConexion conexor = (InterfazConexion) Naming.lookup("//127.0.0.1/ObjetoConecta");
 
                         // Solicitar los objetos actualizados de los aeropuertos
-                        Aeropuerto aeropuertoMadrid = conexor.getAeropuertoMadrid();
-                        Aeropuerto aeropuertoBarcelona = conexor.getAeropuertoBarcelona();
+                        aeropuertoMadrid = conexor.getAeropuertoMadrid();
+                        aeropuertoBarcelona = conexor.getAeropuertoBarcelona();
                         pasajerosM.setText(Integer.toString(aeropuertoMadrid.getPasajeros()));
+                        pasajerosB.setText(Integer.toString(aeropuertoBarcelona.getPasajeros()));
+                        hangarM.setText(Integer.toString(aeropuertoMadrid.getHangar().size()));
+                        hangarB.setText(Integer.toString(aeropuertoBarcelona.getHangar().size()));
+                        tallerM.setText(Integer.toString(aeropuertoMadrid.getAvionesTaller().size()));
+                        tallerB.setText(Integer.toString(aeropuertoBarcelona.getAvionesTaller().size()));
+                        estacionamientoM.setText(Integer.toString(aeropuertoMadrid.getAreaDeEstacionamiento().size()));
+                        estacionamientoB.setText(Integer.toString(aeropuertoBarcelona.getAreaDeEstacionamiento().size()));
+                        areaRodajeM.setText(Integer.toString(aeropuertoMadrid.getAreaDeRodaje().size()));
+                        areaRodajeB.setText(Integer.toString(aeropuertoBarcelona.getAreaDeRodaje().size()));
+                        obtenerAeroviaMB();
+                        obtenerAeroviaBM();
 
                         // Esperar medio segundo antes de la próxima actualización
                         Thread.sleep(500);
@@ -90,22 +102,21 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
         updateThread.start();
 
     }
-    public void actualizarInformación(){
+
+    public void actualizarInformación() {
         try {
-           
 
             boolean[] pistasMadrid = new boolean[]{pista1M, pista2M, pista3M, pista4M};
             boolean[] pistasBarcelona = new boolean[]{pista1B, pista2B, pista3B, pista4B};
 
             conexor2.enviarDatos(pistasMadrid, pistasBarcelona, contadorM, contadorB);
 
-            
         } catch (Exception ex) {
             Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-    
+
     }
+
     public void inicializarConexor2() throws RemoteException {
         try {
             conexor2 = new Conexor2();
@@ -122,7 +133,37 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
             Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
+    public void obtenerAeroviaMB() {
+        ConcurrentLinkedQueue<Avion> aerovia = aeropuertoMadrid.getAerovia().getAvionesAerovia();
+        StringBuilder avionesAerovia = new StringBuilder();
 
+        for (Avion avion : aerovia) {
+            avionesAerovia.append(avion.getNombreAvion());
+            avionesAerovia.append(", ");
+        }
+
+        if (avionesAerovia.length() > 0) {
+            avionesAerovia.delete(avionesAerovia.length() - 2, avionesAerovia.length());
+        }
+        aeroviaMB1.setText(avionesAerovia.toString());
+    }
+
+    public void obtenerAeroviaBM() {
+        ConcurrentLinkedQueue<Avion> aerovia = aeropuertoBarcelona.getAerovia().getAvionesAerovia();
+        StringBuilder avionesAerovia = new StringBuilder();
+
+        for (Avion avion : aerovia) {
+            avionesAerovia.append(avion.getNombreAvion());
+            avionesAerovia.append(", ");
+        }
+
+        if (avionesAerovia.length() > 0) {
+            avionesAerovia.delete(avionesAerovia.length() - 2, avionesAerovia.length());
+        }
+        aeroviaBM1.setText(avionesAerovia.toString());
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
