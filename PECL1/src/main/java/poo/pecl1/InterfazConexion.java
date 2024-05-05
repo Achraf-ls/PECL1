@@ -14,9 +14,18 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public interface InterfazConexion extends Remote {
 
-    void enviarAeropuertos(Aeropuerto aeropuertoMadrid, Aeropuerto aeropuertoBarcelona) throws RemoteException;
+    void enviarAeropuerto(Aeropuerto aeropuerto) throws RemoteException;
 
-    Aeropuerto getAeropuertoMadrid() throws RemoteException;
+    int pasajerosAeropuerto() throws RemoteException;
 
-    Aeropuerto getAeropuertoBarcelona() throws RemoteException;
+    int avionesEnHangar() throws RemoteException;
+
+    int avionesEnTaller() throws RemoteException;
+
+    int avionesEnAreaEstacionamiento() throws RemoteException;
+
+    int avionesEnAreaRodaje() throws RemoteException;
+
+    StringBuilder avionesAerovia() throws RemoteException;
+
 }

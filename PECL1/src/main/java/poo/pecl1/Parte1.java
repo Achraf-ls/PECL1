@@ -7,6 +7,8 @@ package poo.pecl1;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -30,22 +32,21 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
     private Aeropuerto aeropuertoBarcelona = new Aeropuerto(loggerA, "Barcelona", 4);
     Aerovia aeroviaMadBar = new Aerovia("Madrid-Barcelona", aeropuertoBarcelona, loggerA);
     Aerovia aeroviaBarMad = new Aerovia("Barcelona-Madrid", aeropuertoMadrid, loggerA);
-    private Conexor conexor;
+    InterfazConexion2 obj;
+    InterfazConexion2 obj1;
 
     /**
      * Creates new form Ventana
      */
-    public Parte1() {
+    public Parte1() throws RemoteException {
         initComponents();
-      
+
         inicializar();
-             try {
-            inicializarConexor();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        iniciarClientes();
+        inicializarServidorAeropuertoMadrid();
+        inicializarServidorAeropuertoBarcelona();
+
         obtener();
-       
 
     }
 
@@ -102,96 +103,141 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
      * JTextFields y actualizarlos cada cierto tiempo
      */
     public void obtener() {
-        Thread thread = new Thread(new Runnable() {
+
+        Thread uiThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
                     SwingUtilities.invokeLater(new Runnable() {
-
                         public void run() {
-                            try {
-                                actualizarInformación();
-                                InterfazConexion2 conexor = (InterfazConexion2) Naming.lookup("//127.0.0.1/ObjetoConecta2");
-                                aeropuertoMadrid.setPista1(conexor.getPistasMadrid()[0]);
-                                aeropuertoMadrid.setPista2(conexor.getPistasMadrid()[1]);
-                                aeropuertoMadrid.setPista3(conexor.getPistasMadrid()[2]);
-                                aeropuertoMadrid.setPista4(conexor.getPistasMadrid()[3]);
-                                aeropuertoBarcelona.setPista1(conexor.getPistasBarcelona()[0]);
-                                aeropuertoBarcelona.setPista2(conexor.getPistasBarcelona()[1]);
-                                aeropuertoBarcelona.setPista3(conexor.getPistasBarcelona()[2]);
-                                aeropuertoBarcelona.setPista4(conexor.getPistasBarcelona()[3]);
-                                aeropuertoMadrid.setPistasDisponibles(conexor.getSemaforoMadrid());
-                                aeropuertoBarcelona.setPistasDisponibles(conexor.getSemaforoBarcelona());
-                            } catch (Exception e) {
-                                System.out.println(e);
-                            }
-
-                            pasajerosM.setText(Integer.toString(aeropuertoMadrid.getPasajeros()));
-                            pasajerosB.setText(Integer.toString(aeropuertoBarcelona.getPasajeros()));
-                            obtenerHangarM();
-                            obtenerHangarB();
-                            obtenerTallerM();
-                            obtenerTallerB();
-                            obtenerAreaEstacionamientoM();
-                            obtenerAreaEstacionamientoB();
-                            obtenerAreaRodajeM();
-                            obtenerAreaRodajeB();
-                            obtenerAeroviaMB();
-                            obtenerAeroviaBM();
-                            obtenerPistasM();
-                            obtenerPistasB();
-                            obtenerPuertasM();
-                            obtenerPuertasB();
-                            obtenerBusCM();
-                            obtenerBusAM();
-                            obtenerBusCB();
-                            obtenerBusAB();
+                            actualizarUI();
+                            actualizarPistasMadrid();
+                            actualizarPistasBarcelona();
 
                         }
                     });
-
                     try {
-                        Thread.sleep(25);  // Espera medio segundo antes de la próxima actualización
+                        Thread.sleep(500);  // Espera medio segundo antes de la próxima actualización
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
-        thread.start();
+
+        uiThread.start();
+
     }
 
-    public void actualizarInformación() {
+    public void actualizarPistasMadrid() {
+
         try {
-
-            // Establecer los aeropuertos en el conector
-            conexor.enviarAeropuertos(aeropuertoMadrid, aeropuertoBarcelona);
-
-        } catch (Exception ex) {
+            try {
+                obj = (InterfazConexion2) Naming.lookup("//localhost/objetoConecta2");
+            } catch (NotBoundException ex) {
+                Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            aeropuertoMadrid.setPista1(obj.getPistas()[0]);
+            aeropuertoMadrid.setPista2(obj.getPistas()[1]);
+            aeropuertoMadrid.setPista3(obj.getPistas()[2]);
+            aeropuertoMadrid.setPista4(obj.getPistas()[3]);
+            aeropuertoMadrid.setPistasDisponibles(obj.getSemaforo());
+        } catch (RemoteException ex) {
             Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
-    public void inicializarConexor() throws RemoteException {
-        try {
-            conexor = new Conexor();
+    public void actualizarPistasBarcelona() {
 
+        try {
+            try {
+                obj1 = (InterfazConexion2) Naming.lookup("//localhost/objetoConecta3");
+            } catch (NotBoundException ex) {
+                Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            aeropuertoBarcelona.setPista1(obj1.getPistas()[0]);
+            aeropuertoBarcelona.setPista2(obj1.getPistas()[1]);
+            aeropuertoBarcelona.setPista3(obj1.getPistas()[2]);
+            aeropuertoBarcelona.setPista4(obj1.getPistas()[3]);
+            aeropuertoBarcelona.setPistasDisponibles(obj1.getSemaforo());
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void iniciarClientes() {
+
+        try {
+            obj = (InterfazConexion2) Naming.lookup("//localhost/objetoConecta2");
+            obj1 = (InterfazConexion2) Naming.lookup("//localhost/objetoConecta3");
+        } catch (NotBoundException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void actualizarUI() {
+
+        pasajerosM.setText(Integer.toString(aeropuertoMadrid.getPasajeros()));
+        pasajerosB.setText(Integer.toString(aeropuertoBarcelona.getPasajeros()));
+        obtenerHangarM();
+        obtenerHangarB();
+        obtenerTallerM();
+        obtenerTallerB();
+        obtenerAreaEstacionamientoM();
+        obtenerAreaEstacionamientoB();
+        obtenerAreaRodajeM();
+        obtenerAreaRodajeB();
+        obtenerAeroviaMB();
+        obtenerAeroviaBM();
+        obtenerPistasM();
+        obtenerPistasB();
+        obtenerPuertasM();
+        obtenerPuertasB();
+        obtenerBusCM();
+        obtenerBusAM();
+        obtenerBusCB();
+        obtenerBusAB();
+    }
+
+    public void inicializarServidorAeropuertoMadrid() throws RemoteException {
+        try {
+            Conexor obj = new Conexor();
             // Establecer los aeropuertos en el conector
-            conexor.enviarAeropuertos(aeropuertoMadrid, aeropuertoBarcelona);
+            Registry registro = LocateRegistry.createRegistry(1099);
+            Naming.rebind("//localhost/objetoConecta", obj);
+            obj.enviarAeropuerto(aeropuertoMadrid);
 
             // Registrar el conector en el registro RMI
-            Registry registro = LocateRegistry.createRegistry(1099);
-            Naming.rebind("//127.0.0.1/ObjetoConecta", conexor);
         } catch (MalformedURLException ex) {
             Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    /**
-     * Metodo para obtener un String con los aviones que se encuentran en el
-     * hangar del aeropuerto de Madrid
-     */
+    public void inicializarServidorAeropuertoBarcelona() throws RemoteException {
+        try {
+            Conexor obj = new Conexor();
+            // Establecer los aeropuertos en el conector
+            Registry registro = LocateRegistry.createRegistry(1100);
+            Naming.rebind("//localhost/objetoConecta1", obj);
+            obj.enviarAeropuerto(aeropuertoBarcelona);
+
+            // Registrar el conector en el registro RMI
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public void obtenerHangarM() {
         ConcurrentLinkedQueue<Avion> hangar = aeropuertoMadrid.getHangar();
         StringBuilder avionesHangar = new StringBuilder();
@@ -368,10 +414,14 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         for (int i = 0; i < avionesPuertas.size(); i++) {
             if (avionesPuertas.get(i) != null) {
                 Avion avion = avionesPuertas.get(i);
-                if (avion.getIdAvion() % 2 == 0) {
+                if (avion.getIdAvion() % 2 == 0 && avion.getNumVuelos() == 0) {
                     valor = "Embarque: ";
-                } else {
+                } else if (avion.getIdAvion() % 2 != 0 && avion.getNumVuelos() % 2 == 0) {
                     valor = "Desembarque: ";
+                } else if (avion.getIdAvion() % 2 == 0 && avion.getNumVuelos() % 2 != 0) {
+                    valor = "Desembarque: ";
+                } else {
+                    valor = "Embarque: ";
                 }
                 String texto = valor + avion.getNombreAvion();
 
@@ -406,10 +456,14 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         for (int i = 0; i < avionesPuertas.size(); i++) {
             if (avionesPuertas.get(i) != null) {
                 Avion avion = avionesPuertas.get(i);
-                if (avion.getIdAvion() % 2 == 0) {
+                if (avion.getIdAvion() % 2 == 0 && avion.getNumVuelos() == 0) {
                     valor = "Desembarque: ";
-                } else {
+                } else if (avion.getIdAvion() % 2 != 0 && avion.getNumVuelos() % 2 == 0) {
                     valor = "Embarque: ";
+                } else if (avion.getIdAvion() % 2 == 0 && avion.getNumVuelos() % 2 != 0) {
+                    valor = "Embarque: ";
+                } else {
+                    valor = "Desembarque: ";
                 }
                 String texto = valor + avion.getNombreAvion();
 
@@ -441,10 +495,14 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         for (int i = 0; i < avionesPista.size(); i++) {
             if (avionesPista.get(i) != null) {
                 Avion avion = avionesPista.get(i);
-                if (avion.getIdAvion() % 2 == 0) {
+                if (avion.getIdAvion() % 2 == 0 && avion.getNumVuelos() == 0) {
                     valor = "Despegue: ";
-                } else {
+                } else if (avion.getIdAvion() % 2 != 0 && avion.getNumVuelos() % 2 == 0) {
                     valor = "Aterrizaje: ";
+                } else if (avion.getIdAvion() % 2 == 0 && avion.getNumVuelos() % 2 != 0) {
+                    valor = "Aterrizaje: ";
+                } else {
+                    valor = "Despegue: ";
                 }
                 String texto = valor + avion.getNombreAvion();
 
@@ -471,11 +529,15 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
 
         for (int i = 0; i < avionesPista.size(); i++) {
             if (avionesPista.get(i) != null) {
-                Avion avion = avionesPista.get(i);
-                if (avion.getIdAvion() % 2 == 0) {
+                 Avion avion = avionesPista.get(i);
+                if (avion.getIdAvion() % 2 == 0 && avion.getNumVuelos() == 0) {
                     valor = "Aterrizaje: ";
-                } else {
+                } else if (avion.getIdAvion() % 2 != 0 && avion.getNumVuelos() % 2 == 0) {
                     valor = "Despegue: ";
+                } else if (avion.getIdAvion() % 2 == 0 && avion.getNumVuelos() % 2 != 0) {
+                    valor = "Despegue: ";
+                } else {
+                    valor = "Aterrizaje: ";
                 }
                 String texto = valor + avion.getNombreAvion();
 
@@ -1216,7 +1278,11 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Parte1().setVisible(true);
+                try {
+                    new Parte1().setVisible(true);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

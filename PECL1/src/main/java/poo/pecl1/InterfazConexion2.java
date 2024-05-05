@@ -13,14 +13,10 @@ import java.rmi.RemoteException;
  */
 public interface InterfazConexion2 extends Remote {
 
-    void enviarDatos(boolean[] pistasMadrid, boolean[] pistasBarcelona, int semaforoMadrid, int semaforoBarcelona) throws RemoteException;
+    void enviarDatos(boolean[] pistas, int semaforo) throws RemoteException;
 
-    boolean[] getPistasMadrid() throws RemoteException;
+    boolean[] getPistas() throws RemoteException;
 
-    boolean[] getPistasBarcelona() throws RemoteException;
-
-    int getSemaforoMadrid() throws RemoteException;
-
-    int getSemaforoBarcelona() throws RemoteException;
+    int getSemaforo() throws RemoteException;
 
 }

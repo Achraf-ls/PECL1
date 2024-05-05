@@ -7,6 +7,8 @@ package poo.pecl1;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -33,6 +35,7 @@ public class Avion extends Thread implements Serializable{
     private Aerovia aerovia;
 
     private ControladorHilos controladorHilos;
+    private Lock cerrojo = new ReentrantLock();
 
      /**
      * Constructor del avion que recibe un aeropuerto y un id del mismo
@@ -68,7 +71,12 @@ public class Avion extends Thread implements Serializable{
      * @return numVuelos, numero de vuelos que lleva el avion
      */
     public int getNumVuelos() {
-        return numVuelos;
+        cerrojo.lock();
+        try {
+            return numVuelos;
+        } finally {
+            cerrojo.unlock();
+        }
     }
 
     public int getIdAvion() {
@@ -116,6 +124,7 @@ public class Avion extends Thread implements Serializable{
      * @param numVuelos
      */
     public void setNumVuelos(int numVuelos) {
+        
         this.numVuelos = numVuelos;
     }
 
@@ -140,23 +149,27 @@ public class Avion extends Thread implements Serializable{
                 if (primerVuelo) {
                     //Se accede al Hangar
                     accederHangar();
+                    controladorHilos.comprobaciónEspera();
+                    salirHangar();
                     primerVuelo = false;
                 } else {
                     int decision = aleatorio.nextInt(1);
                     if (decision == 0) {
                         accederHangar();
                         Thread.sleep((aleatorio.nextInt(16) + 15) * 1000);
+                        controladorHilos.comprobaciónEspera();
+                        salirHangar();
                     }
 
-                }
-                controladorHilos.comprobaciónEspera();
-                
+                }            
                 //Se accede al área de estacionamiento
                 accederAreaEstacionamiento();
                 controladorHilos.comprobaciónEspera();
+        
                 //Accede a una puerta de Embarque
                 accederPuertaEmbarque();
                 controladorHilos.comprobaciónEspera();
+                salirPuertaEmbarque();
                 //Se accede al área de rodaje
                 accederAreaRodaje();
                 controladorHilos.comprobaciónEspera();
@@ -177,9 +190,11 @@ public class Avion extends Thread implements Serializable{
                 //Accedemos al aerovia
                 aeropuertoOrigen.getAerovia().accederAerovia(this);
                 controladorHilos.comprobaciónEspera();
+                aeropuertoOrigen.getAerovia().abandonarAerovia(this);
                 //Solicitamos aterrizaje en el aeropuerto de destino
                 aeropuertoDestino.adquirirPistaAterrizaje(this);
                 controladorHilos.comprobaciónEspera();
+                aeropuertoDestino.abandonaPistaAterrizaje(this);
                 //Una vez aterrizado el avión accedemos a la areá de rodaje
                 aeropuertoDestino.areaRodaje(this);
                 controladorHilos.comprobaciónEspera();
@@ -189,11 +204,16 @@ public class Avion extends Thread implements Serializable{
                 //Desembarca los pasajerosç
                 aeropuertoDestino.accederPuertaDesembarque(this);
                 controladorHilos.comprobaciónEspera();
+                aeropuertoDestino.abandonarPuertasDesembarque(this);
                 //Sumamos uno al valor de número de vuelos
+                cerrojo.lock();
                 numVuelos++;
+                cerrojo.unlock();
                 //Se accede al taller
                 accederTaller();
                 controladorHilos.comprobaciónEspera();
+                abandonarTaller();
+         
                 //Cambiamos el aeropuerto destino y el origen
                 aeropuertoAux = aeropuertoDestino;
                 aeropuertoDestino = aeropuertoOrigen;
@@ -215,13 +235,25 @@ public class Avion extends Thread implements Serializable{
     public void accederHangar() throws InterruptedException {
         aeropuertoOrigen.accederHangar(this);
     }
-
+    
+    
+       /**
+     * Metodo para acceder al hangar del aeropuerto
+     *
+     * @throws java.lang.InterruptedException
+     */
+    public void salirHangar() throws InterruptedException {
+        aeropuertoOrigen.salirHangar(this);
+    }
     /**
      * Metodo para acceder al area de estacionamiento
      */
     public void accederAreaEstacionamiento() {
         aeropuertoOrigen.accederAreaEstacionamiento(this);
     }
+    
+ 
+
 
     /**
      * Metodo para acceder al area de rodaje
@@ -250,12 +282,24 @@ public class Avion extends Thread implements Serializable{
     public void accederPuertaEmbarque() {
         aeropuertoOrigen.accederPuertaEmbarque(this);
     }
-
+    
+       /**
+     * Metodo para acceder a las puertas de embarque
+     */
+    public void salirPuertaEmbarque() {
+        aeropuertoOrigen.salirPuertaEmbarque(this);
+    }
     /**
      * Metodo para acceder al taller
      */
     public void accederTaller() {
         aeropuertoDestino.accederTaller(this);
+    }
+    
+    public void abandonarTaller(){
+        aeropuertoDestino.salirTaller(this);
+    
+    
     }
 
     /**

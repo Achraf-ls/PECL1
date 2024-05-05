@@ -13,37 +13,25 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class Conexor2 extends UnicastRemoteObject implements InterfazConexion2 {
 
-    private boolean[] pistasMadrid;
-    private boolean[] pistasBarcelona;
-    private int semaforoMadrid;
-    private int semaforoBarcelona;
+    private boolean[] pistas;
+
+    private int semaforo;
 
     public Conexor2() throws RemoteException {
 
     }
 
-    @Override
-    public void enviarDatos(boolean[] pistasMadrid, boolean[] pistasBarcelona, int semaforoMadrid, int semaforoBarcelona) throws RemoteException {
-        this.pistasMadrid = pistasMadrid;
-        this.pistasBarcelona = pistasBarcelona;
-        this.semaforoMadrid = semaforoMadrid;
-        this.semaforoBarcelona = semaforoBarcelona;
+    public void enviarDatos(boolean[] pistas, int semaforo) throws RemoteException {
+        this.pistas = pistas;
+        this.semaforo = semaforo;
     }
 
-    public boolean[] getPistasMadrid() {
-        return pistasMadrid;
+    public boolean[] getPistas() {
+        return pistas;
     }
 
-    public boolean[] getPistasBarcelona() {
-        return pistasBarcelona;
-    }
-
-    public int getSemaforoMadrid() {
-        return semaforoMadrid;
-    }
-
-    public int getSemaforoBarcelona() {
-        return semaforoBarcelona;
+    public int getSemaforo() {
+        return semaforo;
     }
 
 }

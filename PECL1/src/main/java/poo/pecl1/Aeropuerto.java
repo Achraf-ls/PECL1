@@ -14,6 +14,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,6 +30,8 @@ public class Aeropuerto implements Serializable {
     private boolean pista3 = true;
     private boolean pista4 = true;
 
+    private int p;
+    private int puerta;
     private Aerovia aerovia;
     private LoggerA loggerA;
     private Random aleatorio = new Random();
@@ -87,7 +91,7 @@ public class Aeropuerto implements Serializable {
      *
      * @return aerovia, la aerovía asiganada al aeropuerto
      */
-    public Aerovia getAerovia() {
+    public synchronized Aerovia getAerovia() {
         return aerovia;
     }
 
@@ -329,7 +333,18 @@ public class Aeropuerto implements Serializable {
     public void accederHangar(Avion avion) throws InterruptedException {
         hangar.add(avion);
         loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede al hangar");
-        Thread.sleep(3000);
+        Thread.sleep(2000);
+
+    }
+
+    /**
+     * Metodo que "controla" el hangar, añadiendo y eliminando a los aviones
+     *
+     * @param avion
+     * @throws InterruptedException
+     */
+    public void salirHangar(Avion avion) throws InterruptedException {
+        loggerA.logEvent("Avión " + avion.getNombreAvion() + " sale del hangar");
         hangar.remove(avion);
     }
 
@@ -363,6 +378,15 @@ public class Aeropuerto implements Serializable {
                 //El tiempo de esta inspección es de entre 1 y 5 segundos
                 Thread.sleep((aleatorio.nextInt(5) + 1) * 1000);
             }
+           
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    
+    public void salirTaller(Avion avion){
+        try {
             //Salimos del taller
             puertaTaller.acquire();
             //El avión tarda 1 segundo en atraversar la puerta
@@ -371,10 +395,14 @@ public class Aeropuerto implements Serializable {
             puertaTaller.release();
             avionesTaller.remove(avion);
             taller.release();
-
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Aeropuerto.class.getName()).log(Level.SEVERE, null, ex);
         }
+    
+    
+    
+    
+    
     }
 
     /**
@@ -399,7 +427,7 @@ public class Aeropuerto implements Serializable {
                     break;
                 }
             }
-
+            loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede a puerta de embarque " + puerta + " para embarcar " + avion.getPasajeros() + " pasajeros");
             escrituraPuertas.unlock();
 
             int contador = 0;
@@ -420,7 +448,13 @@ public class Aeropuerto implements Serializable {
                 contador++;
             }
 
-            loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede a puerta de embarque " + puerta + " para embarcar " + avion.getPasajeros() + " pasajeros");
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void salirPuertaEmbarque(Avion avion) {
+        try {
 
             escrituraPuertas.lock();
             for (int i = 0; i < avionesPuertas.size(); i++) {
@@ -430,14 +464,11 @@ public class Aeropuerto implements Serializable {
                     break; // Sal del bucle una vez que hayas eliminado el avión
                 }
             }
-
             escrituraPuertas.unlock();
-
-        } catch (Exception e) {
-            System.out.println(e);
-        } finally {
             puertasEmbarqueDesembarque.release();
             posiblePuertasEmbarque.release();
+
+        } catch (Exception e) {
 
         }
 
@@ -466,7 +497,7 @@ public class Aeropuerto implements Serializable {
                     break;
                 }
             }
-
+            loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede a puerta de embarque " + puerta + " para desembarcar " + avion.getPasajeros() + " pasajeros");
             escrituraPuertas.unlock();
 
             //Transferimos los pasajeros al aeropuerto
@@ -474,28 +505,31 @@ public class Aeropuerto implements Serializable {
             //La transferencia de pasajeros dura entre 1 y 5 segundos
             Thread.sleep(1000 * aleatorio.nextInt(5) + 1);
             pasajeros += avion.getPasajeros();
-            loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede a puerta de embarque " + puerta + " para desembarcar " + avion.getPasajeros() + " pasajeros");
+
             avion.setPasajeros(0);
             semaforoPasajeros.release();
 
-            escrituraPuertas.lock();
-            for (int i = 0; i < avionesPuertas.size(); i++) {
-                Avion avionEnPista = avionesPuertas.get(i);
-                if (avionEnPista != null && avionEnPista.getIdAvion() == avion.getIdAvion()) {
-                    avionesPuertas.set(i, null); // Elimina el avión de la pista
-                    break; // Sal del bucle una vez que hayas eliminado el avión
-                }
-            }
-
-            escrituraPuertas.unlock();
+           
 
         } catch (Exception e) {
             System.out.println(e);
-        } finally {
-            puertasEmbarqueDesembarque.release();
-            posiblePuertasDesembarque.release();
+        } 
 
+    }
+
+    public void abandonarPuertasDesembarque(Avion avion) {
+        escrituraPuertas.lock();
+        for (int i = 0; i < avionesPuertas.size(); i++) {
+            Avion avionEnPista = avionesPuertas.get(i);
+            if (avionEnPista != null && avionEnPista.getIdAvion() == avion.getIdAvion()) {
+                avionesPuertas.set(i, null); // Elimina el avión de la pista
+                break; // Sal del bucle una vez que hayas eliminado el avión
+            }
         }
+        escrituraPuertas.unlock();
+        puertasEmbarqueDesembarque.release();
+        posiblePuertasDesembarque.release();
+        
 
     }
 
@@ -537,8 +571,8 @@ public class Aeropuerto implements Serializable {
      * @param avion
      */
     public void adquirirPistaDespegue(Avion avion) {
-         try {
-            int p = 1;
+        try {
+
             // Intenta adquirir la pista
             pista.acquire();
 
@@ -587,7 +621,7 @@ public class Aeropuerto implements Serializable {
      */
     public void adquirirPistaAterrizaje(Avion avion) {
         try {
-            int p = 1;
+
             boolean pistaAdquirida = false;
             while (!pistaAdquirida) {
                 pistaAdquirida = pista.tryAcquire();
@@ -621,9 +655,9 @@ public class Aeropuerto implements Serializable {
                     }
                 }
             }
+            loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede a la pista " + p + " para aterrizaje");
             escrituraPista.unlock();
 
-            loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede a la pista " + p + " para aterrizaje");
             //El avión aterriza durante un tiempo de entre 1 y 5 segundos
             int tiempoAterrizaje = aleatorio.nextInt(5) + 1;
             Thread.sleep(1000 * tiempoAterrizaje);
@@ -641,6 +675,29 @@ public class Aeropuerto implements Serializable {
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    public void abandonaPistaAterrizaje(Avion avion) {
+
+        try {
+            //El avión aterriza durante un tiempo de entre 1 y 5 segundos
+            int tiempoAterrizaje = aleatorio.nextInt(5) + 1;
+            Thread.sleep(1000 * tiempoAterrizaje);
+            //Una vez abandona la aterriza abandona la pista y accede al 
+            escrituraPista.lock();
+            for (int i = 0; i < listaPista.size(); i++) {
+                Avion avionEnPista = listaPista.get(i);
+                if (avionEnPista != null && avionEnPista.getIdAvion() == avion.getIdAvion()) {
+                    listaPista.set(i, null); // Elimina el avión de la pista
+                    break; // Sal del bucle una vez que hayas eliminado el avión
+                }
+            }
+            escrituraPista.unlock();
+            pista.release();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Aeropuerto.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     /**
@@ -667,7 +724,5 @@ public class Aeropuerto implements Serializable {
         areaDeRodaje.add(avion);
         loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede al area de rodaje");
     }
-
-    
 
 }

@@ -7,13 +7,17 @@ package poo.pecl1;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -35,13 +39,147 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
     private boolean pista4B = true;
     private int contadorM = 4;
     private int contadorB = 4;
-    private Conexor2 conexor2;
+    InterfazConexion obj;
+    InterfazConexion obj1;
+    Conexor2 conexor2;
+    Conexor2 conexor21;
 
-    private Aeropuerto aeropuertoMadrid;
-    private Aeropuerto aeropuertoBarcelona;
+    public Parte2() throws RemoteException {
 
-    public Parte2() {
         initComponents();
+        deshabilitarBotones();
+
+        iniciarClientes();
+        inicializarServidorPistasAeropuertoMadrid();
+        inicializarServidorPistasAeropuertoBarcelona();
+
+        inicializar();
+
+    }
+
+    public void inicializar() {
+
+        Thread uiThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            try {
+                                actualizarAeropuerto();
+                                actualizarServidorPistasAeropuertoMadrid();
+                                actualizarServidorPistasAeropuertoBarcelona();
+                                        
+                                        } catch (RemoteException ex) {
+                                Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                        }
+                    });
+                    try {
+                        Thread.sleep(5000);  // Espera medio segundo antes de la próxima actualización
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        uiThread.start();
+
+    }
+
+    public void iniciarClientes() {
+
+        try {
+            obj = (InterfazConexion) Naming.lookup("//localhost/objetoConecta");
+            obj1 = (InterfazConexion) Naming.lookup("//localhost/objetoConecta1");
+        } catch (NotBoundException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+    
+      public void actualizarServidorPistasAeropuertoMadrid() throws RemoteException {
+        try {
+           
+            boolean[] pistasMadrid = new boolean[]{pista1M, pista2M, pista3M, pista4M};
+            conexor2.enviarDatos(pistasMadrid, contadorM);
+
+            // Registrar el conector en el registro RMI
+        } catch (Exception ex) {
+            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void inicializarServidorPistasAeropuertoMadrid() throws RemoteException {
+        try {
+            conexor2 = new Conexor2();
+            // Establecer los aeropuertos en el conector
+            Registry registro = LocateRegistry.createRegistry(1101);
+            Naming.rebind("//localhost/objetoConecta2", conexor2);
+            boolean[] pistasMadrid = new boolean[]{pista1M, pista2M, pista3M, pista4M};
+            conexor2.enviarDatos(pistasMadrid, contadorM);
+
+            // Registrar el conector en el registro RMI
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void inicializarServidorPistasAeropuertoBarcelona() throws RemoteException {
+        try {
+            conexor21 = new Conexor2();
+            // Establecer los aeropuertos en el conector
+            Registry registro = LocateRegistry.createRegistry(1102);
+            Naming.rebind("//localhost/objetoConecta3", conexor21);
+            boolean[] pistasBarcelona = new boolean[]{pista1B, pista2B, pista3B, pista4B};
+            conexor21.enviarDatos(pistasBarcelona, contadorB);
+
+            // Registrar el conector en el registro RMI
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+      public void actualizarServidorPistasAeropuertoBarcelona() throws RemoteException {
+        try {
+          
+            boolean[] pistasBarcelona = new boolean[]{pista1B, pista2B, pista3B, pista4B};
+            conexor21.enviarDatos(pistasBarcelona, contadorB);
+
+            // Registrar el conector en el registro RMI
+        } catch (Exception ex) {
+            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void actualizarAeropuerto() {
+
+        try {
+            pasajerosM.setText(Integer.toString(obj.pasajerosAeropuerto()));
+            hangarM.setText(Integer.toString(obj.avionesEnHangar()));
+            tallerM.setText(Integer.toString(obj.avionesEnTaller()));
+            estacionamientoM.setText(Integer.toString(obj.avionesEnAreaEstacionamiento()));
+            areaRodajeM.setText(Integer.toString(obj.avionesEnAreaRodaje()));
+            aeroviaMB1.setText(obj.avionesAerovia().toString());
+            pasajerosB.setText(Integer.toString(obj1.pasajerosAeropuerto()));
+            hangarB.setText(Integer.toString(obj1.avionesEnHangar()));
+            tallerB.setText(Integer.toString(obj1.avionesEnTaller()));
+            estacionamientoB.setText(Integer.toString(obj1.avionesEnAreaEstacionamiento()));
+            areaRodajeB.setText(Integer.toString(obj1.avionesEnAreaRodaje()));
+            aeroviaBM1.setText(obj1.avionesAerovia().toString());
+
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void deshabilitarBotones() {
         botonAbrir1M.setEnabled(false);
         botonAbrir2M.setEnabled(false);
         botonAbrir3M.setEnabled(false);
@@ -51,119 +189,11 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
         botonAbrir2B.setEnabled(false);
         botonAbrir3B.setEnabled(false);
         botonAbrir4B.setEnabled(false);
+
         this.setLocationRelativeTo(null);
-        try {
-            inicializarConexor2();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        inicializar();
 
     }
 
-    public void inicializar() {
-
-        Thread updateThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-
-                    try {
-                        actualizarInformación();
-
-                        InterfazConexion conexor = (InterfazConexion) Naming.lookup("//127.0.0.1/ObjetoConecta");
-
-                        // Solicitar los objetos actualizados de los aeropuertos
-                        aeropuertoMadrid = conexor.getAeropuertoMadrid();
-                        aeropuertoBarcelona = conexor.getAeropuertoBarcelona();
-                        pasajerosM.setText(Integer.toString(aeropuertoMadrid.getPasajeros()));
-                        pasajerosB.setText(Integer.toString(aeropuertoBarcelona.getPasajeros()));
-                        hangarM.setText(Integer.toString(aeropuertoMadrid.getHangar().size()));
-                        hangarB.setText(Integer.toString(aeropuertoBarcelona.getHangar().size()));
-                        tallerM.setText(Integer.toString(aeropuertoMadrid.getAvionesTaller().size()));
-                        tallerB.setText(Integer.toString(aeropuertoBarcelona.getAvionesTaller().size()));
-                        estacionamientoM.setText(Integer.toString(aeropuertoMadrid.getAreaDeEstacionamiento().size()));
-                        estacionamientoB.setText(Integer.toString(aeropuertoBarcelona.getAreaDeEstacionamiento().size()));
-                        areaRodajeM.setText(Integer.toString(aeropuertoMadrid.getAreaDeRodaje().size()));
-                        areaRodajeB.setText(Integer.toString(aeropuertoBarcelona.getAreaDeRodaje().size()));
-                        obtenerAeroviaMB();
-                        obtenerAeroviaBM();
-
-                        // Esperar medio segundo antes de la próxima actualización
-                        Thread.sleep(500);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        });
-        updateThread.start();
-
-    }
-
-    public void actualizarInformación() {
-        try {
-
-            boolean[] pistasMadrid = new boolean[]{pista1M, pista2M, pista3M, pista4M};
-            boolean[] pistasBarcelona = new boolean[]{pista1B, pista2B, pista3B, pista4B};
-
-            conexor2.enviarDatos(pistasMadrid, pistasBarcelona, contadorM, contadorB);
-
-        } catch (Exception ex) {
-            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    public void inicializarConexor2() throws RemoteException {
-        try {
-            conexor2 = new Conexor2();
-
-            boolean[] pistasMadrid = new boolean[]{pista1M, pista2M, pista3M, pista4M};
-            boolean[] pistasBarcelona = new boolean[]{pista1B, pista2B, pista3B, pista4B};
-
-            conexor2.enviarDatos(pistasMadrid, pistasBarcelona, contadorM, contadorB);
-
-            // Registrar el conector en el registro RMI
-            Registry registro = LocateRegistry.createRegistry(1050);
-            Naming.rebind("//127.0.0.1/ObjetoConecta2", conexor2);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    
-    public void obtenerAeroviaMB() {
-        ConcurrentLinkedQueue<Avion> aerovia = aeropuertoMadrid.getAerovia().getAvionesAerovia();
-        StringBuilder avionesAerovia = new StringBuilder();
-
-        for (Avion avion : aerovia) {
-            avionesAerovia.append(avion.getNombreAvion());
-            avionesAerovia.append(", ");
-        }
-
-        if (avionesAerovia.length() > 0) {
-            avionesAerovia.delete(avionesAerovia.length() - 2, avionesAerovia.length());
-        }
-        aeroviaMB1.setText(avionesAerovia.toString());
-    }
-
-    public void obtenerAeroviaBM() {
-        ConcurrentLinkedQueue<Avion> aerovia = aeropuertoBarcelona.getAerovia().getAvionesAerovia();
-        StringBuilder avionesAerovia = new StringBuilder();
-
-        for (Avion avion : aerovia) {
-            avionesAerovia.append(avion.getNombreAvion());
-            avionesAerovia.append(", ");
-        }
-
-        if (avionesAerovia.length() > 0) {
-            avionesAerovia.delete(avionesAerovia.length() - 2, avionesAerovia.length());
-        }
-        aeroviaBM1.setText(avionesAerovia.toString());
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -817,7 +847,11 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Parte2().setVisible(true);
+                try {
+                    new Parte2().setVisible(true);
+                } catch (RemoteException ex) {
+                    Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
