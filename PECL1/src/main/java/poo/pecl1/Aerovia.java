@@ -56,11 +56,7 @@ public class Aerovia implements Serializable{
         //Añadimos el avión a la aerovia
         avionesAerovia.add(avion);
         loggerA.logEvent("Avion " + avion.getNombreAvion() + "(" + avion.getPasajeros() + " pasajeros) accede a la aerovía " + avion.getAeropuertoOrigen().getAerovia().aeropuertoOrigenDestino, avion.getAeropuertoOrigen().getNombreAeropuerto());
-        //El avión vuela un tiempo entre 15 y 30 segunodos
-        int tiempoVuelo = aleatorio.nextInt(16) + 15;
-        Thread.sleep(1000 * tiempoVuelo);
-        //Una vez se realiza el vuelo dejamos la aerovia e intentamos adquirir una pista del aeropuerto de origen 
-        avionesAerovia.remove(avion);
+        
     }
     public void abandonarAerovia(Avion avion) throws InterruptedException {
         int tiempoVuelo = aleatorio.nextInt(16) + 15;
