@@ -37,8 +37,6 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
     private int contadorB = 4;
     InterfazConexion obj;
     InterfazConexion obj1;
-    Conexor2 conexor2;
-    Conexor2 conexor21;
 
     public Parte2() throws RemoteException {
 
@@ -46,8 +44,7 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
         deshabilitarBotones();
 
         iniciarClientes();
-        inicializarServidorPistasAeropuertoMadrid();
-        inicializarServidorPistasAeropuertoBarcelona();
+        
 
         inicializar();
 
@@ -61,14 +58,7 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
                 while (true) {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
-                            try {
-                                actualizarAeropuerto();
-                                actualizarServidorPistasAeropuertoMadrid();
-                                actualizarServidorPistasAeropuertoBarcelona();
-                                        
-                                        } catch (RemoteException ex) {
-                                Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                            actualizarAeropuerto();
 
                         }
                     });
@@ -100,58 +90,7 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
 
     }
     
-      public void actualizarServidorPistasAeropuertoMadrid() throws RemoteException {
-        try {
-           
-            boolean[] pistasMadrid = new boolean[]{pista1M, pista2M, pista3M, pista4M};
-            conexor2.enviarDatos(pistasMadrid, contadorM);
-
-            // Registrar el conector en el registro RMI
-        } catch (Exception ex) {
-            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void inicializarServidorPistasAeropuertoMadrid() throws RemoteException {
-        try {
-            conexor2 = new Conexor2();
-            // Establecer los aeropuertos en el conector
-            Registry registro = LocateRegistry.createRegistry(1101);
-            Naming.rebind("//localhost/objetoConecta2", conexor2);
-            boolean[] pistasMadrid = new boolean[]{pista1M, pista2M, pista3M, pista4M};
-            conexor2.enviarDatos(pistasMadrid, contadorM);
-
-            // Registrar el conector en el registro RMI
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void inicializarServidorPistasAeropuertoBarcelona() throws RemoteException {
-        try {
-            conexor21 = new Conexor2();
-            // Establecer los aeropuertos en el conector
-            Registry registro = LocateRegistry.createRegistry(1102);
-            Naming.rebind("//localhost/objetoConecta3", conexor21);
-            boolean[] pistasBarcelona = new boolean[]{pista1B, pista2B, pista3B, pista4B};
-            conexor21.enviarDatos(pistasBarcelona, contadorB);
-
-            // Registrar el conector en el registro RMI
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-      public void actualizarServidorPistasAeropuertoBarcelona() throws RemoteException {
-        try {
-          
-            boolean[] pistasBarcelona = new boolean[]{pista1B, pista2B, pista3B, pista4B};
-            conexor21.enviarDatos(pistasBarcelona, contadorB);
-
-            // Registrar el conector en el registro RMI
-        } catch (Exception ex) {
-            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+      
 
     public void actualizarAeropuerto() {
 
@@ -702,115 +641,199 @@ public class Parte2 extends javax.swing.JFrame implements Serializable {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonCerrar1MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar1MActionPerformed
-        botonAbrir1M.setEnabled(true);
-        botonCerrar1M.setEnabled(false);
-        pista1M = false;
-        contadorM--;
+        try {
+            botonAbrir1M.setEnabled(true);
+            botonCerrar1M.setEnabled(false);
+            pista1M = false;
+            int pista = 1;
+            obj.controlarPistas(pista1M, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_botonCerrar1MActionPerformed
 
     private void botonAbrir1MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir1MActionPerformed
-        botonAbrir1M.setEnabled(false);
-        botonCerrar1M.setEnabled(true);
-        pista1M = true;
-        contadorM++;
+        try {
+            botonAbrir1M.setEnabled(false);
+            botonCerrar1M.setEnabled(true);
+            pista1M = true;
+            int pista = 1;
+            obj.controlarPistas(pista1M, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonAbrir1MActionPerformed
 
     private void botonCerrar2MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar2MActionPerformed
-        botonAbrir2M.setEnabled(true);
-        botonCerrar2M.setEnabled(false);
-        pista2M = false;
-        contadorM--;
+        try {
+            botonAbrir2M.setEnabled(true);
+            botonCerrar2M.setEnabled(false);
+            pista2M = false;
+            int pista= 2;
+            obj.controlarPistas(pista2M, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonCerrar2MActionPerformed
 
     private void botonAbrir2MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir2MActionPerformed
-        botonAbrir2M.setEnabled(false);
-        botonCerrar2M.setEnabled(true);
-        pista2M = true;
-        contadorM++;
+        try {
+            botonAbrir2M.setEnabled(false);
+            botonCerrar2M.setEnabled(true);
+            pista2M = true;
+            int pista = 2;
+            obj.controlarPistas(pista2M, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonAbrir2MActionPerformed
 
     private void botonCerrar3MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar3MActionPerformed
-        botonAbrir3M.setEnabled(true);
-        botonCerrar3M.setEnabled(false);
-        pista3M = false;
-        contadorM--;
+        try {
+            botonAbrir3M.setEnabled(true);
+            botonCerrar3M.setEnabled(false);
+            pista3M = false;
+            int pista = 3;
+            obj.controlarPistas(pista3M, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonCerrar3MActionPerformed
 
     private void botonAbrir3MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir3MActionPerformed
-        botonAbrir3M.setEnabled(false);
-        botonCerrar3M.setEnabled(true);
-        pista3M = true;
-        contadorM++;
+        try {
+            botonAbrir3M.setEnabled(false);
+            botonCerrar3M.setEnabled(true);
+            pista3M = true;
+            
+            int pista = 3;
+            obj.controlarPistas(pista3M, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonAbrir3MActionPerformed
 
     private void botonCerrar4MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar4MActionPerformed
-        botonAbrir4M.setEnabled(true);
-        botonCerrar4M.setEnabled(false);
-        pista4M = false;
-        contadorM--;
+        try {
+            botonAbrir4M.setEnabled(true);
+            botonCerrar4M.setEnabled(false);
+            pista4M = false;
+            int pista = 4;
+            obj.controlarPistas(pista4M, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
     }//GEN-LAST:event_botonCerrar4MActionPerformed
 
     private void botonAbrir4MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir4MActionPerformed
-        botonAbrir4M.setEnabled(false);
-        botonCerrar4M.setEnabled(true);
-        pista4M = true;
-        contadorM++;
+        try {
+            botonAbrir4M.setEnabled(false);
+            botonCerrar4M.setEnabled(true);
+            pista4M = true;
+            int pista = 4;
+            obj.controlarPistas(pista4M, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonAbrir4MActionPerformed
 
     private void botonCerrar1BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar1BActionPerformed
-        botonAbrir1B.setEnabled(true);
-        botonCerrar1B.setEnabled(false);
-        pista1B = false;
-        contadorB--;
+        try {
+            botonAbrir1B.setEnabled(true);
+            botonCerrar1B.setEnabled(false);
+            pista1B = false;
+            int pista = 1;
+            obj1.controlarPistas(pista1B, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonCerrar1BActionPerformed
 
     private void botonAbrir1BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir1BActionPerformed
-        botonAbrir1B.setEnabled(false);
-        botonCerrar1B.setEnabled(true);
-        pista1B = true;
-        contadorB++;
+        try {
+            botonAbrir1B.setEnabled(false);
+            botonCerrar1B.setEnabled(true);
+            pista1B = true;
+            int pista = 1;
+            obj1.controlarPistas(pista1B, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonAbrir1BActionPerformed
 
     private void botonCerrar2BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar2BActionPerformed
-        botonAbrir2B.setEnabled(true);
-        botonCerrar2B.setEnabled(false);
-        pista2B = false;
-        contadorB--;
+        try {
+            botonAbrir2B.setEnabled(true);
+            botonCerrar2B.setEnabled(false);
+            pista2B = false;
+            int pista = 2;
+            obj1.controlarPistas(pista2B, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_botonCerrar2BActionPerformed
 
     private void botonAbrir2BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir2BActionPerformed
-        botonAbrir2B.setEnabled(false);
-        botonCerrar2B.setEnabled(true);
-        pista2B = true;
-        contadorB++;
+        try {
+            botonAbrir2B.setEnabled(false);
+            botonCerrar2B.setEnabled(true);
+            pista2B = true;
+            int pista = 2;
+            obj1.controlarPistas(pista2B, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonAbrir2BActionPerformed
 
     private void botonCerrar3BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar3BActionPerformed
-        botonAbrir3B.setEnabled(true);
-        botonCerrar3B.setEnabled(false);
-        pista3B = false;
-        contadorB--;
+        try {
+            botonAbrir3B.setEnabled(true);
+            botonCerrar3B.setEnabled(false);
+            pista3B = false;
+            int pista = 3;
+            obj1.controlarPistas(pista3B, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonCerrar3BActionPerformed
 
     private void botonAbrir3BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir3BActionPerformed
-        botonAbrir3B.setEnabled(false);
-        botonCerrar3B.setEnabled(true);
-        pista3B = true;
-        contadorB++;
+        try {
+            botonAbrir3B.setEnabled(false);
+            botonCerrar3B.setEnabled(true);
+            pista3B = true;
+            int pista = 3;
+            obj1.controlarPistas(pista3B, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonAbrir3BActionPerformed
 
     private void botonCerrar4BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar4BActionPerformed
-        botonAbrir4B.setEnabled(true);
-        botonCerrar4B.setEnabled(false);
-        pista4B = false;
-        contadorB--;
+        try {
+            botonAbrir4B.setEnabled(true);
+            botonCerrar4B.setEnabled(false);
+            pista4B = false;
+            int pista = 4;
+            obj1.controlarPistas(pista4B, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonCerrar4BActionPerformed
 
     private void botonAbrir4BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir4BActionPerformed
-        botonAbrir4B.setEnabled(false);
-        botonCerrar4B.setEnabled(true);
-        pista4B = true;
-        contadorB++;
+        try {
+            botonAbrir4B.setEnabled(false);
+            botonCerrar4B.setEnabled(true);
+            pista4B = true;
+            int pista = 4;
+            obj1.controlarPistas(pista4B, pista);
+        } catch (RemoteException ex) {
+            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_botonAbrir4BActionPerformed
 
     /**

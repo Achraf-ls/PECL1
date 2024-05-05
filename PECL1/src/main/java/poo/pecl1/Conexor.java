@@ -7,6 +7,7 @@ package poo.pecl1;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Semaphore;
 
 /**
  *
@@ -14,10 +15,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Conexor extends UnicastRemoteObject implements InterfazConexion {
 
-    private  Aeropuerto aeropuerto;
+    private Aeropuerto aeropuerto;
 
     public Conexor() throws RemoteException {
-        
+
     }
 
     public void enviarAeropuerto(Aeropuerto aeropuerto) throws RemoteException {
@@ -44,8 +45,8 @@ public class Conexor extends UnicastRemoteObject implements InterfazConexion {
         return aeropuerto.getAreaDeRodaje().size();
     }
 
-    public StringBuilder avionesAerovia() throws RemoteException{
-       ConcurrentLinkedQueue<Avion> aerovia = aeropuerto.getAerovia().getAvionesAerovia();
+    public StringBuilder avionesAerovia() throws RemoteException {
+        ConcurrentLinkedQueue<Avion> aerovia = aeropuerto.getAerovia().getAvionesAerovia();
         StringBuilder avionesAerovia = new StringBuilder();
 
         for (Avion avion : aerovia) {
@@ -57,6 +58,37 @@ public class Conexor extends UnicastRemoteObject implements InterfazConexion {
             avionesAerovia.delete(avionesAerovia.length() - 2, avionesAerovia.length());
         }
         return avionesAerovia;
+    }
+
+    public void controlarPistas(boolean valor, int pista) throws RemoteException {
+        int permisos;
+        int nuevosPermisos;
+        if (valor) {
+            permisos = aeropuerto.getPistasDisponibles();
+            aeropuerto.setPistasDisponibles(permisos + 1);
+            nuevosPermisos = aeropuerto.getPistasDisponibles();
+            Semaphore semaforoPista = new Semaphore(nuevosPermisos, true);
+            aeropuerto.setPista(semaforoPista);
+
+        } else {
+            permisos = aeropuerto.getPistasDisponibles();
+            aeropuerto.setPistasDisponibles(permisos - 1);
+            nuevosPermisos = aeropuerto.getPistasDisponibles();
+            Semaphore semaforoPista = new Semaphore(nuevosPermisos, true);
+            aeropuerto.setPista(semaforoPista);
+
+        }
+
+        if (pista == 1) {
+            aeropuerto.setPista1(valor);
+        } else if (pista == 2) {
+            aeropuerto.setPista2(valor);
+        } else if (pista == 3) {
+            aeropuerto.setPista3(valor);
+        } else {
+            aeropuerto.setPista4(valor);
+        }
+
     }
 
 }

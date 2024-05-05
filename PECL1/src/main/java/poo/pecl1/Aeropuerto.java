@@ -80,6 +80,17 @@ public class Aeropuerto implements Serializable {
         return nombreAeropuerto;
     }
 
+    public int getPistasDisponibles() {
+         escrituraPista.lock();
+        try {
+            return pistasDisponibles;
+        } finally {
+            escrituraPista.unlock();
+        }
+    }
+    
+    
+
     public ArrayList<Avion> getListaPista() {
         try {
             lecturaPista.lock();
@@ -176,6 +187,10 @@ public class Aeropuerto implements Serializable {
         this.busesDirCiudad = busesDirCiudad;
     }
 
+    public void setPista(Semaphore pista) {
+        this.pista = pista;
+    }
+    
     public void setPistasDisponibles(int pistasDisponibles) {
         escrituraPista.lock();
         this.pistasDisponibles = pistasDisponibles;
@@ -648,21 +663,7 @@ public class Aeropuerto implements Serializable {
             }
             loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede a la pista " + p + " para aterrizaje", avion.getAeropuertoOrigen().nombreAeropuerto);
             escrituraPista.unlock();
-
-            //El avión aterriza durante un tiempo de entre 1 y 5 segundos
-            int tiempoAterrizaje = aleatorio.nextInt(5) + 1;
-            Thread.sleep(1000 * tiempoAterrizaje);
-            //Una vez abandona la aterriza abandona la pista y accede al 
-            escrituraPista.lock();
-            for (int i = 0; i < listaPista.size(); i++) {
-                Avion avionEnPista = listaPista.get(i);
-                if (avionEnPista != null && avionEnPista.getIdAvion() == avion.getIdAvion()) {
-                    listaPista.set(i, null); // Elimina el avión de la pista
-                    break; // Sal del bucle una vez que hayas eliminado el avión
-                }
-            }
-            escrituraPista.unlock();
-            pista.release();
+          
         } catch (Exception e) {
             System.out.println(e);
         }

@@ -30,8 +30,6 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
     private Aeropuerto aeropuertoBarcelona = new Aeropuerto(loggerA, "Barcelona", 4);
     Aerovia aeroviaMadBar = new Aerovia("Madrid-Barcelona", aeropuertoBarcelona, loggerA);
     Aerovia aeroviaBarMad = new Aerovia("Barcelona-Madrid", aeropuertoMadrid, loggerA);
-    InterfazConexion2 obj;
-    InterfazConexion2 obj1;
 
     /**
      * Creates new form Ventana
@@ -40,7 +38,6 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         initComponents();
 
         inicializar();
-        iniciarClientes();
         inicializarServidorAeropuertoMadrid();
         inicializarServidorAeropuertoBarcelona();
 
@@ -109,8 +106,6 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
                             actualizarUI();
-                            actualizarPistasMadrid();
-                            actualizarPistasBarcelona();
 
                         }
                     });
@@ -124,63 +119,6 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         });
 
         uiThread.start();
-
-    }
-
-    public void actualizarPistasMadrid() {
-
-        try {
-            try {
-                obj = (InterfazConexion2) Naming.lookup("//localhost/objetoConecta2");
-            } catch (NotBoundException ex) {
-                Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            aeropuertoMadrid.setPista1(obj.getPistas()[0]);
-            aeropuertoMadrid.setPista2(obj.getPistas()[1]);
-            aeropuertoMadrid.setPista3(obj.getPistas()[2]);
-            aeropuertoMadrid.setPista4(obj.getPistas()[3]);
-            aeropuertoMadrid.setPistasDisponibles(obj.getSemaforo());
-        } catch (RemoteException ex) {
-            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    public void actualizarPistasBarcelona() {
-
-        try {
-            try {
-                obj1 = (InterfazConexion2) Naming.lookup("//localhost/objetoConecta3");
-            } catch (NotBoundException ex) {
-                Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            aeropuertoBarcelona.setPista1(obj1.getPistas()[0]);
-            aeropuertoBarcelona.setPista2(obj1.getPistas()[1]);
-            aeropuertoBarcelona.setPista3(obj1.getPistas()[2]);
-            aeropuertoBarcelona.setPista4(obj1.getPistas()[3]);
-            aeropuertoBarcelona.setPistasDisponibles(obj1.getSemaforo());
-        } catch (RemoteException ex) {
-            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    public void iniciarClientes() {
-
-        try {
-            obj = (InterfazConexion2) Naming.lookup("//localhost/objetoConecta2");
-            obj1 = (InterfazConexion2) Naming.lookup("//localhost/objetoConecta3");
-        } catch (NotBoundException ex) {
-            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(Parte2.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
     }
 
@@ -527,7 +465,7 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
 
         for (int i = 0; i < avionesPista.size(); i++) {
             if (avionesPista.get(i) != null) {
-                 Avion avion = avionesPista.get(i);
+                Avion avion = avionesPista.get(i);
                 if (avion.getIdAvion() % 2 == 0 && avion.getNumVuelos() == 0) {
                     valor = "Aterrizaje: ";
                 } else if (avion.getIdAvion() % 2 != 0 && avion.getNumVuelos() % 2 == 0) {

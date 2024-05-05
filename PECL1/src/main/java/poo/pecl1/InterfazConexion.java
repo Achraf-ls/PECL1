@@ -26,5 +26,7 @@ public interface InterfazConexion extends Remote {
     int avionesEnAreaRodaje() throws RemoteException;
 
     StringBuilder avionesAerovia() throws RemoteException;
+    
+    void controlarPistas(boolean valor, int pista) throws RemoteException;
 
 }
