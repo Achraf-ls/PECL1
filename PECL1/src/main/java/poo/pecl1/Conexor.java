@@ -4,23 +4,20 @@
  */
 package poo.pecl1;
 
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
- * @author achra
+ * @author Achraf El Idrissi y Gisela González
  */
 public class Conexor extends UnicastRemoteObject implements InterfazConexion {
 
     private  Aeropuerto aeropuerto;
 
     public Conexor() throws RemoteException {
-        // No se necesita inicializar nada especial en el constructor
+        
     }
 
     public void enviarAeropuerto(Aeropuerto aeropuerto) throws RemoteException {

@@ -5,16 +5,14 @@
 package poo.pecl1;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
- * @author achra
+ * @author Achraf El Idrissi y Gisela González
  */
 public class ControladorHilos implements Serializable {
 
-    private volatile boolean seguirEjecutando;
+    private boolean seguirEjecutando;
 
     public ControladorHilos() {
         seguirEjecutando = true;
@@ -33,7 +31,7 @@ public class ControladorHilos implements Serializable {
         return seguirEjecutando;
     }
 
-    public synchronized void comprobaciónEspera() throws InterruptedException {
+    public synchronized void comprobacionEspera() throws InterruptedException {
         while (!seguirEjecutando) {
             wait(); // Esperar hasta que se reanude el hilo
         }

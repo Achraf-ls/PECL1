@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 
 /**
  *
- * @author achra
+ * @author Achraf El Idrissi y Gisela González
  */
 public interface InterfazConexion2 extends Remote {
 

@@ -16,12 +16,11 @@ import java.util.logging.Logger;
 public class Autobus extends Thread implements Serializable{
     
     private int id;
-    private int pasajeros;   
-    private LoggerA loggerA;
+    private int pasajeros;  
     
+    private LoggerA loggerA;
     private Aeropuerto aeropuerto;
     private String nombreBus;
-    
     private ControladorHilos controladorHilos;
     
     /**
@@ -70,17 +69,17 @@ public class Autobus extends Thread implements Serializable{
         try {
             while(true){
             llegar();
-            controladorHilos.comprobaciónEspera();
+            controladorHilos.comprobacionEspera();
             subirPasajeros();
-            controladorHilos.comprobaciónEspera();
+            controladorHilos.comprobacionEspera();
             viajar();
-            controladorHilos.comprobaciónEspera();
+            controladorHilos.comprobacionEspera();
             bajarPasajeros();
-            controladorHilos.comprobaciónEspera();
+            controladorHilos.comprobacionEspera();
             subirNuevos();
-            controladorHilos.comprobaciónEspera();
+            controladorHilos.comprobacionEspera();
             viajar();
-            controladorHilos.comprobaciónEspera();
+            controladorHilos.comprobacionEspera();
             //El bus se elimina de la lista de buses dirección ciudad ya que este llega correctamente
             aeropuerto.getBusesDirCiudad().remove(this);
             pasajeros = 0; //llega a la parada y los pasajeros dejan de contar

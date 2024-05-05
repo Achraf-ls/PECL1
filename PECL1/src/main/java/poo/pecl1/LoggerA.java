@@ -13,21 +13,21 @@ import java.util.Date;
 
 /**
  *
- * @author achra
+ * @author Achraf El Idrissi y Gisela González
  */
 public class LoggerA implements Serializable{
 
-    private final String LOG_FILE;
+    private String archivoLog;
 
-    public LoggerA(String logFile) {
-        this.LOG_FILE = logFile;
+    public LoggerA(String archivoLog) {
+        this.archivoLog = archivoLog;
     }
 
-    public synchronized void logEvent(String event) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG_FILE, true))) {
-            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-            String logEntry = String.format("[%s] %s\n", timestamp, event);
-            writer.write(logEntry);
+    public synchronized void logEvent(String event, String aeropuerto) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivoLog, true))) {
+            String tiempo = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
+            String entrada = String.format("[%s] %s\n %s\n", tiempo, aeropuerto, event);
+            writer.write(entrada);
         } catch (IOException e) {
             e.printStackTrace();
         }

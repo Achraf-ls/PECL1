@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -22,7 +21,6 @@ import javax.swing.SwingUtilities;
 /**
  *
  * @author Achraf El Idrissi y Gisela González
- *
  */
 public class Parte1 extends javax.swing.JFrame implements Serializable {
 

@@ -6,11 +6,10 @@ package poo.pecl1;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
- * @author achra
+ * @author Achraf El Idrissi y Gisela González
  */
 public interface InterfazConexion extends Remote {
 

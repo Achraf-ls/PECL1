@@ -11,17 +11,13 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
  *
- * @author Gisela González y Achraf El Idrissi
+ * @author Achraf El Idrissi y Gisela González
  */
 public class Parte2 extends javax.swing.JFrame implements Serializable {
 

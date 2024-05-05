@@ -10,8 +10,6 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
@@ -25,13 +23,14 @@ public class Aeropuerto implements Serializable {
 
     private int pasajeros;
     private int pistasDisponibles;
+    private int p = 1;
+    private int puerta;
+
     private boolean pista1 = true;
     private boolean pista2 = true;
     private boolean pista3 = true;
     private boolean pista4 = true;
 
-    private int p;
-    private int puerta;
     private Aerovia aerovia;
     private LoggerA loggerA;
     private Random aleatorio = new Random();
@@ -75,6 +74,10 @@ public class Aeropuerto implements Serializable {
 
     public ConcurrentLinkedQueue<Autobus> getBusesDirCiudad() {
         return busesDirCiudad;
+    }
+
+    public String getNombreAeropuerto() {
+        return nombreAeropuerto;
     }
 
     public ArrayList<Avion> getListaPista() {
@@ -283,7 +286,7 @@ public class Aeropuerto implements Serializable {
 
             semaforoPasajeros.acquire();
             busesDirAeropuerto.remove(autobus);
-            loggerA.logEvent("Bus " + autobus.getNombreBus() + " deja " + autobus.getPasajeros() + " pasajeros en el aeropuerto de " + autobus.getAeropuerto().nombreAeropuerto);
+            loggerA.logEvent("Bus " + autobus.getNombreBus() + " deja " + autobus.getPasajeros() + " pasajeros en el aeropuerto de " + autobus.getAeropuerto().nombreAeropuerto, autobus.getAeropuerto().nombreAeropuerto);
             pasajeros += autobus.getPasajeros();
 
         } catch (Exception e) {
@@ -308,7 +311,7 @@ public class Aeropuerto implements Serializable {
         try {
 
             semaforoPasajeros.acquire();
-            loggerA.logEvent("Bus " + autobus.getNombreBus() + " recoge " + autobus.getPasajeros() + " del aeropuerto de " + autobus.getAeropuerto().nombreAeropuerto);
+            loggerA.logEvent("Bus " + autobus.getNombreBus() + " recoge " + autobus.getPasajeros() + " del aeropuerto de " + autobus.getAeropuerto().nombreAeropuerto, autobus.getAeropuerto().nombreAeropuerto);
             pasajeros -= autobus.getPasajeros();
             busesDirCiudad.add(autobus);
 
@@ -332,7 +335,7 @@ public class Aeropuerto implements Serializable {
      */
     public void accederHangar(Avion avion) throws InterruptedException {
         hangar.add(avion);
-        loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede al hangar");
+        loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede al hangar", avion.getAeropuertoOrigen().nombreAeropuerto);
         Thread.sleep(2000);
 
     }
@@ -344,7 +347,7 @@ public class Aeropuerto implements Serializable {
      * @throws InterruptedException
      */
     public void salirHangar(Avion avion) throws InterruptedException {
-        loggerA.logEvent("Avión " + avion.getNombreAvion() + " sale del hangar");
+        loggerA.logEvent("Avión " + avion.getNombreAvion() + " sale del hangar", avion.getAeropuertoOrigen().nombreAeropuerto);
         hangar.remove(avion);
     }
 
@@ -364,7 +367,7 @@ public class Aeropuerto implements Serializable {
             //La puerta queda libre
             puertaTaller.release();
 
-            loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede al taller en su vuelo numero " + avion.getNumVuelos());
+            loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede al taller en su vuelo numero " + avion.getNumVuelos(), avion.getAeropuertoOrigen().nombreAeropuerto);
             System.out.println("avion en taller");
             avionesTaller.add(avion);
 
@@ -378,14 +381,13 @@ public class Aeropuerto implements Serializable {
                 //El tiempo de esta inspección es de entre 1 y 5 segundos
                 Thread.sleep((aleatorio.nextInt(5) + 1) * 1000);
             }
-           
+
         } catch (Exception e) {
             System.out.println(e);
         }
     }
-    
-    
-    public void salirTaller(Avion avion){
+
+    public void salirTaller(Avion avion) {
         try {
             //Salimos del taller
             puertaTaller.acquire();
@@ -398,11 +400,6 @@ public class Aeropuerto implements Serializable {
         } catch (InterruptedException ex) {
             Logger.getLogger(Aeropuerto.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-    
-    
-    
-    
     }
 
     /**
@@ -427,7 +424,7 @@ public class Aeropuerto implements Serializable {
                     break;
                 }
             }
-            loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede a puerta de embarque " + puerta + " para embarcar " + avion.getPasajeros() + " pasajeros");
+
             escrituraPuertas.unlock();
 
             int contador = 0;
@@ -444,10 +441,9 @@ public class Aeropuerto implements Serializable {
                     // Espera un tiempo aleatorio (1-5 segundos) antes de volver a admitir más pasajeros
                     Thread.sleep((aleatorio.nextInt(5) + 1) * 1000);
                 }
-
                 contador++;
             }
-
+            loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede a puerta de embarque " + puerta + " para embarcar " + avion.getPasajeros() + " pasajeros", avion.getAeropuertoOrigen().nombreAeropuerto);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -467,11 +463,9 @@ public class Aeropuerto implements Serializable {
             escrituraPuertas.unlock();
             puertasEmbarqueDesembarque.release();
             posiblePuertasEmbarque.release();
-
         } catch (Exception e) {
 
         }
-
     }
 
     /**
@@ -497,7 +491,7 @@ public class Aeropuerto implements Serializable {
                     break;
                 }
             }
-            loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede a puerta de embarque " + puerta + " para desembarcar " + avion.getPasajeros() + " pasajeros");
+            loggerA.logEvent("Avión " + avion.getNombreAvion() + " accede a puerta de embarque " + puerta + " para desembarcar " + avion.getPasajeros() + " pasajeros", avion.getAeropuertoOrigen().nombreAeropuerto);
             escrituraPuertas.unlock();
 
             //Transferimos los pasajeros al aeropuerto
@@ -509,11 +503,9 @@ public class Aeropuerto implements Serializable {
             avion.setPasajeros(0);
             semaforoPasajeros.release();
 
-           
-
         } catch (Exception e) {
             System.out.println(e);
-        } 
+        }
 
     }
 
@@ -529,7 +521,6 @@ public class Aeropuerto implements Serializable {
         escrituraPuertas.unlock();
         puertasEmbarqueDesembarque.release();
         posiblePuertasDesembarque.release();
-        
 
     }
 
@@ -605,7 +596,7 @@ public class Aeropuerto implements Serializable {
                     }
                 }
 
-                loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede a la pista " + p + " para despegue");
+                loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede a la pista " + p + " para despegue", avion.getAeropuertoOrigen().nombreAeropuerto);
             } finally {
                 escrituraPista.unlock();
             }
@@ -655,7 +646,7 @@ public class Aeropuerto implements Serializable {
                     }
                 }
             }
-            loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede a la pista " + p + " para aterrizaje");
+            loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede a la pista " + p + " para aterrizaje", avion.getAeropuertoOrigen().nombreAeropuerto);
             escrituraPista.unlock();
 
             //El avión aterriza durante un tiempo de entre 1 y 5 segundos
@@ -708,7 +699,7 @@ public class Aeropuerto implements Serializable {
     public void accederAreaEstacionamiento(Avion avion) {
         try {
             areaDeEstacionamiento.add(avion);
-            loggerA.logEvent("Avion " + avion.getNombreAvion() + " accede al area de estacionamiento");
+            loggerA.logEvent("Avion " + avion.getNombreAvion() + " accede al area de estacionamiento", avion.getAeropuertoOrigen().nombreAeropuerto);
             Thread.sleep(3000);
         } catch (Exception e) {
             System.out.println(e);
@@ -722,7 +713,7 @@ public class Aeropuerto implements Serializable {
      */
     public void areaRodaje(Avion avion) {
         areaDeRodaje.add(avion);
-        loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede al area de rodaje");
+        loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede al area de rodaje", avion.getAeropuertoOrigen().nombreAeropuerto);
     }
 
 }

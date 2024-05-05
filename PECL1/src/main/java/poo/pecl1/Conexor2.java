@@ -9,7 +9,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 /**
  *
- * @author achra
+ * @author Achraf El Idrissi y Gisela González
  */
 public class Conexor2 extends UnicastRemoteObject implements InterfazConexion2 {
 
