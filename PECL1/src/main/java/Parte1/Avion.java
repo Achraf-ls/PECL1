@@ -12,6 +12,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
+ * Esta clase será utilizada para representar los aviones en el sistema 
+ * y las tareas que los mismos deben realizar
  *
  * @author Achraf El Idrissi y Gisela González
  */
@@ -335,7 +337,12 @@ public class Avion extends Thread implements Serializable {
         return sb.toString();
 
     }
-
+    
+    /**
+     * Metodo de comparación de objetos avión
+     * @param obj recibe un avión
+     * @return devuelva un booleano true si es el avión y false si no es
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

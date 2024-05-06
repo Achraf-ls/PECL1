@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- *
+ * Logger donde se guardaran los eventos del sistema
  * @author Achraf El Idrissi y Gisela González
  */
 public class LoggerA implements Serializable {

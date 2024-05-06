@@ -16,70 +16,99 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Clase del aeropuerto donde se desarrollaran varias tareas pertinentes a los 
+ * aviones y a los buses. Además se describen todas las zonas del mismo.
  * @author Achraf El Idrissi y Gisela González
  */
 public class Aeropuerto implements Serializable {
 
-    private int pasajeros;
-    private int pistasDisponibles;
-    private int p = 1;
-    private int puerta;
+    private int pasajeros; //Pasajeros presentes en el aeropuerto
+    private int pistasDisponibles;//Pistas disponibles para aterrizar/despegar
+    private int p = 1;//Varibale utilizada para el logger
+    private int puerta;//Variable utilizada para el logger
 
-    private boolean pista1 = true;
-    private boolean pista2 = true;
-    private boolean pista3 = true;
-    private boolean pista4 = true;
+    private boolean pista1 = true;//Indica si la pista 1 esta disponible o no
+    private boolean pista2 = true;//Indica si la pista 2 esta disponible o no
+    private boolean pista3 = true;//Indica si la pista 3 esta disponible o no
+    private boolean pista4 = true;//Indica si la pista 4 esta disponible o no
 
-    private Aerovia aerovia;
-    private LoggerA loggerA;
-    private Random aleatorio = new Random();
-    private String nombreAeropuerto;
+    private Aerovia aerovia;//Aerovia que pertenece al aeropuerto
+    private LoggerA loggerA;//Declaración del logger
+    private Random aleatorio = new Random();//Declaración de random
+    private String nombreAeropuerto;//El nombre del aeropuerto
 
-    private Semaphore semaforoPasajeros = new Semaphore(1, true);
-    private Semaphore puertaTaller = new Semaphore(1, true);
-    private Semaphore taller = new Semaphore(20, true);
-    private Semaphore pista;
-    private Semaphore puertasEmbarqueDesembarque = new Semaphore(6, true);
-    private Semaphore posiblePuertasEmbarque = new Semaphore(5, true);
-    private Semaphore posiblePuertasDesembarque = new Semaphore(5, true);
+    private Semaphore semaforoPasajeros = new Semaphore(1, true);//Semaforo que controla que solo un hilo realice cambios sobre la variable pasajeros
+    private Semaphore puertaTaller = new Semaphore(1, true);//Semaforo justo (FIFO) que controla que solo un avión puede entrar por la puerta del taller
+    private Semaphore taller = new Semaphore(20, true);//Semaforo justo (FIFO) que controla que solo 20 aviones puedan estar en el taller
+    private Semaphore pista;//Semaforo que contiene el numero de permisos de pistas de aeropuerto
+    private Semaphore puertasEmbarqueDesembarque = new Semaphore(6, true);//Semaforo que controla que en total solo pueda haber 6 aviones en las puertas de embarque/desembarque
+    private Semaphore posiblePuertasEmbarque = new Semaphore(5, true);//Semafoto que controla que solo pueda haber 5 aviones embarcando, garantizando una para desembarcar
+    private Semaphore posiblePuertasDesembarque = new Semaphore(5, true);//Semaforo que controla que solo pueda haber 5 aviones desemembarcando, garantizando una para embarcar
 
-    private ConcurrentLinkedQueue<Avion> hangar = new ConcurrentLinkedQueue();
-    private ConcurrentLinkedQueue<Avion> areaDeEstacionamiento = new ConcurrentLinkedQueue();
-    private ConcurrentLinkedQueue<Avion> avionesTaller = new ConcurrentLinkedQueue();
-    private ConcurrentLinkedQueue<Avion> areaDeRodaje = new ConcurrentLinkedQueue();
-    private ConcurrentLinkedQueue<Autobus> busesDirAeropuerto = new ConcurrentLinkedQueue();
-    private ConcurrentLinkedQueue<Autobus> busesDirCiudad = new ConcurrentLinkedQueue();
+    private ConcurrentLinkedQueue<Avion> hangar = new ConcurrentLinkedQueue();//Lista concurrente de los aviooes en el hangar
+    private ConcurrentLinkedQueue<Avion> areaDeEstacionamiento = new ConcurrentLinkedQueue();//Lista concurrente de los aviones en el area de estacionamiento
+    private ConcurrentLinkedQueue<Avion> avionesTaller = new ConcurrentLinkedQueue();//Lista concurrente de los aviones en el taller
+    private ConcurrentLinkedQueue<Avion> areaDeRodaje = new ConcurrentLinkedQueue();//Lista concurrente de los aviones en el area de rodaje
+    private ConcurrentLinkedQueue<Autobus> busesDirAeropuerto = new ConcurrentLinkedQueue();//Lista concurrente con los buses dirección aeropuerto
+    private ConcurrentLinkedQueue<Autobus> busesDirCiudad = new ConcurrentLinkedQueue();//Lista concurrente con los buses dirección ciudad
 
-    private ArrayList<Avion> avionesPuertas = new ArrayList<Avion>(Arrays.asList(new Avion[6]));
-    private ArrayList<Avion> listaPista = new ArrayList<Avion>(Arrays.asList(new Avion[4]));
+    private ArrayList<Avion> avionesPuertas = new ArrayList<Avion>(Arrays.asList(new Avion[6]));//Lista que almacena posiciones fijas para los aviones en las puertas de embarque/desembarque
+    private ArrayList<Avion> listaPista = new ArrayList<Avion>(Arrays.asList(new Avion[4]));//Lista que almacena posiciones fijas para los aviones en las pistas
 
+    //Cerrojo de escritura-lectura sobre pista y otras variables asociadas a la lista de pistas
     private ReentrantReadWriteLock lockPista = new ReentrantReadWriteLock();
     Lock lecturaPista = lockPista.readLock();
     Lock escrituraPista = lockPista.writeLock();
+    //Cerrrojo de escritura-lectura sobre la lista de puertas de embarque
     private ReentrantReadWriteLock lockPuertas = new ReentrantReadWriteLock();
     Lock lecturaPuertas = lockPuertas.readLock();
     Lock escrituraPuertas = lockPuertas.writeLock();
-
+    
+    
+    /**
+     * Constructor de la clasae aeropuerto 
+     * @param loggerA recibe un logger
+     * @param nombreAeropuerto recibe un nombre
+     * @param pistasDisponibles  recibe un número incial de pistas disponibles
+     */
     public Aeropuerto(LoggerA loggerA, String nombreAeropuerto, int pistasDisponibles) {
         this.loggerA = loggerA;
         this.nombreAeropuerto = nombreAeropuerto;
         this.pistasDisponibles = pistasDisponibles;
         this.pista = new Semaphore(pistasDisponibles, true);
-    }
-
+    } 
+    
+    
+    /**
+     * Get que devuelve una lista concurrente con los buses dirección aeropuerto 
+     * @return los buses dirección aeropuerto 
+     */
     public ConcurrentLinkedQueue<Autobus> getBusesDirAeropuerto() {
         return busesDirAeropuerto;
     }
-
+    
+    /**
+     * Get que devuelve una lista concurrente con los buses dirección ciudad 
+     * @return los buses dirección ciudad 
+     * 
+     */
     public ConcurrentLinkedQueue<Autobus> getBusesDirCiudad() {
         return busesDirCiudad;
     }
-
+    
+    /**
+     * Devuelve el nombre del aeropuerto 
+     * @return 
+     */
     public String getNombreAeropuerto() {
         return nombreAeropuerto;
     }
-
+      
+    
+    /**
+     * Get que devuelve el número de pistas disponibles
+     * @return numero de pistas diponibles
+     */
     public int getPistasDisponibles() {
          escrituraPista.lock();
         try {
@@ -90,7 +119,11 @@ public class Aeropuerto implements Serializable {
     }
     
     
-
+   /**
+    * Devuelve una lista con las pistas y los aviones que se encuentran dentro 
+    * de ellas
+    * @return 
+    */
     public ArrayList<Avion> getListaPista() {
         try {
             lecturaPista.lock();
@@ -178,43 +211,75 @@ public class Aeropuerto implements Serializable {
             lecturaPuertas.unlock();
         }
     }
-
+    
+    /**
+     * Método para setear los buses dir aeropuerto 
+     * @param busesDirAeropuerto 
+     */
     public void setBusesDirAeropuerto(ConcurrentLinkedQueue<Autobus> busesDirAeropuerto) {
         this.busesDirAeropuerto = busesDirAeropuerto;
     }
-
+     
+    /**
+     * Metodo para setear los buses dir ciudad
+     * @param busesDirCiudad 
+     */
     public void setBusesDirCiudad(ConcurrentLinkedQueue<Autobus> busesDirCiudad) {
         this.busesDirCiudad = busesDirCiudad;
     }
-
+    
+    /**
+     * Metodo para setear el semaforo de pistas
+     * @param pista 
+     */
     public void setPista(Semaphore pista) {
         this.pista = pista;
     }
     
+    /**
+     * Metodo para setear las pistas disponibles
+     * @param pistasDisponibles 
+     */
     public void setPistasDisponibles(int pistasDisponibles) {
         escrituraPista.lock();
         this.pistasDisponibles = pistasDisponibles;
         escrituraPista.unlock();
     }
-
+    
+    /**
+     * Metodo para setear la pista 1
+     * @param pista1 
+     */
     public void setPista1(boolean pista1) {
         escrituraPista.lock();
         this.pista1 = pista1;
         escrituraPista.unlock();
     }
-
+    
+    /**
+     * Metodo para setear la pista 2
+     * @param pista2 
+     */
     public void setPista2(boolean pista2) {
         escrituraPista.lock();
         this.pista2 = pista2;
         escrituraPista.unlock();
     }
-
+    
+    /**
+     * Metodo para setear la pista 3
+     * @param pista3 
+     */
     public void setPista3(boolean pista3) {
         escrituraPista.lock();
         this.pista3 = pista3;
         escrituraPista.unlock();
     }
-
+    
+    /**
+     * Metodo para setear la pista 4
+     * @param pista4 
+     */
     public void setPista4(boolean pista4) {
         escrituraPista.lock();
         this.pista4 = pista4;

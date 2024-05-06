@@ -20,7 +20,8 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
- *
+ * Interfaz uno que contendra el valor de los contenedores del aeropuerto y 
+ * un opción de pausar y renaudar el sistema
  * @author Achraf El Idrissi y Gisela González
  */
 public class InterfazParte1 extends javax.swing.JFrame implements Serializable {

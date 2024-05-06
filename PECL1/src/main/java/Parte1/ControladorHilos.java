@@ -7,7 +7,8 @@ package Parte1;
 import java.io.Serializable;
 
 /**
- *
+ * Clase que controla la ejecución de los hilos con tal de que se puedan tomar
+ * capturas del aeropuerto
  * @author Achraf El Idrissi y Gisela González
  */
 public class ControladorHilos implements Serializable {

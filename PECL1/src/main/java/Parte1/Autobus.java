@@ -10,18 +10,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Achraf El Idrissi y Gisela González
+ * Esta clase será utilizada para representar los buses en el sistema 
+ * y las tareas que los mismos deben realizar
+ * @author Achraf El Idrissi y Gisela González 
+ * 
  */
 public class Autobus extends Thread implements Serializable{
     
-    private int id;
-    private int pasajeros;  
+    private int id;//Varible del id del bus
+    private int pasajeros; //Variable que contiene los pasajerod en el bus
     
-    private LoggerA loggerA;
-    private Aeropuerto aeropuerto;
-    private String nombreBus;
-    private ControladorHilos controladorHilos;
+    private LoggerA loggerA; //Declaración del logger
+    private Aeropuerto aeropuerto; //Aeropuerto en el que se desarrolaran las tarea del bus
+    private String nombreBus; //Contiene el nombre del bus
+    private ControladorHilos controladorHilos; //Declaración del controlador de hilos
     
     /**
      * Constructor del autobus que recibe un id de este y el aeropuerto con el que se comunica
@@ -37,11 +39,20 @@ public class Autobus extends Thread implements Serializable{
         this.loggerA = loggerA;
         this.controladorHilos = controladorHilos;
     }
-
+    
+    /**
+     * Metodo get para el nombre del bus
+     * @return el nombre del bus
+     */
     public String getNombreBus() {
         return nombreBus;
     }
-
+    
+    
+    /**
+     * Metodo get para el aeropuerto
+     * @return el aerpuerto en el que se encuentra el bus
+     */
     public Aeropuerto getAeropuerto() {
         return aeropuerto;
     }
@@ -68,16 +79,22 @@ public class Autobus extends Thread implements Serializable{
     public void run(){
         try {
             while(true){
+            //Llega a la parada ciudad
             llegar();
             controladorHilos.comprobacionEspera();
+            //Se suben los pasajeros al bus
             subirPasajeros();
             controladorHilos.comprobacionEspera();
+            //Se viaja dirección aeropuerto
             viajar();
             controladorHilos.comprobacionEspera();
+            //Se bajan los pasajeros
             bajarPasajeros();
             controladorHilos.comprobacionEspera();
+            //Se suben nuevos pasajeros
             subirNuevos();
             controladorHilos.comprobacionEspera();
+            //Se viaja hacia la ciudad
             viajar();
             controladorHilos.comprobacionEspera();
             //El bus se elimina de la lista de buses dirección ciudad ya que este llega correctamente
@@ -93,7 +110,7 @@ public class Autobus extends Thread implements Serializable{
      * Metodo para que el autobus llegue a la parada y espere a los pasajeros
      * @throws InterruptedException 
      */
-    private void llegar() throws InterruptedException{
+    public void llegar() throws InterruptedException{
         Thread.sleep(2000 + new Random().nextInt(3001)); //llega a la parada y espera
         System.out.println("llega y espera");
     }
@@ -101,7 +118,7 @@ public class Autobus extends Thread implements Serializable{
     /**
      * Metodo que define el numero de pasajeros que se suben al bus y los añade a este
      */
-    private void subirPasajeros(){
+    public void subirPasajeros(){
         pasajeros = new Random().nextInt(51); //se montan entre 0 y 50 pasajeros   
         System.out.println("Se han subido" + pasajeros);
         aeropuerto.getBusesDirAeropuerto().add(this);
@@ -111,14 +128,14 @@ public class Autobus extends Thread implements Serializable{
      * Metodo para que el autobus haga su recorrido
      * @throws InterruptedException 
      */
-    private void viajar() throws InterruptedException{
+    public void viajar() throws InterruptedException{
         Thread.sleep(5000 + new Random().nextInt(5001)); // va o vuelve del aeropuerto 
     }
     
     /**
      * Metodo para bajar los pasajeros del bus y añadirlos al aeropuerto
      */
-    private void bajarPasajeros(){
+    public void bajarPasajeros(){
         aeropuerto.bajarPasajerosBus(this); // entran los pasajeros al aeropuerto        
     }
     
@@ -126,7 +143,7 @@ public class Autobus extends Thread implements Serializable{
      * Metodo para subir a ciertos pasajeros al bus y eliminarlos del aeropuerto
      * @throws InterruptedException 
      */
-    private void subirNuevos() throws InterruptedException{
+    public void subirNuevos() throws InterruptedException{
         Thread.sleep(2000 + new Random().nextInt(3001)); //se montan nuevos pasajeros 
         pasajeros = Math.min(new Random().nextInt(51),aeropuerto.getPasajeros());
         aeropuerto.subirPasajerosBus(this);

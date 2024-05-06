@@ -9,16 +9,16 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- *
+ * En esta clase se describe las tareas que se realizan en la aerovia y sus atributos
  * @author Achraf El Idrissi y Gisela González
  */
 public class Aerovia implements Serializable{
 
-    private Random aleatorio = new Random();
-    private String aeropuertoOrigenDestino;
-    private ConcurrentLinkedQueue<Avion> avionesAerovia = new ConcurrentLinkedQueue();
-    private LoggerA loggerA;
-    private Aeropuerto aeropuertoDestino;
+    private Random aleatorio = new Random(); //Declaración random
+    private String aeropuertoOrigenDestino; //A que aeropuerto pertence la aerovia
+    private ConcurrentLinkedQueue<Avion> avionesAerovia = new ConcurrentLinkedQueue(); //Lista concurrente que almacena los aviones en la aerovia
+    private LoggerA loggerA; //Declaración del logger
+    private Aeropuerto aeropuertoDestino;//Aeropuerto destino
 
     /**
      * Constructor de la aerovia que recibe el aeropuerto de destino de esta
@@ -41,15 +41,18 @@ public class Aerovia implements Serializable{
     public ConcurrentLinkedQueue<Avion> getAvionesAerovia() {
         return avionesAerovia;
     }
-
+    /**
+     * Metodo get que devuelve el aeropuerto de destino
+     * @return aeropuerto destino
+     */
     public Aeropuerto getAeropuertoDestino() {
         return aeropuertoDestino;
     }
 
     /**
-     * Metodo para que un avion acceda y salga de la aerovia
+     * Metodo para que un avion acceda 
      *
-     * @param avion
+     * @param avion recibe un avión
      * @throws InterruptedException
      */
     public void accederAerovia(Avion avion) throws InterruptedException {
@@ -60,6 +63,12 @@ public class Aerovia implements Serializable{
         Thread.sleep(1000 * tiempoVuelo);
         
     }
+    
+    /**
+     * Metodo para que el avión salga de la aerovia
+     * @param avion recibe un avion
+     * @throws InterruptedException 
+     */
     public void abandonarAerovia(Avion avion) throws InterruptedException {
         //Una vez se realiza el vuelo dejamos la aerovia e intentamos adquirir una pista del aeropuerto de origen 
         loggerA.logEvent("Avion " + avion.getNombreAvion() + "(" + avion.getPasajeros() + " pasajeros) abandona la aerovía " + avion.getAeropuertoOrigen().getAerovia().aeropuertoOrigenDestino, avion.getAeropuertoOrigen().getNombreAeropuerto());

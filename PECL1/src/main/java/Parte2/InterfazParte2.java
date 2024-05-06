@@ -16,7 +16,9 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
- *
+ * Interfaz 2 que se encargara de mostrar el valor numerico de cada uno de 
+ * los contenedores de aeropuerto y una funcionalidad que permite el control de 
+ * las pistas
  * @author Achraf El Idrissi y Gisela González
  */
 public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
@@ -105,16 +107,16 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
 
         try {
             pasajerosM.setText(Integer.toString(obj.pasajerosAeropuerto()));
-            hangarM.setText(Integer.toString(obj.avionesEnHangar()));
-            tallerM.setText(Integer.toString(obj.avionesEnTaller()));
-            estacionamientoM.setText(Integer.toString(obj.avionesEnAreaEstacionamiento()));
-            areaRodajeM.setText(Integer.toString(obj.avionesEnAreaRodaje()));
+            hangarM.setText(Integer.toString(obj.avionesHangar()));
+            tallerM.setText(Integer.toString(obj.avionesTaller()));
+            estacionamientoM.setText(Integer.toString(obj.avionesAreaEstacionamiento()));
+            areaRodajeM.setText(Integer.toString(obj.avionesAreaRodaje()));
             aeroviaMB1.setText(obj.avionesAerovia().toString());
             pasajerosB.setText(Integer.toString(obj1.pasajerosAeropuerto()));
-            hangarB.setText(Integer.toString(obj1.avionesEnHangar()));
-            tallerB.setText(Integer.toString(obj1.avionesEnTaller()));
-            estacionamientoB.setText(Integer.toString(obj1.avionesEnAreaEstacionamiento()));
-            areaRodajeB.setText(Integer.toString(obj1.avionesEnAreaRodaje()));
+            hangarB.setText(Integer.toString(obj1.avionesHangar()));
+            tallerB.setText(Integer.toString(obj1.avionesTaller()));
+            estacionamientoB.setText(Integer.toString(obj1.avionesAreaEstacionamiento()));
+            areaRodajeB.setText(Integer.toString(obj1.avionesAreaRodaje()));
             aeroviaBM1.setText(obj1.avionesAerovia().toString());
 
         } catch (RemoteException ex) {

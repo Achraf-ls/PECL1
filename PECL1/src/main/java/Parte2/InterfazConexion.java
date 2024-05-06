@@ -9,7 +9,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- *
+ * Interfaz de conexión remota con metodos 
  * @author Achraf El Idrissi y Gisela González
  */
 public interface InterfazConexion extends Remote {
@@ -18,13 +18,13 @@ public interface InterfazConexion extends Remote {
 
     int pasajerosAeropuerto() throws RemoteException;
 
-    int avionesEnHangar() throws RemoteException;
+    int avionesHangar() throws RemoteException;
 
-    int avionesEnTaller() throws RemoteException;
+    int avionesTaller() throws RemoteException;
 
-    int avionesEnAreaEstacionamiento() throws RemoteException;
+    int avionesAreaEstacionamiento() throws RemoteException;
 
-    int avionesEnAreaRodaje() throws RemoteException;
+    int avionesAreaRodaje() throws RemoteException;
 
     StringBuilder avionesAerovia() throws RemoteException;
     

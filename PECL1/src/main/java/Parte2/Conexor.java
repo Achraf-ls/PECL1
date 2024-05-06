@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
 /**
- *
+ * Metodos definidos para el servidor
  * @author Achraf El Idrissi y Gisela González
  */
 public class Conexor extends UnicastRemoteObject implements InterfazConexion {
@@ -47,7 +47,7 @@ public class Conexor extends UnicastRemoteObject implements InterfazConexion {
      * @return
      * @throws RemoteException 
      */
-    public int avionesEnHangar() throws RemoteException {
+    public int avionesHangar() throws RemoteException {
         return aeropuerto.getHangar().size();
     }
     
@@ -56,7 +56,7 @@ public class Conexor extends UnicastRemoteObject implements InterfazConexion {
      * @return
      * @throws RemoteException 
      */
-    public int avionesEnTaller() throws RemoteException {
+    public int avionesTaller() throws RemoteException {
         return aeropuerto.getAvionesTaller().size();
     }
     
@@ -65,7 +65,7 @@ public class Conexor extends UnicastRemoteObject implements InterfazConexion {
      * @return
      * @throws RemoteException 
      */
-    public int avionesEnAreaEstacionamiento() throws RemoteException {
+    public int avionesAreaEstacionamiento() throws RemoteException {
         return aeropuerto.getAreaDeEstacionamiento().size();
     }
 
@@ -74,7 +74,7 @@ public class Conexor extends UnicastRemoteObject implements InterfazConexion {
      * @return
      * @throws RemoteException 
      */
-    public int avionesEnAreaRodaje() throws RemoteException {
+    public int avionesAreaRodaje() throws RemoteException {
         return aeropuerto.getAreaDeRodaje().size();
     }
 
