@@ -35,8 +35,8 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
     private ControladorHilos controladorHilos = new ControladorHilos();
     private Aeropuerto aeropuertoMadrid = new Aeropuerto(loggerA, "Madrid", 4);
     private Aeropuerto aeropuertoBarcelona = new Aeropuerto(loggerA, "Barcelona", 4);
-    Aerovia aeroviaMadBar = new Aerovia("Madrid-Barcelona", aeropuertoBarcelona, loggerA);
-    Aerovia aeroviaBarMad = new Aerovia("Barcelona-Madrid", aeropuertoMadrid, loggerA);
+    private Aerovia aeroviaMadBar = new Aerovia("Madrid-Barcelona", aeropuertoBarcelona, loggerA);
+    private Aerovia aeroviaBarMad = new Aerovia("Barcelona-Madrid", aeropuertoMadrid, loggerA);
 
     /**
      * Creates new form Ventana

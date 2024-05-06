@@ -69,7 +69,7 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
             actualizarAeropuerto();
         }, 0, 2, TimeUnit.SECONDS);
     }
-
+    
     /**
      * Método para iniciar los clientes de cada aeropuerto
      */
