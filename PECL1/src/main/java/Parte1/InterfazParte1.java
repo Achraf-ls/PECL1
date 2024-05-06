@@ -15,13 +15,18 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 /**
- * Interfaz uno que contendra el valor de los contenedores del aeropuerto y 
- * un opción de pausar y renaudar el sistema
+ * Interfaz uno que contendra el valor de los contenedores del aeropuerto y un
+ * opción de pausar y renaudar el sistema
+ *
  * @author Achraf El Idrissi y Gisela González
  */
 public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
@@ -96,36 +101,23 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
     }
 
     /**
-     * Metodo para obtener todos los datos necesarios, mostrarlos en los
-     * JTextFields y actualizarlos cada cierto tiempo
+     * Método para obtener todos los datos necesarios, mostrarlos en los
+     * JTextFields y actualizarlos cada cierto tiempo en un hilo separado
+     * utilizando un ScheduledExecutorService. La actualización se realiza cada
+     * dos segundos.
      */
     public void obtener() {
-
-        Thread uiThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            actualizarUI();
-
-                        }
-                    });
-                    try {
-                        Thread.sleep(500);  // Espera medio segundo antes de la próxima actualización
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        uiThread.start();
-
+        // Se crea un ScheduledExecutorService para ejecutar tareas programadas en hilos separados.
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        // Programa la tarea de actualización de la interfaz cada dos segundos.
+        scheduler.scheduleAtFixedRate(() -> {
+                actualizarUI();
+        }, 0, 2, TimeUnit.SECONDS);
     }
-    
+
     /**
-     * Metodo que contiene metodos que actualizan el valor de cada uno de los contenedores
+     * Metodo que contiene metodos que actualizan el valor de cada uno de los
+     * contenedores
      */
     public void actualizarUI() {
 
@@ -150,10 +142,11 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
         obtenerBusCB();
         obtenerBusAB();
     }
-    
+
     /**
-     * Metodo que inicia el servidor de Madrid 
-     * @throws RemoteException 
+     * Metodo que inicia el servidor de Madrid
+     *
+     * @throws RemoteException
      */
     public void inicializarServidorAeropuertoMadrid() throws RemoteException {
         try {
@@ -168,10 +161,11 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
             Logger.getLogger(InterfazParte1.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
- 
+
     /**
      * Metodo que inicia el servidor de Barcelona
-     * @throws RemoteException 
+     *
+     * @throws RemoteException
      */
     public void inicializarServidorAeropuertoBarcelona() throws RemoteException {
         try {
@@ -258,11 +252,11 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
         }
         tallerB.setText(avionesTaller.toString());
     }
-    
+
     /**
-     * Metodo para obtener un String con los aviones que se encuntran en 
-     * el area de estacionamiento de Madrid
-     * 
+     * Metodo para obtener un String con los aviones que se encuntran en el area
+     * de estacionamiento de Madrid
+     *
      */
     public void obtenerAreaEstacionamientoM() {
         ConcurrentLinkedQueue<Avion> area = aeropuertoMadrid.getAreaDeEstacionamiento();
@@ -278,11 +272,11 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
         }
         estacionamientoM.setText(avionesArea.toString());
     }
-    
+
     /**
-     * Metodo para obtener un String con los aviones que se encuntran en 
-     * el area de estacionamiento de Barcelona
-     * 
+     * Metodo para obtener un String con los aviones que se encuntran en el area
+     * de estacionamiento de Barcelona
+     *
      */
     public void obtenerAreaEstacionamientoB() {
         ConcurrentLinkedQueue<Avion> area = aeropuertoBarcelona.getAreaDeEstacionamiento();
@@ -300,8 +294,8 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
     }
 
     /**
-     * Metodo para obtener un String con los aviones que se encuntran en 
-     * el area de rodaje de Madrid
+     * Metodo para obtener un String con los aviones que se encuntran en el area
+     * de rodaje de Madrid
      */
     public void obtenerAreaRodajeM() {
         ConcurrentLinkedQueue<Avion> area = aeropuertoMadrid.getAreaDeRodaje();
@@ -317,11 +311,11 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
         }
         areaRodajeM.setText(avionesArea.toString());
     }
-    
+
     /**
-     * Metodo para obtener un String con los aviones que se encuntran en 
-     * el area de rodaje de Barcelona
-     * 
+     * Metodo para obtener un String con los aviones que se encuntran en el area
+     * de rodaje de Barcelona
+     *
      */
     public void obtenerAreaRodajeB() {
         ConcurrentLinkedQueue<Avion> area = aeropuertoBarcelona.getAreaDeRodaje();
@@ -337,11 +331,11 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
         }
         areaRodajeB.setText(avionesArea.toString());
     }
-    
+
     /**
-     * Metodo para obtener un String con los aviones que se encuntran en 
-     * la aerovia de Madrid-Barcelona
-     * 
+     * Metodo para obtener un String con los aviones que se encuntran en la
+     * aerovia de Madrid-Barcelona
+     *
      */
     public void obtenerAeroviaMB() {
         ConcurrentLinkedQueue<Avion> aerovia = aeropuertoMadrid.getAerovia().getAvionesAerovia();
@@ -357,12 +351,12 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
         }
         aeroviaMB.setText(avionesAerovia.toString());
     }
-    
+
     /**
-     * Metodo para obtener un String con los aviones que se encuntran en 
-     * la aerovia de Barcelona-Madrid
-     * 
-     * 
+     * Metodo para obtener un String con los aviones que se encuntran en la
+     * aerovia de Barcelona-Madrid
+     *
+     *
      */
     public void obtenerAeroviaBM() {
         ConcurrentLinkedQueue<Avion> aerovia = aeropuertoBarcelona.getAerovia().getAvionesAerovia();
@@ -378,8 +372,7 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
         }
         aeroviaBM.setText(avionesAerovia.toString());
     }
-    
-    
+
     /**
      * Metodo por el cual se obtiene un string para cada una de las puertas de
      * embarque/desembarque del aeropuerto de Madrid
@@ -425,7 +418,7 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
             }
         }
     }
-    
+
     /**
      * Metodo por el cual se obtiene un string para cada una de las puertas de
      * embarque/desembarque del aeropuerto de Barcelona
@@ -471,7 +464,7 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
             }
         }
     }
-    
+
     /**
      * Metodo por el cual se obtiene un string para cada una de las pistas de
      * del aeropuerto de Madrid
@@ -510,7 +503,7 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
             }
         }
     }
-    
+
     /**
      * Metodo por el cual se obtiene un string para cada una de las pistas de
      * del aeropuerto de Barcelona
@@ -551,8 +544,8 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
     }
 
     /**
-     * Metodo por el que se obtiene un String con los buses dirección el aeropueto 
-     * de Madrid
+     * Metodo por el que se obtiene un String con los buses dirección el
+     * aeropueto de Madrid
      */
     public void obtenerBusAM() {
         ConcurrentLinkedQueue<Autobus> buses = aeropuertoMadrid.getBusesDirAeropuerto();
@@ -570,7 +563,7 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
         busesAM.setText(busesMadridAero.toString());
 
     }
-    
+
     /**
      * Metodo por el que se obtiene un String con los buses dirección la ciudad
      * de Madrid
@@ -591,11 +584,10 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
         busesCM.setText(busesM.toString());
 
     }
-    
-    
+
     /**
-     * Metodo por el que se obtiene un String con los buses dirección el aeropueto 
-     * de Barcelona
+     * Metodo por el que se obtiene un String con los buses dirección el
+     * aeropueto de Barcelona
      */
     public void obtenerBusAB() {
         ConcurrentLinkedQueue<Autobus> buses = aeropuertoBarcelona.getBusesDirAeropuerto();
@@ -613,7 +605,7 @@ public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
         busesAB.setText(busesB.toString());
 
     }
-    
+
     /**
      * Metodo por el que se obtiene un String con los buses dirección la ciudad
      * de Barcelona

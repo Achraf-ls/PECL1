@@ -11,14 +11,18 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
- * Interfaz 2 que se encargara de mostrar el valor numerico de cada uno de 
- * los contenedores de aeropuerto y una funcionalidad que permite el control de 
- * las pistas
+ * Interfaz 2 que se encargara de mostrar el valor numerico de cada uno de los
+ * contenedores de aeropuerto y una funcionalidad que permite el control de las
+ * pistas
+ *
  * @author Achraf El Idrissi y Gisela González
  */
 public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
@@ -35,7 +39,7 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
     private boolean pista2B = true; // Valor de la pista 2 de Barcelona al iniciar la ejecución
     private boolean pista3B = true; // Valor de la pista 3 de Barcelona al iniciar la ejecución
     private boolean pista4B = true; // Valor de la pista 4 de Barcelona al iniciar la ejecución
- 
+
     InterfazConexion obj;
     InterfazConexion obj1;
 
@@ -44,43 +48,28 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
         initComponents();
         //Función que deshabilita los botones de abrir al inicio de la ejecución
         deshabilitarBotones();
-        
+
         //Inicia los clientes de aeropuerto Madrid y el de Barcelona
         iniciarClientes();
-        
+
         //Se inicaliza un hilo encargardo de refescar la interfaz
         inicializar();
 
     }
 
     /**
-     * Método encargado de actualizar la interfaz, en este metodo se lanza un hilo que repite su rutina cada dos segundos
+     * Inicializa la interfaz y programa la actualización periódica de los datos
+     * del aeropuerto. La actualización se realiza cada dos segundos.
      */
     public void inicializar() {
-    
-        Thread uiThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            actualizarAeropuerto();
-
-                        }
-                    });
-                    try {
-                        Thread.sleep(2000);  // Espera dos segundos antes de la próxima actualización
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-        uiThread.start();
-
+        // Se crea un ScheduledExecutorService para ejecutar tareas programadas en hilos separados.
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        // Programa la tarea de actualización del aeropuerto cada dos segundos.
+        scheduler.scheduleAtFixedRate(() -> {
+            actualizarAeropuerto();
+        }, 0, 2, TimeUnit.SECONDS);
     }
-    
+
     /**
      * Método para iniciar los clientes de cada aeropuerto
      */
@@ -98,11 +87,10 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
         }
 
     }
-    
-      
-   /**
-    * Método donde se actualiza cada uno de los componentes de la interfaz
-    */
+
+    /**
+     * Método donde se actualiza cada uno de los componentes de la interfaz
+     */
     public void actualizarAeropuerto() {
 
         try {
@@ -124,9 +112,10 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
         }
 
     }
-    
+
     /**
-     * Método que deshabilita los botones de abrir al inicio de la ejecución ya que al principio todas estas abiertas
+     * Método que deshabilita los botones de abrir al inicio de la ejecución ya
+     * que al principio todas estas abiertas
      */
     public void deshabilitarBotones() {
         botonAbrir1M.setEnabled(false);
@@ -652,10 +641,10 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
     /**
      * Cuando se hace click sobre el botón se cierra la pista 1 de Madrid
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonCerrar1MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar1MActionPerformed
         try {
@@ -667,12 +656,13 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
         } catch (RemoteException ex) {
             Logger.getLogger(InterfazParte2.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_botonCerrar1MActionPerformed
-     /**
-      * Cuando se hace click sobre el botón se abre la pista 1 de Madrid
-      * @param evt 
-      */
+    /**
+     * Cuando se hace click sobre el botón se abre la pista 1 de Madrid
+     *
+     * @param evt
+     */
     private void botonAbrir1MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir1MActionPerformed
         try {
             botonAbrir1M.setEnabled(false);
@@ -686,14 +676,15 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
     }//GEN-LAST:event_botonAbrir1MActionPerformed
     /**
      * Cuando se hace click sobre el botón se cierra la pista 2 de Madrid
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonCerrar2MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar2MActionPerformed
         try {
             botonAbrir2M.setEnabled(true);
             botonCerrar2M.setEnabled(false);
             pista2M = false;
-            int pista= 2;
+            int pista = 2;
             obj.controlarPistas(pista2M, pista);
         } catch (RemoteException ex) {
             Logger.getLogger(InterfazParte2.class.getName()).log(Level.SEVERE, null, ex);
@@ -701,7 +692,8 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
     }//GEN-LAST:event_botonCerrar2MActionPerformed
     /**
      * Cuando se hace click sobre el botón se abre la pista 2 de Madrid
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonAbrir2MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir2MActionPerformed
         try {
@@ -716,7 +708,8 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
     }//GEN-LAST:event_botonAbrir2MActionPerformed
     /**
      * Cuando se hace click sobre el botón se cierra la pista 3 de Madrid
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonCerrar3MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar3MActionPerformed
         try {
@@ -731,14 +724,15 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
     }//GEN-LAST:event_botonCerrar3MActionPerformed
     /**
      * Cuando se hace click sobre el botón se abre la pista 3 de Madrid
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonAbrir3MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir3MActionPerformed
         try {
             botonAbrir3M.setEnabled(false);
             botonCerrar3M.setEnabled(true);
             pista3M = true;
-            
+
             int pista = 3;
             obj.controlarPistas(pista3M, pista);
         } catch (RemoteException ex) {
@@ -747,7 +741,8 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
     }//GEN-LAST:event_botonAbrir3MActionPerformed
     /**
      * Cuando se hace click sobre el botón se cierra la pista 4 de Madrid
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonCerrar4MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar4MActionPerformed
         try {
@@ -759,12 +754,13 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
         } catch (RemoteException ex) {
             Logger.getLogger(InterfazParte2.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
+
     }//GEN-LAST:event_botonCerrar4MActionPerformed
-    
+
     /**
      * Cuando se hace click sobre el botón se abre la pista 4 de Madrid
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonAbrir4MActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir4MActionPerformed
         try {
@@ -779,7 +775,8 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
     }//GEN-LAST:event_botonAbrir4MActionPerformed
     /**
      * Cuando se hace click sobre el botón se cierra la pista 1 de Barcelona
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonCerrar1BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar1BActionPerformed
         try {
@@ -792,10 +789,11 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
             Logger.getLogger(InterfazParte2.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botonCerrar1BActionPerformed
-    
+
     /**
      * Cuando se hace click sobre el botón se abre la pista 1 de Barcelona
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonAbrir1BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir1BActionPerformed
         try {
@@ -810,7 +808,8 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
     }//GEN-LAST:event_botonAbrir1BActionPerformed
     /**
      * Cuando se hace click sobre el botón se cierra la pista 2 de Barcelona
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonCerrar2BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar2BActionPerformed
         try {
@@ -822,11 +821,12 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
         } catch (RemoteException ex) {
             Logger.getLogger(InterfazParte2.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_botonCerrar2BActionPerformed
     /**
      * Cuando se hace click sobre el botón se abre la pista 2 de Barcelona
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonAbrir2BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir2BActionPerformed
         try {
@@ -841,7 +841,8 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
     }//GEN-LAST:event_botonAbrir2BActionPerformed
     /**
      * Cuando se hace click sobre el botón se cierra la pista 3 de Barcelona
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonCerrar3BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar3BActionPerformed
         try {
@@ -854,10 +855,11 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
             Logger.getLogger(InterfazParte2.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botonCerrar3BActionPerformed
-    
+
     /**
      * Cuando se hace click sobre el botón se abre la pista 3 de Barcelona
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonAbrir3BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir3BActionPerformed
         try {
@@ -870,10 +872,11 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
             Logger.getLogger(InterfazParte2.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botonAbrir3BActionPerformed
-    
+
     /**
      * Cuando se hace click sobre el botón se cierra la pista 4 de Barcelona
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonCerrar4BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCerrar4BActionPerformed
         try {
@@ -888,7 +891,8 @@ public class InterfazParte2 extends javax.swing.JFrame implements Serializable {
     }//GEN-LAST:event_botonCerrar4BActionPerformed
     /**
      * Cuando se hace click sobre el botón se abre la pista 4 de Barcelona
-     * @param evt 
+     *
+     * @param evt
      */
     private void botonAbrir4BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAbrir4BActionPerformed
         try {

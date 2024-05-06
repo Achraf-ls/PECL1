@@ -16,8 +16,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Clase del aeropuerto donde se desarrollaran varias tareas pertinentes a los 
+ * Clase del aeropuerto donde se desarrollaran varias tareas pertinentes a los
  * aviones y a los buses. Además se describen todas las zonas del mismo.
+ *
  * @author Achraf El Idrissi y Gisela González
  */
 public class Aeropuerto implements Serializable {
@@ -63,67 +64,69 @@ public class Aeropuerto implements Serializable {
     private ReentrantReadWriteLock lockPuertas = new ReentrantReadWriteLock();
     Lock lecturaPuertas = lockPuertas.readLock();
     Lock escrituraPuertas = lockPuertas.writeLock();
-    
-    
+
     /**
-     * Constructor de la clasae aeropuerto 
+     * Constructor de la clasae aeropuerto
+     *
      * @param loggerA recibe un logger
      * @param nombreAeropuerto recibe un nombre
-     * @param pistasDisponibles  recibe un número incial de pistas disponibles
+     * @param pistasDisponibles recibe un número incial de pistas disponibles
      */
     public Aeropuerto(LoggerA loggerA, String nombreAeropuerto, int pistasDisponibles) {
         this.loggerA = loggerA;
         this.nombreAeropuerto = nombreAeropuerto;
         this.pistasDisponibles = pistasDisponibles;
         this.pista = new Semaphore(pistasDisponibles, true);
-    } 
-    
-    
+    }
+
     /**
-     * Get que devuelve una lista concurrente con los buses dirección aeropuerto 
-     * @return los buses dirección aeropuerto 
+     * Get que devuelve una lista concurrente con los buses dirección aeropuerto
+     *
+     * @return los buses dirección aeropuerto
      */
     public ConcurrentLinkedQueue<Autobus> getBusesDirAeropuerto() {
         return busesDirAeropuerto;
     }
-    
+
     /**
-     * Get que devuelve una lista concurrente con los buses dirección ciudad 
-     * @return los buses dirección ciudad 
-     * 
+     * Get que devuelve una lista concurrente con los buses dirección ciudad
+     *
+     * @return los buses dirección ciudad
+     *
      */
     public ConcurrentLinkedQueue<Autobus> getBusesDirCiudad() {
         return busesDirCiudad;
     }
-    
+
     /**
-     * Devuelve el nombre del aeropuerto 
-     * @return 
+     * Devuelve el nombre del aeropuerto
+     *
+     * @return
      */
     public String getNombreAeropuerto() {
         return nombreAeropuerto;
     }
-      
-    
+
     /**
      * Get que devuelve el número de pistas disponibles
+     *
      * @return numero de pistas diponibles
      */
     public int getPistasDisponibles() {
-         escrituraPista.lock();
+        escrituraPista.lock();
         try {
             return pistasDisponibles;
         } finally {
             escrituraPista.unlock();
         }
     }
-    
-    
-   /**
-    * Devuelve una lista con las pistas y los aviones que se encuentran dentro 
-    * de ellas
-    * @return 
-    */
+
+    /**
+     * Devuelve una lista con las pistas y los aviones que se encuentran dentro
+     * de ellas
+     *
+     * @return
+     */
     public ArrayList<Avion> getListaPista() {
         try {
             lecturaPista.lock();
@@ -157,15 +160,15 @@ public class Aeropuerto implements Serializable {
      * @return pasajeros, el numero de pasajeros en el aeropuerto
      */
     public int getPasajeros() {
+        int cantidadPasajeros = 0; // Valor por defecto en caso de excepción
         try {
             semaforoPasajeros.acquire();
-            return pasajeros;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return -1;  // Devuelve un valor de error en caso de interrupción
-        } finally {
+            cantidadPasajeros = pasajeros;
             semaforoPasajeros.release();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Aeropuerto.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return cantidadPasajeros; // Se devuelve la cantidad de pasajeros
     }
 
     /**
@@ -211,74 +214,82 @@ public class Aeropuerto implements Serializable {
             lecturaPuertas.unlock();
         }
     }
-    
+
     /**
-     * Método para setear los buses dir aeropuerto 
-     * @param busesDirAeropuerto 
+     * Método para setear los buses dir aeropuerto
+     *
+     * @param busesDirAeropuerto
      */
     public void setBusesDirAeropuerto(ConcurrentLinkedQueue<Autobus> busesDirAeropuerto) {
         this.busesDirAeropuerto = busesDirAeropuerto;
     }
-     
+
     /**
      * Metodo para setear los buses dir ciudad
-     * @param busesDirCiudad 
+     *
+     * @param busesDirCiudad
      */
     public void setBusesDirCiudad(ConcurrentLinkedQueue<Autobus> busesDirCiudad) {
         this.busesDirCiudad = busesDirCiudad;
     }
-    
+
     /**
      * Metodo para setear el semaforo de pistas
-     * @param pista 
+     *
+     * @param pista
      */
     public void setPista(Semaphore pista) {
         this.pista = pista;
     }
-    
+
     /**
      * Metodo para setear las pistas disponibles
-     * @param pistasDisponibles 
+     *
+     * @param pistasDisponibles
      */
     public void setPistasDisponibles(int pistasDisponibles) {
         escrituraPista.lock();
         this.pistasDisponibles = pistasDisponibles;
         escrituraPista.unlock();
     }
-    
+
     /**
      * Metodo para setear la pista 1
-     * @param pista1 
+     *
+     * @param pista1
      */
     public void setPista1(boolean pista1) {
         escrituraPista.lock();
         this.pista1 = pista1;
         escrituraPista.unlock();
     }
-    
+
     /**
      * Metodo para setear la pista 2
-     * @param pista2 
+     *
+     * @param pista2
      */
     public void setPista2(boolean pista2) {
         escrituraPista.lock();
         this.pista2 = pista2;
         escrituraPista.unlock();
     }
-    
+
     /**
      * Metodo para setear la pista 3
-     * @param pista3 
+     *
+     * @param pista3
      */
     public void setPista3(boolean pista3) {
         escrituraPista.lock();
         this.pista3 = pista3;
         escrituraPista.unlock();
     }
-    
+
     /**
      * Metodo para setear la pista 4
-     * @param pista4 
+     *
+     * @param pista4
      */
     public void setPista4(boolean pista4) {
         escrituraPista.lock();
@@ -344,7 +355,14 @@ public class Aeropuerto implements Serializable {
      * @param pasajeros
      */
     public void setPasajeros(int pasajeros) {
-        this.pasajeros = pasajeros;
+        try {
+            semaforoPasajeros.acquire();
+            this.pasajeros = pasajeros;
+            semaforoPasajeros.release();
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Aeropuerto.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -363,7 +381,7 @@ public class Aeropuerto implements Serializable {
      */
     public void bajarPasajerosBus(Autobus autobus) {
         try {
-
+            
             semaforoPasajeros.acquire();
             busesDirAeropuerto.remove(autobus);
             loggerA.logEvent("Bus " + autobus.getNombreBus() + " deja " + autobus.getPasajeros() + " pasajeros en el aeropuerto de " + autobus.getAeropuerto().nombreAeropuerto, autobus.getAeropuerto().nombreAeropuerto);
@@ -374,7 +392,7 @@ public class Aeropuerto implements Serializable {
             System.out.println(e);
 
         } finally {
-
+           
             semaforoPasajeros.release();
 
         }
@@ -389,7 +407,7 @@ public class Aeropuerto implements Serializable {
      */
     public void subirPasajerosBus(Autobus autobus) {
         try {
-
+        
             semaforoPasajeros.acquire();
             loggerA.logEvent("Bus " + autobus.getNombreBus() + " recoge " + autobus.getPasajeros() + " del aeropuerto de " + autobus.getAeropuerto().nombreAeropuerto, autobus.getAeropuerto().nombreAeropuerto);
             pasajeros -= autobus.getPasajeros();
@@ -402,6 +420,7 @@ public class Aeropuerto implements Serializable {
         } finally {
 
             semaforoPasajeros.release();
+           
 
         }
 
@@ -510,11 +529,11 @@ public class Aeropuerto implements Serializable {
             int contador = 0;
             while (contador < 3 && avion.getPasajeros() < avion.getCapacidadMaxima()) {
                 // Si no hay suficientes pasajeros en el aeropuerto, coge los que haya disponibles
-                semaforoPasajeros.acquire();
+                semaforoPasajeros.acquire();               
                 int pasajerosParaEmbarcar = Math.min(pasajeros, avion.getCapacidadMaxima() - avion.getPasajeros());
                 avion.setPasajeros(avion.getPasajeros() + pasajerosParaEmbarcar);
                 pasajeros -= pasajerosParaEmbarcar;
-                semaforoPasajeros.release();
+                semaforoPasajeros.release();            
                 // Cada transferencia de pasajeros al avión dura un tiempo aleatorio entre 1 y 3 segundos
                 Thread.sleep((aleatorio.nextInt(3) + 1) * 1000);
                 if (avion.getPasajeros() < avion.getCapacidadMaxima()) {
@@ -582,6 +601,7 @@ public class Aeropuerto implements Serializable {
 
             avion.setPasajeros(0);
             semaforoPasajeros.release();
+
 
         } catch (Exception e) {
             System.out.println(e);
@@ -728,7 +748,7 @@ public class Aeropuerto implements Serializable {
             }
             loggerA.logEvent("Avion " + avion.getNombreAvion() + " (" + avion.getPasajeros() + " pasajeros) accede a la pista " + p + " para aterrizaje", avion.getAeropuertoOrigen().nombreAeropuerto);
             escrituraPista.unlock();
-          
+
         } catch (Exception e) {
             System.out.println(e);
         }

@@ -18,6 +18,7 @@ import java.util.Date;
 public class LoggerA implements Serializable {
 
     private String archivoLog;
+   
 
     // Constructor que toma el nombre del archivo de registro como parámetro
     public LoggerA(String archivoLog) {
@@ -27,6 +28,7 @@ public class LoggerA implements Serializable {
     // Método para registrar un evento en el archivo de registro
     // El método es sincronizado para evitar problemas de concurrencia si múltiples hilos acceden a este registrador
     public synchronized void logEvent(String event, String aeropuerto) {
+        
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(archivoLog, true))) {
             // Obtener la marca de tiempo actual
             String tiempo = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
@@ -37,6 +39,7 @@ public class LoggerA implements Serializable {
         } catch (IOException e) {
             // Manejo de excepciones en caso de error al escribir en el archivo de registro
             e.printStackTrace();
+        
         }
     }
 
