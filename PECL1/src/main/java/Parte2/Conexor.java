@@ -2,8 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package poo.pecl1;
+package Parte2;
 
+import Parte1.Aeropuerto;
+import Parte1.Avion;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -15,36 +17,73 @@ import java.util.concurrent.Semaphore;
  */
 public class Conexor extends UnicastRemoteObject implements InterfazConexion {
 
-    private Aeropuerto aeropuerto;
+    private Aeropuerto aeropuerto; //El aeropuerto de donde se solicitarán los objetos
 
     public Conexor() throws RemoteException {
 
     }
+    
+    /**
+     * El servidor brinda su aeropuerto a la interfaz remota
+     * @param aeropuerto
+     * @throws RemoteException 
+     */
 
     public void enviarAeropuerto(Aeropuerto aeropuerto) throws RemoteException {
         this.aeropuerto = aeropuerto;
     }
-
+    
+    /**
+     * El cliente solicita el número de pasajeros
+     * @return
+     * @throws RemoteException 
+     */
     public int pasajerosAeropuerto() throws RemoteException {
         return aeropuerto.getPasajeros();
     }
-
+    
+    /**
+     * El cliente solicita el número de los aviones en el Hangar
+     * @return
+     * @throws RemoteException 
+     */
     public int avionesEnHangar() throws RemoteException {
         return aeropuerto.getHangar().size();
     }
-
+    
+    /**
+     * El cliente solicita el número de los aviones en taller
+     * @return
+     * @throws RemoteException 
+     */
     public int avionesEnTaller() throws RemoteException {
         return aeropuerto.getAvionesTaller().size();
     }
-
+    
+    /**
+     * El cliente solicita el número de aviones en el area de estacionamiento
+     * @return
+     * @throws RemoteException 
+     */
     public int avionesEnAreaEstacionamiento() throws RemoteException {
         return aeropuerto.getAreaDeEstacionamiento().size();
     }
 
+    /**
+     * El cliente solicita el numero de aviones en el area de rodaje
+     * @return
+     * @throws RemoteException 
+     */
     public int avionesEnAreaRodaje() throws RemoteException {
         return aeropuerto.getAreaDeRodaje().size();
     }
 
+    
+    /**
+     * El cliente solicita los aviones en la aerovia
+     * @return
+     * @throws RemoteException 
+     */
     public StringBuilder avionesAerovia() throws RemoteException {
         ConcurrentLinkedQueue<Avion> aerovia = aeropuerto.getAerovia().getAvionesAerovia();
         StringBuilder avionesAerovia = new StringBuilder();
@@ -59,7 +98,13 @@ public class Conexor extends UnicastRemoteObject implements InterfazConexion {
         }
         return avionesAerovia;
     }
-
+    
+    /**
+     * El cliente solicita un cambio en las pistas disponibles
+     * @param valor recibe un boolean que indica si se quiere cerrar o abrir la pista
+     * @param pista recibe una pista que indica la pista que se va a cerrar
+     * @throws RemoteException 
+     */
     public void controlarPistas(boolean valor, int pista) throws RemoteException {
         int permisos;
         int nuevosPermisos;

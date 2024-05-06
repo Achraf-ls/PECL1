@@ -2,13 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package poo.pecl1;
+package Parte1;
 
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  *
@@ -16,26 +17,30 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class Avion extends Thread implements Serializable {
 
-    private Random aleatorio = new Random();
+    private Random aleatorio = new Random(); //Declaración de random
 
-    private String letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private String nombreAvion;
+    private String letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //Letras que se utilizaran para crear el nombre del avión
+    private String nombreAvion; //Varibale que almacena el nombre del avión
 
-    private int idAvion;
-    private int pasajeros;
-    private int capacidadMaxima;
-    private int numVuelos = 0;
+    private int idAvion; //Variable del id del avión
+    private int pasajeros; //Variable que almacena la cantidad de pasaejros
+    private int capacidadMaxima; //Variable que almacena la capacidad máxima de un avión
+    private int numVuelos = 0; //Variable de número de vuelos
 
-    private LoggerA loggerA;
+    private LoggerA loggerA; //Declaración del logger
 
-    private Aeropuerto aeropuertoOrigen;
-    private Aeropuerto aeropuertoDestino;
-    private Aeropuerto aeropuertoAux;
+    private Aeropuerto aeropuertoOrigen; //Almacena el aeropuerto origen
+    private Aeropuerto aeropuertoDestino; //Almacena el aeropuerto destino
+    private Aeropuerto aeropuertoAux; //Variable auxiliar para hacer cambio entre aeropuerto origen y destino
 
-    private Aerovia aerovia;
+    private Aerovia aerovia; // Declaración de aerovia
 
-    private ControladorHilos controladorHilos;
-    private Lock cerrojo = new ReentrantLock();
+    private ControladorHilos controladorHilos; //Declaración del controlador de hilos
+    
+    //Creación de cerrojo de escritura y lectura para modificar y leer sobre la variable numVuelos
+    private ReentrantReadWriteLock cerrojoNumVuelos = new ReentrantReadWriteLock();
+    Lock lecturaCerrojoNumVuelos = cerrojoNumVuelos.readLock();
+    Lock escrituraCerrojoNumVuelos = cerrojoNumVuelos.writeLock();
 
     /**
      * Constructor del avion que recibe un aeropuerto y un id del mismo
@@ -70,22 +75,34 @@ public class Avion extends Thread implements Serializable {
      * @return numVuelos, numero de vuelos que lleva el avion
      */
     public int getNumVuelos() {
-        cerrojo.lock();
+        lecturaCerrojoNumVuelos.lock();
         try {
             return numVuelos;
         } finally {
-            cerrojo.unlock();
+            lecturaCerrojoNumVuelos.unlock();
         }
     }
-
+    
+    /**
+     * Metodo ger para el id del avión
+     * @return 
+     */
     public int getIdAvion() {
         return idAvion;
     }
-
+    
+    /**
+     * Metodo ger para la aerovia del aeropuerto
+     * @return 
+     */
     public Aerovia getAerovia() {
         return aerovia;
     }
-
+    
+    /**
+     * Metodo ger para el aeropuerto de origen
+     * @return 
+     */
     public Aeropuerto getAeropuertoOrigen() {
         return aeropuertoOrigen;
     }
@@ -123,8 +140,9 @@ public class Avion extends Thread implements Serializable {
      * @param numVuelos
      */
     public void setNumVuelos(int numVuelos) {
-
+        escrituraCerrojoNumVuelos.lock();
         this.numVuelos = numVuelos;
+        escrituraCerrojoNumVuelos.unlock();
     }
 
     /**
@@ -205,9 +223,9 @@ public class Avion extends Thread implements Serializable {
                 controladorHilos.comprobacionEspera();
                 aeropuertoDestino.abandonarPuertasDesembarque(this);
                 //Sumamos uno al valor de número de vuelos
-                cerrojo.lock();
+                escrituraCerrojoNumVuelos.lock();
                 numVuelos++;
-                cerrojo.unlock();
+                escrituraCerrojoNumVuelos.unlock();
                 //Se accede al taller
                 accederTaller();
                 controladorHilos.comprobacionEspera();
@@ -292,7 +310,10 @@ public class Avion extends Thread implements Serializable {
     public void accederTaller() {
         aeropuertoDestino.accederTaller(this);
     }
-
+    
+    /**
+     * Metodo para abandonar el taller
+     */
     public void abandonarTaller() {
         aeropuertoDestino.salirTaller(this);
 

@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package poo.pecl1;
+package Parte1;
 
+import Parte2.Conexor;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -22,7 +23,7 @@ import javax.swing.SwingUtilities;
  *
  * @author Achraf El Idrissi y Gisela González
  */
-public class Parte1 extends javax.swing.JFrame implements Serializable {
+public class InterfazParte1 extends javax.swing.JFrame implements Serializable {
 
     private LoggerA loggerA = new LoggerA("evolucionAeropuerto.txt");
     private ControladorHilos controladorHilos = new ControladorHilos();
@@ -34,7 +35,7 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
     /**
      * Creates new form Ventana
      */
-    public Parte1() throws RemoteException {
+    public InterfazParte1() throws RemoteException {
         initComponents();
 
         inicializar();
@@ -121,7 +122,10 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         uiThread.start();
 
     }
-
+    
+    /**
+     * Metodo que contiene metodos que actualizan el valor de cada uno de los contenedores
+     */
     public void actualizarUI() {
 
         pasajerosM.setText(Integer.toString(aeropuertoMadrid.getPasajeros()));
@@ -145,7 +149,11 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         obtenerBusCB();
         obtenerBusAB();
     }
-
+    
+    /**
+     * Metodo que inicia el servidor de Madrid 
+     * @throws RemoteException 
+     */
     public void inicializarServidorAeropuertoMadrid() throws RemoteException {
         try {
             Conexor obj = new Conexor();
@@ -156,10 +164,14 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
 
             // Registrar el conector en el registro RMI
         } catch (MalformedURLException ex) {
-            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InterfazParte1.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+ 
+    /**
+     * Metodo que inicia el servidor de Barcelona
+     * @throws RemoteException 
+     */
     public void inicializarServidorAeropuertoBarcelona() throws RemoteException {
         try {
             Conexor obj = new Conexor();
@@ -170,7 +182,7 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
 
             // Registrar el conector en el registro RMI
         } catch (MalformedURLException ex) {
-            Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InterfazParte1.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -245,7 +257,12 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         }
         tallerB.setText(avionesTaller.toString());
     }
-
+    
+    /**
+     * Metodo para obtener un String con los aviones que se encuntran en 
+     * el area de estacionamiento de Madrid
+     * 
+     */
     public void obtenerAreaEstacionamientoM() {
         ConcurrentLinkedQueue<Avion> area = aeropuertoMadrid.getAreaDeEstacionamiento();
         StringBuilder avionesArea = new StringBuilder();
@@ -260,7 +277,12 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         }
         estacionamientoM.setText(avionesArea.toString());
     }
-
+    
+    /**
+     * Metodo para obtener un String con los aviones que se encuntran en 
+     * el area de estacionamiento de Barcelona
+     * 
+     */
     public void obtenerAreaEstacionamientoB() {
         ConcurrentLinkedQueue<Avion> area = aeropuertoBarcelona.getAreaDeEstacionamiento();
         StringBuilder avionesArea = new StringBuilder();
@@ -276,6 +298,10 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         estacionamientoB.setText(avionesArea.toString());
     }
 
+    /**
+     * Metodo para obtener un String con los aviones que se encuntran en 
+     * el area de rodaje de Madrid
+     */
     public void obtenerAreaRodajeM() {
         ConcurrentLinkedQueue<Avion> area = aeropuertoMadrid.getAreaDeRodaje();
         StringBuilder avionesArea = new StringBuilder();
@@ -290,7 +316,12 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         }
         areaRodajeM.setText(avionesArea.toString());
     }
-
+    
+    /**
+     * Metodo para obtener un String con los aviones que se encuntran en 
+     * el area de rodaje de Barcelona
+     * 
+     */
     public void obtenerAreaRodajeB() {
         ConcurrentLinkedQueue<Avion> area = aeropuertoBarcelona.getAreaDeRodaje();
         StringBuilder avionesArea = new StringBuilder();
@@ -305,7 +336,12 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         }
         areaRodajeB.setText(avionesArea.toString());
     }
-
+    
+    /**
+     * Metodo para obtener un String con los aviones que se encuntran en 
+     * la aerovia de Madrid-Barcelona
+     * 
+     */
     public void obtenerAeroviaMB() {
         ConcurrentLinkedQueue<Avion> aerovia = aeropuertoMadrid.getAerovia().getAvionesAerovia();
         StringBuilder avionesAerovia = new StringBuilder();
@@ -320,7 +356,13 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         }
         aeroviaMB.setText(avionesAerovia.toString());
     }
-
+    
+    /**
+     * Metodo para obtener un String con los aviones que se encuntran en 
+     * la aerovia de Barcelona-Madrid
+     * 
+     * 
+     */
     public void obtenerAeroviaBM() {
         ConcurrentLinkedQueue<Avion> aerovia = aeropuertoBarcelona.getAerovia().getAvionesAerovia();
         StringBuilder avionesAerovia = new StringBuilder();
@@ -335,7 +377,12 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         }
         aeroviaBM.setText(avionesAerovia.toString());
     }
-
+    
+    
+    /**
+     * Metodo por el cual se obtiene un string para cada una de las puertas de
+     * embarque/desembarque del aeropuerto de Madrid
+     */
     public void obtenerPuertasM() {
         gate1M.setText("");
         gate2M.setText("");
@@ -377,7 +424,11 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
             }
         }
     }
-
+    
+    /**
+     * Metodo por el cual se obtiene un string para cada una de las puertas de
+     * embarque/desembarque del aeropuerto de Barcelona
+     */
     public void obtenerPuertasB() {
         gate1B.setText("");
         gate2B.setText("");
@@ -419,7 +470,11 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
             }
         }
     }
-
+    
+    /**
+     * Metodo por el cual se obtiene un string para cada una de las pistas de
+     * del aeropuerto de Madrid
+     */
     public void obtenerPistasM() {
         pista1M.setText("");
         pista2M.setText("");
@@ -454,7 +509,11 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
             }
         }
     }
-
+    
+    /**
+     * Metodo por el cual se obtiene un string para cada una de las pistas de
+     * del aeropuerto de Barcelona
+     */
     public void obtenerPistasB() {
         pista1B.setText("");
         pista2B.setText("");
@@ -490,6 +549,10 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         }
     }
 
+    /**
+     * Metodo por el que se obtiene un String con los buses dirección el aeropueto 
+     * de Madrid
+     */
     public void obtenerBusAM() {
         ConcurrentLinkedQueue<Autobus> buses = aeropuertoMadrid.getBusesDirAeropuerto();
         StringBuilder busesMadridAero = new StringBuilder();
@@ -506,7 +569,11 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         busesAM.setText(busesMadridAero.toString());
 
     }
-
+    
+    /**
+     * Metodo por el que se obtiene un String con los buses dirección la ciudad
+     * de Madrid
+     */
     public void obtenerBusCM() {
         ConcurrentLinkedQueue<Autobus> buses = aeropuertoMadrid.getBusesDirCiudad();
         StringBuilder busesM = new StringBuilder();
@@ -523,7 +590,12 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         busesCM.setText(busesM.toString());
 
     }
-
+    
+    
+    /**
+     * Metodo por el que se obtiene un String con los buses dirección el aeropueto 
+     * de Barcelona
+     */
     public void obtenerBusAB() {
         ConcurrentLinkedQueue<Autobus> buses = aeropuertoBarcelona.getBusesDirAeropuerto();
         StringBuilder busesB = new StringBuilder();
@@ -540,7 +612,11 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         busesAB.setText(busesB.toString());
 
     }
-
+    
+    /**
+     * Metodo por el que se obtiene un String con los buses dirección la ciudad
+     * de Barcelona
+     */
     public void obtenerBusCB() {
         ConcurrentLinkedQueue<Autobus> buses = aeropuertoBarcelona.getBusesDirCiudad();
         StringBuilder busesB = new StringBuilder();
@@ -1193,21 +1269,23 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Parte1.class
+            java.util.logging.Logger.getLogger(InterfazParte1.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Parte1.class
+            java.util.logging.Logger.getLogger(InterfazParte1.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Parte1.class
+            java.util.logging.Logger.getLogger(InterfazParte1.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
 
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Parte1.class
+            java.util.logging.Logger.getLogger(InterfazParte1.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
@@ -1215,9 +1293,9 @@ public class Parte1 extends javax.swing.JFrame implements Serializable {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new Parte1().setVisible(true);
+                    new InterfazParte1().setVisible(true);
                 } catch (RemoteException ex) {
-                    Logger.getLogger(Parte1.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(InterfazParte1.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });

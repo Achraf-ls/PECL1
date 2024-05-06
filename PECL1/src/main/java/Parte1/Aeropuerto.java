@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package poo.pecl1;
+package Parte1;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -386,8 +386,8 @@ public class Aeropuerto implements Serializable {
             System.out.println("avion en taller");
             avionesTaller.add(avion);
 
-            if (avion.getNumVuelos() == 15) {
-                //Como el valor de contador de vuelos es igual a 15 se realiza una inspección en profundidad
+            if (avion.getNumVuelos() % 15 == 0) {
+                //Cada 15 vuelos se realiza una inspección en profundidad
                 //El avión tarda entre 5 y 10 segundos en realizar una inspección en profundidad
                 Thread.sleep((aleatorio.nextInt(6) + 5) * 1000);
 
